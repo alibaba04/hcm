@@ -4,7 +4,7 @@ require_once('function/mysql.php');
 
 /*********** Database Settings ***********/
 $dbHost = 'localhost';
-$dbName = 'hcm'; 
+$dbName = 'u8364183_hcm'; 
 
 
 $dbUser = 'u8364183_marketing';
