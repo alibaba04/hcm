@@ -1,6 +1,5 @@
 <?php
-require_once( 'config.php' );
-global $dbLink;
+$dbLink = mysqli_connect("localhost","u8364183_marketing","PVMMA0Akp4;(","u8364183_hcm");
 $nik = $_GET['nik'];
  $sqlQuery = "SELECT 'Scan 1 ' as 'title', CONCAT(tanggal,' ',scan1) as 'start',CONCAT(tanggal,' ',scan1) as 'end',if(scan1>'07:35:00','#dd4b39','#3a87ad') as 'backgroundColor',scan1 FROM `aki_absensi` WHERE (nik)='".$nik."'";
 
