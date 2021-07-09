@@ -1,5 +1,5 @@
 <?php
-
+global $passSalt;
 require_once('../config.php' );
 require_once('../function/secureParam.php');
 //require_once('../function/mysql.php');

@@ -43,7 +43,7 @@ $judulMenu = 'Ubah Password';
     }
 
     function validasiForm(form)
-    {   
+    { 
        if($("#txtKodeUser").val()=="")
        {
           alert("Kode User tidak valid!");

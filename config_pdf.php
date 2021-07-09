@@ -3,11 +3,12 @@ require_once('function/mysql.php');
 
 /*********** Database Settings ***********/
 $dbHost = 'localhost';
-$dbName = 'u8364183_finance'; 
+$dbName = 'u8364183_hcm'; 
 
 
 $dbUser = 'u8364183_marketing';
 $dbPass = 'PVMMA0Akp4;(';
+
 
 $passSalt = 'UFqPNrZENKSQc5yc';
 

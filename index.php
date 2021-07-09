@@ -25,6 +25,7 @@ require_once('./function/fungsi_formatdate.php');
     <head>
 
         <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>HCM</title>
         <!-- Tell the browser to be responsive to screen width -->
