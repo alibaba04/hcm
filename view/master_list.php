@@ -186,9 +186,9 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 //Set Filter berdasarkan query string
                 $filter="";
                 if ($kname)
-                    $filter = $filter . " AND kname LIKE '%" . $kname . "%'";
+                    $filter = $filter . " AND m.kname LIKE '%" . $kname . "%'";
                 if ($nik)
-                    $filter = $filter . " AND nik LIKE '%" . $nik . "%'";
+                    $filter = $filter . " AND m.nik LIKE '%" . $nik . "%'";
                 if ($gol)
                     $filter = $filter . " AND g.gol_kerja='" . $gol . "'";
                 if ($status)
