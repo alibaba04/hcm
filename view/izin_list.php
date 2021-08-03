@@ -7,7 +7,7 @@ error_reporting( error_reporting() & ~E_NOTICE );
 //Periksa hak user pada modul/menu ini
 $judulMenu = 'Data Izin';
 $hakUser = getUserPrivilege($curPage);
-
+$pesan='';
 if ($hakUser < 10) {
     session_unregister("my");
     echo "<p class='error'>";
@@ -17,29 +17,13 @@ if ($hakUser < 10) {
 //Periksa apakah merupakan proses headerless (tambah, edit atau hapus) dan apakah hak user cukup
 if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 
-    require_once("./class/c_perkiraan.php");
-    $tmpPerkiraan = new c_perkiraan();
-
-//Jika Mode Tambah/Add
-    if ($_POST["txtMode"] == "Add") {
-        $pesan = $tmpPerkiraan->add($_POST);
-    }
-
-//Jika Mode Ubah/Edit
-    if ($_POST["txtMode"] == "Edit") {
-        $pesan = $tmpPerkiraan->edit($_POST);
-    }
-
-//Jika Mode Upload
-    if ($_POST["txtMode"] == "Upload") {
-        $pesan = $tmpPerkiraan->upload($_POST);
-    }
+    require_once("./class/c_izin.php");
+    $tmpIzin = new c_izin;
 
 //Jika Mode Hapus/Delete
     if ($_GET["txtMode"] == "Delete") {
-        $pesan = $tmpPerkiraan->delete($_GET["nik"]);
+        $pesan = $tmpIzin->delete($_GET["kode"]);
     }
-
 //Seharusnya semua transaksi Add dan Edit Sukses karena data sudah tervalidasi dengan javascript di form detail.
 //Jika masih ada masalah, berarti ada exception/masalah yang belum teridentifikasi dan harus segera diperbaiki!
     if (strtoupper(substr($pesan, 0, 5)) == "GAGAL") {
@@ -50,8 +34,30 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     exit;
 }
 ?>
+<div class="modal fade" id="myPesan" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Message</h4>
+            </div>
+            <div class="modal-body">
+                <p><?php echo "Warning!!, please text to " . $mailSupport . " for support this error!."; ?></p>
+                <p id="pesanErr"></p>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div> 
 <script type="text/javascript" charset="utf-8">
-    $(document).ready(function () { 
+    $(document).ready(function () {
+        var link = window.location.href;
+        var res = link.match(/pesan=Gagal/g); 
+        if (res == 'pesan=Gagal') {
+            $("#myPesan").modal({backdrop: 'static'});
+        }
         $("#stanggal").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
     });
 </script>
@@ -70,12 +76,16 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     <!-- Main row -->
     <div class="row">
         <div class="col-md-3">
-            <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/profile_detail'; ?>" class="btn btn-primary btn-block margin-bottom">ADD</a>
+            <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/izin_detail&mode=add'; ?>" class="btn btn-primary btn-block margin-bottom">Add</a>
           <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
             <input type="hidden" name="page" value="<?php echo $curPage; ?>">
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control" name="snik" id="snik" placeholder="NIK ...."
                 <?php
+                if ($_GET["pesan"] != "") {
+
+                            echo $_GET["pesan"];
+                        }
                 if (isset($_GET["nik"])) {
                     echo("value='" . $_GET["nik"] . "'");
                 }
@@ -92,6 +102,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 if (isset($_GET["kname"])) {
                     echo("value='" . $_GET["kname"] . "'");
                 }
+
                 ?>
                 onKeyPress="return handleEnter(this, event)">
                 <span class="input-group-btn">
@@ -106,23 +117,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
                 </span>
             </div>
-          <div class="box box-solid">
-            <div class="box-header with-border">
-              <h3 class="box-title">Filter</h3>
-              <div class="box-tools">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-              </div>
-            </div>
-            <div class="box-body no-padding">
-              <ul class="nav nav-pills nav-stacked">
-                <li  id="btnall"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage; ?>" ><i class="fa fa-inbox"></i> All</a></li>
-                <li id="btnmnjemen"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage.'&gol=Manajemen'; ?>" ><i class="fa fa-inbox"></i> Manajemen</a></li>
-                <li id="btnproduksi"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage.'&gol=Produksi'; ?>"><i class="fa fa-envelope-o"></i> Produksi</a></li>
-              </ul>
-            </div>
-            <!-- /.box-body -->
-          </div>
         </div>
         </form>
         <div class="col-md-9">
@@ -132,66 +126,48 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
             <!-- /.box-header -->
             <div class="box-body no-padding">
-              <div class="mailbox-controls">
-                <!-- Check all button -->
-                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                </button>
-                <div class="btn-group">
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+                <div class="mailbox-controls">
+                    <div class="btn-group">
+                    </div>
+                    <ul class="pagination pagination-sm inline"><?php 
+                        if (isset($_GET["skname"])){
+                            $kname = secureParam($_GET["skname"], $dbLink);
+                        }else{
+                            $kname = "";
+                        }
+                        if (isset($_GET["snik"])){
+                            $nik = secureParam($_GET["snik"], $dbLink);
+                        }else{
+                            $nik = "";
+                        }
+                        if (isset($_GET["stanggal"])){
+                            $tgl = secureParam($_GET["stanggal"], $dbLink);
+                        }else{
+                            $tgl = "";
+                        }
+                        //Set Filter berdasarkan query string
+                        $filter="";
+                        if ($kname)
+                            $filter = $filter . " AND m.kname LIKE '%" . $kname . "%'";
+                        if ($nik)
+                            $filter = $filter . " AND z.nik LIKE '%" . $nik . "%'";
+                        if ($tgl)
+                            $filter = $filter . " AND z.tanggal LIKE '%" .date("Y-m-d", strtotime($tgl)) . "%'";
+                        //database
+                        $q = "SELECT * ";
+                        $q.= "FROM `aki_izin` z left join aki_tabel_master m on m.nik=z.nik";
+                        $q.= " WHERE 1=1 and z.aktif=1 " . $filter." order by z.tanggal desc";
+                        $rs = new MySQLPagedResultSet($q, 100, $dbLink);
+                        echo $rs->getPageNav($_SERVER['QUERY_STRING']);
+                    ?></ul>
                 </div>
-                <!-- /.btn-group -->
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                <div class="pull-right">
-                  1-50/200
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                  </div>
-                  <!-- /.btn-group -->
-                </div>
-                <!-- /.pull-right -->
-              </div>
+            </div>
               <div class="table-responsive mailbox-messages">
                 <table class="table table-hover table-striped">
                     <?php
-                    if (isset($_GET["kname"])){
-                        $kname = secureParam($_GET["kname"], $dbLink);
-                    }else{
-                        $kname = "";
-                    }
-                    if (isset($_GET["nik"])){
-                        $nik = secureParam($_GET["nik"], $dbLink);
-                    }else{
-                        $nik = "";
-                    }
-                    if (isset($_GET["gol"])){
-                        $gol = secureParam($_GET["gol"], $dbLink);
-                    }else{
-                        $gol = "";
-                    }
-                    if (isset($_GET["status"])){
-                        $status = secureParam($_GET["status"], $dbLink);
-                    }else{
-                        $status = "";
-                    }
-                //Set Filter berdasarkan query string
-                    $filter="";
-                    if ($kname)
-                        $filter = $filter . " AND kname LIKE '%" . $kname . "%'";
-                    if ($nik)
-                        $filter = $filter . " AND nik LIKE '%" . $nik . "%'";
-                    if ($gol)
-                        $filter = $filter . " AND g.gol_kerja='" . $gol . "'";
-                    if ($status)
-                        $filter = $filter . " AND m.status='" . $status . "'";
-                //database
-                    $q = "SELECT * ";
-                    $q.= "FROM `aki_izin` z left join aki_tabel_master m on m.nik=z.nik";
-                    $q.= " WHERE 1=1 " . $filter." order by m.nik";
+                    
                 //Paging
-                    $rs = new MySQLPagedResultSet($q, 500, $dbLink);
+                    
                     $rowCounter=1;
                     $totDebet = 0; $totKredit = 0;
                     while ($query_data = $rs->fetchArray()) {
@@ -208,16 +184,24 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                             $gol = "Mutasi";
                             $aktif = 'bg-light-green';
                         }
-                        echo '<tbody>
+                        echo "<tbody>
                         <tr>
-                            <td><input type="checkbox"></td>
-                            <td class="mailbox-star">'.$query_data['nik'].'</td>
-                            <td class="mailbox-name"><a href="read-mail.html"><b>'.$query_data['kname'].'</b></a></td>
-                            <td class="mailbox-subject"><b>'.$query_data['jenis'].'</b> - '.$query_data['keterangan'].'
-                        </td>
-                            <td class="mailbox-attachment"></td>
-                            <td class="mailbox-date">'.date("d F Y", strtotime($query_data["tanggal"])).'</td>
-                        </tr>
+                            <td><button type='button' class='btn btn-primary' onclick=\"if(confirm('Apakah anda yakin akan menghapus data ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["no"]) . "'}\" style='cursor:pointer;'>";
+                            echo '<i class="fa fa-bars"></i></button></td><td class="mailbox-star">'.$query_data['nik'].'</td>
+                            <td class="mailbox-name"><a href="'.$_SERVER["PHP_SELF"].'?page=view/izin_detail&mode=edit&no='.$query_data['no'].'&nik='.md5($query_data['nik']).'"><b>'.$query_data['kname'].'</b></a></td>
+                            <td class="mailbox-date">'.date("d F Y", strtotime($query_data["tanggal"])).'</td>';
+                        if ($query_data["start"] =='07:30:00' && $query_data["end"] =='16:00:00') {
+                            if ($query_data["jenis"] =='Cuti') {
+                                echo '<td class="mailbox-attachment" colspan="2"> - Cuti</td>';
+                            }else{
+                                echo '<td class="mailbox-attachment" colspan="2"> - Satu Hari</td>';
+                            }
+                            
+                        }else{
+                            echo '<td class="mailbox-attachment">'.$query_data["start"].'</td>';
+                            echo '<td class="mailbox-attachment">'.$query_data["end"].'</td>';
+                        }
+                        echo '<td class="mailbox-subject"><b>'.$query_data['jenis'].'</b>  -  '.$query_data['keterangan'].'</td></tr>
                         </tbody>';
                         $rowCounter++;
                     }
@@ -235,27 +219,13 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
             <!-- /.box-body -->
             <div class="box-footer no-padding">
-              <div class="mailbox-controls">
-                <!-- Check all button -->
-                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                </button>
-                <div class="btn-group">
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+            <div class="box-body no-padding">
+                <div class="mailbox-controls">
+                    <div class="btn-group">
+                    </div>
+                    <ul class="pagination pagination-sm inline"><?php echo $rs->getPageNav($_SERVER['QUERY_STRING']) ?></ul>
                 </div>
-                <!-- /.btn-group -->
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                <div class="pull-right">
-                  1-50/200
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                  </div>
-                  <!-- /.btn-group -->
-                </div>
-                <!-- /.pull-right -->
-              </div>
+            </div>
             </div>
           </div>
           <!-- /. box -->

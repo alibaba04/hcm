@@ -59,7 +59,7 @@ require_once('./function/fungsi_formatdate.php');
         <link rel="stylesheet" href="plugins/select2/select2.min.css">
         <link rel="stylesheet" href="css/searchInput1.css">
         <link rel="icon" href="dist/img/logo-qoobah.png" type="image/png"/>
-        
+        <link rel="stylesheet" href="plugins/timepicker/bootstrap-timepicker.min.css">
         <script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
         <style type="text/css">
             .preloader {
@@ -246,6 +246,7 @@ require_once('./function/fungsi_formatdate.php');
         <!-- AdminLTE for demo purposes -->
         <script src="dist/js/demo.js"></script>
         <script src="plugins/fullcalendar/fullcalendar.min.js"></script>    
+        <script src="plugins/timepicker/bootstrap-timepicker.min.js"></script>
 
     </body>
     
