@@ -199,7 +199,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                 if (isset($_GET["year"])){
                                     $year = secureParam($_GET["year"], $dbLink);
                                 }else{
-                                    $year = "";
+                                    $year = date("Y");
                                 }
                                 if (isset($_GET["gol"])){
                                     $gol = secureParam($_GET["gol"], $dbLink);

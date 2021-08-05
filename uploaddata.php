@@ -21,7 +21,7 @@ $jumlah_baris = $data->rowcount($sheet_index = 0);
 
 //Jumlah default data yang berhasil di import
 $berhasil = 0;
-for($i = 7; $i <= $jumlah_baris; $i++)
+for($i = 3; $i <= $jumlah_baris; $i++)
 {
 	//menangkap data dan memasukkan ke variabel sesuai dengan kolomnya masing2
 	$nik = $data->val($i, 2);
@@ -37,7 +37,7 @@ for($i = 7; $i <= $jumlah_baris; $i++)
 	if($nik != "" && $tanggal != "" && $scan1 != ""){
 		//persiapkan insert data ke database
 		$fixtanggal = date("y-m-d", strtotime($tanggal));
-		$q="INSERT INTO aki_absensi (`nik`, `tanggal`, `scan1`, `scan2`, `scan3`, `scan4`, `scan5`, `scan6`)  VALUES ('$nik', '$fixtanggal', '$scan1', '$scan2', '$scan3', '$scan4', '$scan5', '$scan6')";
+		$q="INSERT INTO aki_absensi (`nik`, `tanggal`, `scan1`, `scan2`, `scan3`, `scan4`, `scan5`, `scan6`)  VALUES ($nik', '$fixtanggal', '$scan1', '$scan2', '$scan3', '$scan4', '$scan5', '$scan6')";
 		mysql_query( $q,$dbLink);
 		$berhasil++;
 	}
