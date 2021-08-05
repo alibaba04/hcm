@@ -21,7 +21,7 @@ $jumlah_baris = $data->rowcount($sheet_index = 0);
 
 //Jumlah default data yang berhasil di import
 $berhasil = 0;
-for($i = 3; $i <= $jumlah_baris; $i++)
+for($i = 2; $i <= $jumlah_baris; $i++)
 {
 	//menangkap data dan memasukkan ke variabel sesuai dengan kolomnya masing2
 	$nik = $data->val($i, 2);
