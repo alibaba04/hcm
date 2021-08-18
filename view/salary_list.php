@@ -104,11 +104,17 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 <select name="month" id="month" class="form-control select2">
                     <option value="">Select</option>
                     <?php
-                    for ($i = 0; $i < 12; ) {
-                        $date_val = date('m', strtotime($i." months"));
-                        $date_str = date('F', strtotime($i++." months"));
-                        echo "<option value=".$date_val .">".$date_str ."</option>";
-                    } ?>
+                        for ($i = 0; $i < 12; ) {
+                            $date_val = date('m', strtotime($i." months"));
+                            $date_str = date('F', strtotime($i++." months"));
+                            echo "<option value=".$date_val .">".$date_str ."</option>";
+                        } 
+                        if (isset($_GET["month"])){
+                            $month = secureParam($_GET["month"], $dbLink);
+                        }else{
+                            $month = date("m");
+                        }
+                    ?>
                 </select>
                 
                 <span class="input-group-btn">
@@ -126,8 +132,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             <div class="box-body no-padding">
               <ul class="nav nav-pills nav-stacked">
                 <li  id="btnall"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage; ?>" ><i class="fa fa-inbox"></i> All</a></li>
-                <li id="btnmnjemen"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage.'&gol=Manajemen'; ?>" ><i class="fa fa-inbox"></i> Manajemen</a></li>
-                <li id="btnproduksi"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage.'&gol=Produksi'; ?>"><i class="fa fa-envelope-o"></i> Produksi</a></li>
+                <li id="btnmnjemen"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage.'&month='.$month.'&gol=Manajemen'; ?>" ><i class="fa fa-inbox"></i> Manajemen</a></li>
+                <li id="btnproduksi"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage.'&month='.$month.'&gol=Produksi'; ?>"><i class="fa fa-envelope-o"></i> Produksi</a></li>
               </ul>
             </div>
             <!-- /.box-body -->
@@ -144,9 +150,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         <div class="mailbox-controls">
                             <!-- Check all button -->
                             <?php
-                                $qm="SELECT * FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik where m.status='Aktif '" . $filter." order by m.nik";
-                                $rs = new MySQLPagedResultSet($qm, 50, $dbLink);
-                                echo $rs->getPageNav($_SERVER['QUERY_STRING']);
                                 if (isset($_GET["skname"])){
                                     $kname = secureParam($_GET["skname"], $dbLink);
                                 }else{
@@ -157,23 +160,23 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                 }else{
                                     $nik = "";
                                 }
-                                if (isset($_GET["month"])){
-                                    $month = secureParam($_GET["month"], $dbLink);
-                                }else{
-                                    $month = date("m");
-                                }
                                 if (isset($_GET["gol"])){
                                     $gol = secureParam($_GET["gol"], $dbLink);
                                 }else{
                                     $gol = "";
                                 }
-                                if (isset($_GET["status"])){
-                                    $status = secureParam($_GET["status"], $dbLink);
-                                }else{
-                                    $status = "";
-                                }
+                                $filter="";
+                                if ($kname)
+                                    $filter = $filter . " AND kname LIKE '%" . $kname . "%'";
+                                if ($nik)
+                                    $filter = $filter . " AND nik LIKE '%" . $nik . "%'";
+                                if ($gol)
+                                    $filter = $filter . " AND g.gol_kerja='" . $gol . "'";
+                                $qm="SELECT * FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik where m.status='Aktif '" . $filter." order by m.nik";
+                                $rs = new MySQLPagedResultSet($qm, 50, $dbLink);
+                                echo $rs->getPageNav($_SERVER['QUERY_STRING']);
+
                             ?>
-                            </button>
                             <!-- /.btn-group -->
                             <div class="pull-right">
                                 Data Bulan <?php echo $month;?>
@@ -198,18 +201,10 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                 </thead>
                                 <?php
                                 
-                                $filter="";
-                                if ($kname)
-                                    $filter = $filter . " AND kname LIKE '%" . $kname . "%'";
-                                if ($nik)
-                                    $filter = $filter . " AND nik LIKE '%" . $nik . "%'";
+                                $filter1="";
                                 if ($month)
-                                    $filter1 = $filter . " AND month(tanggal)='" . $month . "'";
-                                if ($gol)
-                                    $filter = $filter . " AND g.gol_kerja='" . $gol . "'";
-                                if ($status)
-                                    $filter = $filter . " AND m.status='" . $status . "'";
-                                $q = "SELECT nik,Year(tanggal) as years,month(tanggal) as month,COUNT(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6)>if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (scan1) END) AS masuk FROM `aki_absensi` where 1=1 ". $filter1." GROUP by nik,month(tanggal)";
+                                    $filter1 = $filter1 . " AND tanggal BETWEEN '" . date("Y") . "-".($month-1)."-26' and '". date("Y")."-".$month."-25'";
+                                $q = "SELECT nik,Year(tanggal) as years,month(tanggal) as month,COUNT(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6)>if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (scan1) END) AS masuk FROM `aki_absensi` where 1=1 ". $filter1." GROUP by nik";
                                 $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
                                 $absen=array();
                                 while ($query_data = $rs1->fetchArray()) {
@@ -269,25 +264,25 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                     if (empty($absen[$query_data['nik']][$month])) {
                                         echo '0';
                                     }else{
-                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen['nik']['years'].'-'.$i.'"><b>'.$absen[$query_data['nik']][$month];
+                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen['nik']['years'].'-'.$month.'"><b>'.$absen[$query_data['nik']][$month];
                                     }echo '</a></td>';
                                     echo '<td class="mailbox-name">';
                                     if (empty($absen2[$query_data['nik']][$month])) {
                                         echo '0';
                                     }else{
-                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen2['nik']['years'].'-'.$i.'"><b>'.$absen2[$query_data['nik']][$month];
+                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen2['nik']['years'].'-'.$month.'"><b>'.$absen2[$query_data['nik']][$month];
                                     }echo '</a></td>';
                                     echo '<td class="mailbox-name">';
                                     if (empty($absen3[$query_data['nik']][$month])) {
                                         echo '0';
                                     }else{
-                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen3['nik']['years'].'-'.$i.'"><b>'.$absen3[$query_data['nik']][$month];
+                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen3['nik']['years'].'-'.$month.'"><b>'.$absen3[$query_data['nik']][$month];
                                     }echo '</a></td>';
                                     echo '<td class="mailbox-name">';
                                     if (empty($absen4[$query_data['nik']][$month])) {
                                         echo '0';
                                     }else{
-                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen4['nik']['years'].'-'.$i.'"><b>'.$absen4[$query_data['nik']][$month];
+                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen4['nik']['years'].'-'.$month.'"><b>'.$absen4[$query_data['nik']][$month];
                                     }
                                     $result = $absen[$query_data['nik']]['tunjangan']+$absen2[$query_data['nik']]['tunjangan']+$absen3[$query_data['nik']]['tunjangan']+$absen4[$query_data['nik']]['tunjangan'];
                                     echo '</a></td><td>Rp '.number_format($result).'</td>';

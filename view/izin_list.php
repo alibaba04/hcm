@@ -208,7 +208,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         echo "<tbody>
                         <tr>
                             <td><button type='button' class='btn btn-primary' onclick=\"if(confirm('Apakah anda yakin akan menghapus data ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["no"]) . "'}\" style='cursor:pointer;'>";
-                            echo '<i class="fa fa-bars"></i></button></td><td class="mailbox-star">'.$query_data['nik'].'</td>
+                            echo '<i class="fa fa-trash"></i></button></td><td class="mailbox-star">'.$query_data['nik'].'</td>
                             <td class="mailbox-name"><a href="'.$_SERVER["PHP_SELF"].'?page=view/izin_detail&mode=edit&no='.$query_data['no'].'&nik='.md5($query_data['nik']).'"><b>'.$query_data['kname'].'</b></a></td>
                             <td class="mailbox-date">'.date("d F Y", strtotime($query_data["tanggal"])).'</td>';
                         if ($query_data["start"] =='07:30:00' && $query_data["end"] =='16:00:00') {

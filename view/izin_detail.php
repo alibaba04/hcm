@@ -184,43 +184,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         <div class="col-md-3">
             <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/izin_list'; ?>" class="btn btn-primary btn-block margin-bottom">Back</a>
             <input type="hidden" name="page" value="<?php echo $curPage; ?>">
-            <div class="input-group input-group-sm">
-                <input type="hidden" class="form-control" name="txtUpdate" id="txtUpdate">
-                <input type="text" class="form-control" name="snik" id="snik" placeholder="NIK ...."
-                <?php
-                if ($_GET["mode"] != "edit") {
-                    if (isset($_GET["nik"])) {
-                        echo("value='" . $_GET["nik"] . "'");
-                    }
-                }
-                
-                ?>
-                onKeyPress="return handleEnter(this, event)">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-            <p>- or -</p>
-            <div class="input-group input-group-sm">
-                <input type="text" class="form-control" name="skname" id="skname" placeholder="Name ...."
-                <?php
-                if (isset($_GET["kname"])) {
-                    echo("value='" . $_GET["kname"] . "'");
-                }
-                ?>
-                onKeyPress="return handleEnter(this, event)">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-            <p>- or -</p>
-            <div class="input-group input-group-sm">
-                <input name="stanggal" id="stanggal" maxlength="30" class="form-control" 
-                value="<?php ?>" placeholder="Tanggal" onKeyPress="return handleEnter(this, event)">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
         </div>
         <div class="col-md-9">
           <div class="box box-primary">
