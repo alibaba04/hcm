@@ -42,9 +42,14 @@ $nik = $_GET['nik'];
         }else{
             $data['backgroundColor']='#3a87ad';
         }
+        if($row['end']!=$row['tanggal'].' 00:00:00'){
+            $data['title']= 'Pulang';
+            $data['start']= $row['end'];
+        }else{
+            $data['title']= 'Tidak Absen Pulang';
+            $data['start']= $row['tanggal'].' 16:00:00';
+        }
         
-        $data['title']= 'Pulang';
-        $data['start']=$row['end'];
         array_push($eventArray, $data);
     }
     $sqlQuery = "SELECT * FROM `aki_izin` WHERE (nik)='".$nik."'";

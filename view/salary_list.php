@@ -101,12 +101,13 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
             <p>- or -</p>
             <div class="input-group input-group-sm">
-                <select name="year" id="year" class="form-control select2">
+                <select name="month" id="month" class="form-control select2">
                     <option value="">Select</option>
                     <?php
                     for ($i = 0; $i < 12; ) {
-                        $date_str = date('Y', strtotime($i++." years"));
-                        echo "<option value=".$date_str .">".$date_str ."</option>";
+                        $date_val = date('m', strtotime($i." months"));
+                        $date_str = date('F', strtotime($i++." months"));
+                        echo "<option value=".$date_val .">".$date_str ."</option>";
                     } ?>
                 </select>
                 
@@ -137,55 +138,15 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
-                    <li><a href="#izin" data-toggle="tab">Izin</a></li>
-                    <li><a href="#izinstngah" data-toggle="tab">Setengah Hari</a></li>
-                    <li><a href="#cuti" data-toggle="tab">Cuti</a></li>
                 </ul>
                 <div class="tab-content">
                     <div class="active tab-pane" id="activity">
                         <div class="mailbox-controls">
                             <!-- Check all button -->
-                            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                            </button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                            </div>
-                            <!-- /.btn-group -->
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                            <div class="pull-right">
-                                1-50/200
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                            </div>
-                            <!-- /.pull-right -->
-                        </div>
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <td class="mailbox-star">NIK</td>
-                                        <td class="mailbox-name">Name</td>
-                                        <td class="mailbox-name">Jan</td>
-                                        <td class="mailbox-name">Feb</td>
-                                        <td class="mailbox-name">Mar</td>
-                                        <td class="mailbox-name">Apr</td>
-                                        <td class="mailbox-name">Mei</td>
-                                        <td class="mailbox-name">Jun</td>
-                                        <td class="mailbox-name">Jul</td>
-                                        <td class="mailbox-name">Ags</td>
-                                        <td class="mailbox-name">Sep</td>
-                                        <td class="mailbox-name">Okt</td>
-                                        <td class="mailbox-name">Nov</td>
-                                        <td class="mailbox-name">Des</td>
-                                        <td class="mailbox-date">Years</td>
-                                    </tr>
-                                </thead>
-                                <?php
+                            <?php
+                                $qm="SELECT * FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik where m.status='Aktif '" . $filter." order by m.nik";
+                                $rs = new MySQLPagedResultSet($qm, 50, $dbLink);
+                                echo $rs->getPageNav($_SERVER['QUERY_STRING']);
                                 if (isset($_GET["skname"])){
                                     $kname = secureParam($_GET["skname"], $dbLink);
                                 }else{
@@ -196,10 +157,10 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                 }else{
                                     $nik = "";
                                 }
-                                if (isset($_GET["year"])){
-                                    $year = secureParam($_GET["year"], $dbLink);
+                                if (isset($_GET["month"])){
+                                    $month = secureParam($_GET["month"], $dbLink);
                                 }else{
-                                    $year = date("Y");
+                                    $month = date("m");
                                 }
                                 if (isset($_GET["gol"])){
                                     $gol = secureParam($_GET["gol"], $dbLink);
@@ -211,356 +172,126 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                 }else{
                                     $status = "";
                                 }
+                            ?>
+                            </button>
+                            <!-- /.btn-group -->
+                            <div class="pull-right">
+                                Data Bulan <?php echo $month;?>
+                                <div class="btn-group">
+                                </div>
+                                <!-- /.btn-group -->
+                            </div>
+                            <!-- /.pull-right -->
+                        </div>
+                        <div class="table-responsive mailbox-messages">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <td class="mailbox-star">NIK</td>
+                                        <td class="mailbox-name">Nama</td>
+                                        <td class="mailbox-name">Absensi</td>
+                                        <td class="mailbox-name">Izin</td>
+                                        <td class="mailbox-name">Izin 1/2 Hari</td>
+                                        <td class="mailbox-name">Cuti</td>
+                                        <td class="mailbox-name">Total Tunjangan</td>
+                                    </tr>
+                                </thead>
+                                <?php
+                                
                                 $filter="";
                                 if ($kname)
                                     $filter = $filter . " AND kname LIKE '%" . $kname . "%'";
                                 if ($nik)
                                     $filter = $filter . " AND nik LIKE '%" . $nik . "%'";
-                                if ($year)
-                                    $filter1 = $filter . " AND year(tanggal)='" . $year . "'";
+                                if ($month)
+                                    $filter1 = $filter . " AND month(tanggal)='" . $month . "'";
                                 if ($gol)
                                     $filter = $filter . " AND g.gol_kerja='" . $gol . "'";
                                 if ($status)
                                     $filter = $filter . " AND m.status='" . $status . "'";
                                 $q = "SELECT nik,Year(tanggal) as years,month(tanggal) as month,COUNT(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6)>if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (scan1) END) AS masuk FROM `aki_absensi` where 1=1 ". $filter1." GROUP by nik,month(tanggal)";
-                                $rs = new MySQLPagedResultSet($q, 500, $dbLink);
-                                $sumhadir=1;
-
+                                $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
                                 $absen=array();
-                                while ($query_data = $rs->fetchArray()) {
-                                    $absen[$query_data['nik']][$query_data['month']]=$query_data['masuk'];
+                                while ($query_data = $rs1->fetchArray()) {
+                                    $absen[$query_data['nik']][$month]=$query_data['masuk'];
                                     $absen['nik']['years']=$query_data['years'];
+                                    $absen[$query_data['nik']]['tunjangan']=$query_data['masuk']*10000;
                                 }
-                                $qm="SELECT * FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik where m.status='Aktif '" . $filter." order by m.nik";
-                                $rs = new MySQLPagedResultSet($qm, 200, $dbLink);
-                                while ($query_data = $rs->fetchArray()) {
-                                    echo '<tbody>
-                                    <tr>
-                                    <td class="mailbox-star">'.$query_data['nik'].'</td>
-                                    <td class="mailbox-name"><a href="read-mail.html"><b>'.$query_data['kname'].'</b></a></td>';
-                                    for ($i=1; $i <= 12; $i++) { 
-                                        echo '<td class="mailbox-subject">';
-                                        if (empty($absen[$query_data['nik']][$i])) {
-                                            echo '0';
-                                        }else{
-                                            echo '<b>'.$absen[$query_data['nik']][$i];
-                                        }echo '</td>';
+                                $q='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,jenis,COUNT(CASE WHEN (TIME_TO_SEC(timediff(end, start)))>=30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time FROM `aki_izin` WHERE jenis!="cuti" '. $filter1.'GROUP by jenis,nik,month(tanggal)';
+                                $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
+                                $absen2=array();
+                                while ($query_data = $rs1->fetchArray()) {
+                                    $absen2[$query_data['nik']][$month]+=$query_data['time'];
+                                    $absen2['nik']['years']=$query_data['years'];
+                                    if ($query_data['jenis'] == 'Izin Meninggalkan Pekerjaan') {
+                                        $absen2[$query_data['nik']]['tunjangan']=$query_data['time']*20000;
+                                    }else if ($query_data['jenis'] == 'Izin Terlambat') {
+                                        $absen2[$query_data['nik']]['tunjangan']+=$query_data['time']*20000;
+                                    }else if ($query_data['jenis'] == 'Izin Sakit') {
+                                        $absen2[$query_data['nik']]['tunjangan']+=$query_data['time']*10000;
+                                    }else if ($query_data['jenis'] == 'Izin Menikah') {
+                                        $absen2[$query_data['nik']]['tunjangan']+=$query_data['time']*10000;
+                                    }else if ($query_data['jenis'] == 'Izin Keluarga Meninggal') {
+                                        $absen2[$query_data['nik']]['tunjangan']+=$query_data['time']*10000;
                                     }
-                                    echo '<td class="mailbox-subject"><b>'.$absen['nik']['years'].'</td>';
-                                    echo '</tr>
-                                    </tbody>';
                                 }
-                                if (!$rs->getNumPages()) {
-                                    echo("<tr class='even'>");
-                                    echo ("<td colspan='10' align='center'>No Data Found!</td>");
-                                    echo("</tr>");
-                                }
-                                ?>
-                            </table>
-                        </div>
-                        <div class="box-footer no-padding">
-                            <div class="mailbox-controls">
-                                <!-- Check all button -->
-                                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                                </button>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                                <div class="pull-right">
-                                    1-50/200
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                                    </div>
-                                    <!-- /.btn-group -->
-                                </div>
-                                <!-- /.pull-right -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="izin">
-                        <div class="mailbox-controls">
-                            <!-- Check all button -->
-                            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                            </button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                            </div>
-                            <!-- /.btn-group -->
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                            <div class="pull-right">
-                                1-50/200
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                            </div>
-                            <!-- /.pull-right -->
-                        </div>
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <td class="mailbox-star">NIK</td>
-                                        <td class="mailbox-name">Name</td>
-                                        <td class="mailbox-name">Jan</td>
-                                        <td class="mailbox-name">Feb</td>
-                                        <td class="mailbox-name">Mar</td>
-                                        <td class="mailbox-name">Apr</td>
-                                        <td class="mailbox-name">Mei</td>
-                                        <td class="mailbox-name">Jun</td>
-                                        <td class="mailbox-name">Jul</td>
-                                        <td class="mailbox-name">Ags</td>
-                                        <td class="mailbox-name">Sep</td>
-                                        <td class="mailbox-name">Okt</td>
-                                        <td class="mailbox-name">Nov</td>
-                                        <td class="mailbox-name">Des</td>
-                                        <td class="mailbox-date">Total</td>
-                                    </tr>
-                                </thead>
-                                <?php
-                                $absen=array();
-                                $q='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,COUNT(CASE WHEN (TIME_TO_SEC(timediff(end, start)))>=30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time FROM `aki_izin` WHERE jenis!="cuti" '. $filter1.'GROUP by nik,month(tanggal)';
-                                $rs = new MySQLPagedResultSet($q, 500, $dbLink);
-                                while ($query_data = $rs->fetchArray()) {
-                                    $absen[$query_data['nik']][$query_data['month']]=$query_data['time'];
-                                    $absen[$query_data['nik']]['years']=$query_data['years'];
-                                }
-                                $rs = new MySQLPagedResultSet($qm, 200, $dbLink);
-                                while ($query_data = $rs->fetchArray()) {
-                                    $total=0;
-                                    echo '<tbody>
-                                    <tr>
-                                    <td class="mailbox-star">'.$query_data['nik'].'</td>
-                                    <td class="mailbox-name"><a href="read-mail.html"><b>'.$query_data['kname'].'</b></a></td>';
-                                    for ($i=1; $i <= 12; $i++) { 
-                                        echo '<td class="mailbox-subject">';
-                                        if (empty($absen[$query_data['nik']][$i])) {
-                                            echo '0';
-                                        }else{
-                                            echo '<b>'.$absen[$query_data['nik']][$i];
-                                        }echo '</td>';
-                                        $total+=$absen[$query_data['nik']][$i];
+                                $q='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,jenis,sum(CASE WHEN (TIME_TO_SEC(timediff(end, start)))<30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time,count(nik) as jml FROM `aki_izin` WHERE 1 and jenis="Izin 1/2 Hari"'. $filter1.' GROUP by nik,month(tanggal)';
+                                $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
+                                $absen3=array();
+                                while ($query_data = $rs1->fetchArray()) {
+                                    $absen3[$query_data['nik']][$month]=gmdate("H:i:s", $query_data['time']);
+                                    $absen3[$query_data['nik']]['years']=$query_data['years'];
+                                    if ($query_data['jenis'] == 'Izin 1/2 Hari') {
+                                        $absen3[$query_data['nik']]['tunjangan']=$query_data['jml']*20000;
                                     }
-                                    echo '<td class="mailbox-subject"><b>'.$total.'</td>';
-                                    echo '</tr>
-                                    </tbody>';
                                 }
-                                if (!$rs->getNumPages()) {
-                                    echo("<tr class='even'>");
-                                    echo ("<td colspan='10' align='center'>No Data Found!</td>");
-                                    echo("</tr>");
-                                }
-                                ?>
-                            </table>
-                        </div>
-                        <div class="box-footer no-padding">
-                            <div class="mailbox-controls">
-                                <!-- Check all button -->
-                                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                                </button>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                                <div class="pull-right">
-                                    1-50/200
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                                    </div>
-                                    <!-- /.btn-group -->
-                                </div>
-                                <!-- /.pull-right -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="izinstngah">
-                        <div class="mailbox-controls">
-                            <!-- Check all button -->
-                            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                            </button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                            </div>
-                            <!-- /.btn-group -->
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                            <div class="pull-right">
-                                1-50/200
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                            </div>
-                            <!-- /.pull-right -->
-                        </div>
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <td class="mailbox-star">NIK</td>
-                                        <td class="mailbox-name">Name</td>
-                                        <td class="mailbox-name">Jan</td>
-                                        <td class="mailbox-name">Feb</td>
-                                        <td class="mailbox-name">Mar</td>
-                                        <td class="mailbox-name">Apr</td>
-                                        <td class="mailbox-name">Mei</td>
-                                        <td class="mailbox-name">Jun</td>
-                                        <td class="mailbox-name">Jul</td>
-                                        <td class="mailbox-name">Ags</td>
-                                        <td class="mailbox-name">Sep</td>
-                                        <td class="mailbox-name">Okt</td>
-                                        <td class="mailbox-name">Nov</td>
-                                        <td class="mailbox-name">Des</td>
-                                        <td class="mailbox-date">Years</td>
-                                    </tr>
-                                </thead>
-                                <?php
-                                $absen=array();
-                                $q='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,sum(CASE WHEN (TIME_TO_SEC(timediff(end, start)))<30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time FROM `aki_izin` WHERE 1 '. $filter1.' GROUP by nik,month(tanggal)';
-                                $rs = new MySQLPagedResultSet($q, 500, $dbLink);
-                                while ($query_data = $rs->fetchArray()) {
-                                    $absen[$query_data['nik']][$query_data['month']]=gmdate("H:i:s", $query_data['time']);
-                                    $absen[$query_data['nik']]['years']=$query_data['years'];
-                                }
-                                $rs = new MySQLPagedResultSet($qm, 200, $dbLink);
-                                while ($query_data = $rs->fetchArray()) {
-                                    echo '<tbody>
-                                    <tr>
-                                    <td class="mailbox-star">'.$query_data['nik'].'</td>
-                                    <td class="mailbox-name"><a href="read-mail.html"><b>'.$query_data['kname'].'</b></a></td>';
-                                    for ($i=1; $i <= 12; $i++) { 
-                                        echo '<td class="mailbox-subject">';
-                                        if (empty($absen[$query_data['nik']][$i])) {
-                                            echo '00:00:00';
-                                        }else{
-                                            echo '<b>'.$absen[$query_data['nik']][$i];
-                                        }echo '</td>';
-                                    }
-                                    echo '<td class="mailbox-subject"><b>'.$absen[$query_data['nik']]['years'].'</td>';
-                                    echo '</tr>
-                                    </tbody>';
-                                }
-                                if (!$rs->getNumPages()) {
-                                    echo("<tr class='even'>");
-                                    echo ("<td colspan='10' align='center'>No Data Found!</td>");
-                                    echo("</tr>");
-                                }
-                                ?>
-                            </table>
-                        </div>
-                        <div class="box-footer no-padding">
-                            <div class="mailbox-controls">
-                                <!-- Check all button -->
-                                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                                </button>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                                <div class="pull-right">
-                                    1-50/200
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                                    </div>
-                                    <!-- /.btn-group -->
-                                </div>
-                                <!-- /.pull-right -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="cuti">
-                        <div class="mailbox-controls">
-                            <!-- Check all button -->
-                            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                            </button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                            </div>
-                            <!-- /.btn-group -->
-                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                            <div class="pull-right">
-                                1-50/200
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                            </div>
-                            <!-- /.pull-right -->
-                        </div>
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <td class="mailbox-star">NIK</td>
-                                        <td class="mailbox-name">Name</td>
-                                        <td class="mailbox-name">Jan</td>
-                                        <td class="mailbox-name">Feb</td>
-                                        <td class="mailbox-name">Mar</td>
-                                        <td class="mailbox-name">Apr</td>
-                                        <td class="mailbox-name">Mei</td>
-                                        <td class="mailbox-name">Jun</td>
-                                        <td class="mailbox-name">Jul</td>
-                                        <td class="mailbox-name">Ags</td>
-                                        <td class="mailbox-name">Sep</td>
-                                        <td class="mailbox-name">Okt</td>
-                                        <td class="mailbox-name">Nov</td>
-                                        <td class="mailbox-name">Des</td>
-                                        <td class="mailbox-date">Total</td>
-                                    </tr>
-                                </thead>
-                                <?php
-                                
-                                $q = "SELECT *,Year(tanggal) as years,month(tanggal) as month,COUNT(jenis) as cuti FROM aki_izin where jenis='Cuti' and Year(tanggal)=YEAR(CURDATE()) GROUP BY nik,month(tanggal)";
-                                $rs = new MySQLPagedResultSet($q, 500, $dbLink);
-                                $absen=array();
-                                while ($query_data = $rs->fetchArray()) {
+                                $q = "SELECT *,Year(tanggal) as years,month(tanggal) as month,COUNT(jenis) as cuti FROM aki_izin where jenis='Cuti' ". $filter1." GROUP BY nik,month(tanggal)";
+                                $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
+                                $absen4=array();
+                                while ($query_data = $rs1->fetchArray()) {
                                     if (empty($query_data['cuti'])) {
-                                        $absen[$query_data['nik']][$query_data['month']]=0;
+                                        $absen4[$query_data['nik']][$month]=0;
                                     }else{
-                                        $absen[$query_data['nik']][$query_data['month']]=$query_data['cuti'];
+                                        $absen4[$query_data['nik']][$month]=$query_data['cuti'];
                                     }
-                                    $absen[$query_data['nik']]['years']=$query_data['years'];
+                                    if (strpos($query_data['keterangan'], 'Tahunan') !== FALSE) {
+                                        $absen4[$query_data['nik']]['tunjangan']=$query_data['cuti']*30000;
+                                    }
+                                    $absen4[$query_data['nik']]['years']=$query_data['years'];
                                 }
-                                $rs = new MySQLPagedResultSet($qm, 200, $dbLink);
+
                                 while ($query_data = $rs->fetchArray()) {
-                                    $total=0;
                                     echo '<tbody>
                                     <tr>
                                     <td class="mailbox-star">'.$query_data['nik'].'</td>
-                                    <td class="mailbox-name"><a href="read-mail.html"><b>'.$query_data['kname'].'</b></a></td>';
-                                    for ($i=1; $i <= 12; $i++) { 
-                                        echo '<td class="mailbox-subject">';
-                                        if (empty($absen[$query_data['nik']][$i])) {
-                                            echo '0';
-                                        }else{
-                                            echo '<b>'.$absen[$query_data['nik']][$i];
-                                        }echo '</td>';
-                                        $total+=$absen[$query_data['nik']][$i];
+                                    <td class="mailbox-name"><b>'.$query_data['kname'].'</b></td>';
+                                    echo '<td class="mailbox-name">';
+                                    if (empty($absen[$query_data['nik']][$month])) {
+                                        echo '0';
+                                    }else{
+                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen['nik']['years'].'-'.$i.'"><b>'.$absen[$query_data['nik']][$month];
+                                    }echo '</a></td>';
+                                    echo '<td class="mailbox-name">';
+                                    if (empty($absen2[$query_data['nik']][$month])) {
+                                        echo '0';
+                                    }else{
+                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen2['nik']['years'].'-'.$i.'"><b>'.$absen2[$query_data['nik']][$month];
+                                    }echo '</a></td>';
+                                    echo '<td class="mailbox-name">';
+                                    if (empty($absen3[$query_data['nik']][$month])) {
+                                        echo '0';
+                                    }else{
+                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen3['nik']['years'].'-'.$i.'"><b>'.$absen3[$query_data['nik']][$month];
+                                    }echo '</a></td>';
+                                    echo '<td class="mailbox-name">';
+                                    if (empty($absen4[$query_data['nik']][$month])) {
+                                        echo '0';
+                                    }else{
+                                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'&month='.$absen4['nik']['years'].'-'.$i.'"><b>'.$absen4[$query_data['nik']][$month];
                                     }
-                                    echo '<td class="mailbox-subject"><b>'.$total.'</td>';
-                                    echo '</tr>
-                                    </tbody>';
+                                    $result = $absen[$query_data['nik']]['tunjangan']+$absen2[$query_data['nik']]['tunjangan']+$absen3[$query_data['nik']]['tunjangan']+$absen4[$query_data['nik']]['tunjangan'];
+                                    echo '</a></td><td>Rp '.number_format($result).'</td>';
+                                    echo '</tr></tbody>';
                                 }
                                 if (!$rs->getNumPages()) {
                                     echo("<tr class='even'>");
@@ -568,29 +299,14 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                     echo("</tr>");
                                 }
                                 ?>
+
                             </table>
                         </div>
                         <div class="box-footer no-padding">
                             <div class="mailbox-controls">
-                                <!-- Check all button -->
-                                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                                </button>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                                <div class="pull-right">
-                                    1-50/200
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                                    </div>
-                                    <!-- /.btn-group -->
-                                </div>
-                                <!-- /.pull-right -->
+                                <?php
+                                    echo $rs->getPageNav($_SERVER['QUERY_STRING']);
+                                ?>
                             </div>
                         </div>
                     </div>

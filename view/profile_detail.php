@@ -97,15 +97,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 <input name="txtTglTransaksi" id="txtTglTransaksi" maxlength="30" class="form-control" 
                 value="<?php ?>" placeholder="Active" onKeyPress="return handleEnter(this, event)"></div>
           </div>
-          <div class="form-group" >
-            <label class="control-label" for="txtTglTransaksi">Position</label>
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                </div>
-                <input name="txtTglTransaksi" id="txtTglTransaksi" maxlength="30" class="form-control" 
-                value="<?php ?>" placeholder="Active" onKeyPress="return handleEnter(this, event)"></div>
-          </div>
+          
         </div>
       </div>
     </form>
@@ -115,18 +107,21 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     <div class="col-md-9">
       <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
+          <li class="active"><a href="#activity" data-toggle="tab">Posisi</a></li>
           <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
           <li><a href="#settings" data-toggle="tab">Settings</a></li>
         </ul>
         <div class="tab-content">
           <div class="active tab-pane" id="activity">
             <div class="box box-primary">
-              <div class="box-body no-padding">
-                <!-- THE CALENDAR -->
-                <div id="calendar"></div>
+              <div class="box-body no-padding"><br>
+                <label class="control-label" for="txtTglTransaksi">Golongan Kerja</label>
+                <div class="form-group" >
+                  <div class="input-group">
+                    <select class="form-control select2" name="cbogol" id="cbogol"><option>Manajemen</option><option>Produksi</option></select>
+                  </div>
+                </div>
               </div>
-              <!-- /.box-body -->
             </div>
           </div>
           <!-- /.tab-pane -->

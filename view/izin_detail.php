@@ -73,8 +73,19 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     }
     function myFunction(tcounter) {
         var x = document.getElementById("txtJenis_"+tcounter).value;
-        if (x=='Cuti') {
+        if (x.match(/Cuti.*/)) {
             $("#txtKet_"+tcounter).val(x);
+            $("#txtAwal_"+tcounter).val('07:30 AM');
+            $("#txtAkhir_"+tcounter).val('04:00 PM');
+        }else if(x == 'Izin Tidak Masuk'){
+            $("#txtAwal_"+tcounter).val('07:30 AM');
+            $("#txtAkhir_"+tcounter).val('04:00 PM');
+        }else if(x == 'Izin Sakit'){
+            $("#txtKet_"+tcounter).val('Sakit');
+            $("#txtAwal_"+tcounter).val('07:30 AM');
+            $("#txtAkhir_"+tcounter).val('04:00 PM');
+        }else if(x == 'Izin Menikah'){
+            $("#txtKet_"+tcounter).val('Menikah');
             $("#txtAwal_"+tcounter).val('07:30 AM');
             $("#txtAkhir_"+tcounter).val('04:00 PM');
         }else{
@@ -98,7 +109,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         var td = document.createElement("TD");
         td.setAttribute("align","left");
         td.style.verticalAlign = 'top';
-        td.innerHTML+='<div class="form-group"><select onchange="myFunction('+tcounter+')" class="form-control" name="txtJenis_'+tcounter+'" id="txtJenis_'+tcounter+'"><option value="Dinas">Dinas</option><option value="Sakit">Sakit</option><option value="Umum">Umum</option><option value="Khusus">Khusus</option><option value="Cuti">Cuti</option></select></div>';
+        td.innerHTML+='<div class="form-group"><select onchange="myFunction('+tcounter+')" class="form-control" name="txtJenis_'+tcounter+'" id="txtJenis_'+tcounter+'"><option value="Dinas">Dinas</option><option value="Izin Tidak Masuk">Izin Tidak Masuk</option><option value="Izin 1/2 Hari">Izin 1/2 Hari</option><option value="Izin Meninggalkan Pekerjaan">Izin Meninggalkan Pekerjaan</option><option value="Izin Terlambat">Izin Terlambat</option><option value="Izin Sakit">Izin Sakit</option><option value="Izin Menikah">Izin Menikah</option><option value="Izin Keluarga Meninggal">Izin Keluarga Meninggal</option><option value="Cuti Tahunan">Cuti Tahunan</option><option value="Cuti Melahirkan">Cuti Melahirkan</option></select></div>';
         trow.appendChild(td);
 
         //Kolom 3 tanggal
@@ -244,11 +255,11 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <thead>
                         <tr>
                            <th style="width: 1%"><i class='fa fa-edit'></i></th>
-                           <th style="width: 10%">Jenis Izin</th>
-                           <th style="width: 15%">Tanggal</th>
-                           <th style="width: 10%">Jam Awal</th>
-                           <th style="width: 10%">Jam Akhir</th>
-                           <th style="width: 40%">Keterangan</th>
+                           <th style="width: 15%">Jenis Izin</th>
+                           <th style="width: 10%">Tanggal</th>
+                           <th style="width: 8%">Jam Awal</th>
+                           <th style="width: 8%">Jam Akhir</th>
+                           <th style="width: 30%">Keterangan</th>
                         </tr>
                     </thead>
                     <tbody id="kendali">
@@ -258,7 +269,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                 $sql_izin = mysql_query($q,$dbLink);
                                 while($rs_izin = mysql_fetch_assoc($sql_izin)){ 
                                     echo '<td><div class="form-group"><input type="checkbox" class="minimal" name="chkAddJurnal_0" id="chkAddJurnal_0" value="1" checked /></div></td>';
-                                    echo '<td><div class="form-group"><select class="form-control" name="txtJenis_0" id="txtJenis_0"><option value="'.$rs_izin['jenis'].'" selected>'.$rs_izin['jenis'].'</option><option value="Dinas">Dinas</option><option value="Sakit">Sakit</option><option value="Umum">Umum</option><option value="Khusus">Khusus</option></select></div></td>';
+                                    echo '<td><div class="form-group"><select class="form-control" name="txtJenis_0" id="txtJenis_0"><option value="'.$rs_izin['jenis'].'" selected>'.$rs_izin['jenis'].'</option><option value="Dinas">Dinas</option><option value="Izin Tidak Masuk">Izin Tidak Masuk</option><option value="Izin 1/2 Hari">Izin 1/2 Hari</option><option value="Izin Meninggalkan Pekerjaan">Izin Meninggalkan Pekerjaan</option><option value="Izin Terlambat">Izin Terlambat</option><option value="Izin Sakit">Izin Sakit</option><option value="Izin Menikah">Izin Menikah</option><option value="Izin Keluarga Meninggal">Izin Keluarga Meninggal</option><option value="Cuti Tahunan">Cuti Tahunan</option><option value="Cuti Melahirkan">Cuti Melahirkan</option></select></div></td>';
                                     echo '<td><div class="form-group"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right" name="txtdatepicker_0" id="txtdatepicker_0" value="'.date("m/d/Y", strtotime($rs_izin['tanggal'])).'"></div></div></td>';
                                     echo '<td><div class="bootstrap-timepicker"><div class="form-group"><input type="text" class="form-control timepicker" name="txtAwal_0" id="txtAwal_0" value="'.date("h:i a", strtotime($rs_izin['start'])).'"></div></div></td>';
                                     echo '<td><div class="bootstrap-timepicker"><div class="form-group"><input type="text" class="form-control timepicker" name="txtAkhir_0" id="txtAkhir_0" value="'.date("h:i a", strtotime($rs_izin['end'])).'"></div></div></td>';

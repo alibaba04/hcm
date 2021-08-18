@@ -144,7 +144,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
             <div class="box-body no-padding">
               <ul class="nav nav-pills nav-stacked">
-                <li  id="btnall"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage; ?>" ><i class="fa fa-inbox"></i> All</a></li>
                 <li id="btnmnjemen"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage.'&gol=Manajemen'; ?>" ><i class="fa fa-inbox"></i> Manajemen</a></li>
                 <li id="btnproduksi"><a href="<?php echo $_SERVER['PHP_SELF'].'?page='.$curPage.'&gol=Produksi'; ?>"><i class="fa fa-envelope-o"></i> Produksi</a></li>
                 </li>
@@ -181,7 +180,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 if (isset($_GET["status"])){
                     $status = secureParam($_GET["status"], $dbLink);
                 }else{
-                    $status = "";
+                    $status = "Aktif";
                 }
                 //Set Filter berdasarkan query string
                 $filter="";

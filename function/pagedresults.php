@@ -76,23 +76,26 @@ class MySQLPagedResultSet
 	
 	
     $nav = '';
+	$nav .= "<button type='button' class='btn btn-default btn-sm'><a href=\"?resultpage=".
+	($this->getPageNum()-1)."&".$queryvars."\"><i class='fa fa-chevron-left'></i></a></button>";
+	$nav .= "<button type='button' class='btn btn-default btn-sm'><a href=\"?resultpage=".
+	($this->getPageNum()+1)."&".$queryvars."\"><i class='fa fa-chevron-right'></i></a></button>";
 	$nav.="".number_format(mysql_num_rows($this->results), 0, ',', '.')." Records. Page: ".$this->page."/".$this->getNumPages()." &nbsp; ";
-      
-   
-   if (!$this->isFirstPage())
-    {
-		 $nav .= "<a href=\"?resultpage=1&".$queryvars."\">First</a> ";
-  
-	       if ($this->page > 10) {
-		   $nav .= "<a href=\"?resultpage=".
-              ($this->getPageNum()-10)."&".$queryvars."\">Prev 10</a> ";
-   }
- 
-		 $nav .= "<a href=\"?resultpage=".
-              ($this->getPageNum()-1)."&".$queryvars."\">Prev</a> ";
-    }
+
+	/*if (!$this->isFirstPage())
+	{
+		$nav .= "<a href=\"?resultpage=1&".$queryvars."\">First</a> ";
+
+		if ($this->page > 10) {
+			$nav .= "<a href=\"?resultpage=".
+			($this->getPageNum()-10)."&".$queryvars."\">Prev 10</a> ";
+		}
+
+		$nav .= "<a href=\"?resultpage=".
+		($this->getPageNum()-1)."&".$queryvars."\">Prev</a> ";
+	}*/
 		
-    if ($this->getNumPages() > 1){
+    /*if ($this->getNumPages() > 1){
 	
 	 if  ($this->getNumPages()<=10) { // kalau halaman kurang dari 10
 		  for ($i=1; $i<=$this->getNumPages(); $i++)
@@ -135,27 +138,21 @@ class MySQLPagedResultSet
 					  $queryvars."\">{$i}</a> ";
 		  }
 	  }
-	}
+	}*/
 	  
-    if (!$this->isLastPage())
-    {
-      $nav .= "<a href=\"?resultpage=".
-              ($this->getPageNum()+1).'&'.$queryvars.'">Next</a> ';
-			  
-			  
-			  
-			  
-	if ($this->page + 5 <  $this->getNumPages() ) {
-	      $nav .= "<a href=\"?resultpage=".
-              ($this->getPageNum()+10).'&'.$queryvars.'">Next 10</a> ';
-   	}
-	
-	  $nav .= "<a href=\"?resultpage=".
-              ($this->getNumPages()).'&'.$queryvars.'">Last</a> ';
-			  
-	
-	
-    }
+	/*if (!$this->isLastPage())
+	{
+		$nav .= "<a href=\"?resultpage=".
+		($this->getPageNum()+1).'&'.$queryvars.'">Next</a> ';
+
+		if ($this->page + 5 <  $this->getNumPages() ) {
+			$nav .= "<a href=\"?resultpage=".
+			($this->getPageNum()+10).'&'.$queryvars.'">Next 10</a> ';
+		}
+
+		$nav .= "<a href=\"?resultpage=".
+		($this->getNumPages()).'&'.$queryvars.'">Last</a> ';
+	}*/
 	
 	
     

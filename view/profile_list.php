@@ -1,4 +1,4 @@
-<?php
+  <?php
 //=======  : Alibaba
 //Memastikan file ini tidak diakses secara langsung (direct access is not allowed)
 defined('validSession') or die('Restricted access');
@@ -53,6 +53,10 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     if ($dataKaryawan = mysql_fetch_array($rsTemp)) {
         echo "<input type='hidden' id='nik' name='nik' value='" . $dataKaryawan["nik"] . "'>";
     } 
+    if (isset($_GET["month"])){
+        $month = secureParam($_GET["month"], $dbLink);
+        echo "<input type='hidden' id='month' name='month' value='" . $month . "'>";
+    }
 ?>
 <!-- Main content -->
 <section class="content">
@@ -192,7 +196,11 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 event.allDay = false;
             }
         },
-
     });
+    var month = $('#month').val();
+    if (month!='') {
+      calendar.fullCalendar( 'gotoDate', month );
+    }
+    
 });
 </script>

@@ -145,6 +145,21 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         }else{
                             $tgl = "";
                         }
+                        if (isset($_GET["smonth"])){
+                            $smonth = secureParam($_GET["smonth"], $dbLink);
+                        }else{
+                            $smonth = "";
+                        }
+                        if (isset($_GET["syear"])){
+                            $syear = secureParam($_GET["syear"], $dbLink);
+                        }else{
+                            $syear = "";
+                        }
+                        if (isset($_GET["stype"])){
+                            $stype = secureParam($_GET["stype"], $dbLink);
+                        }else{
+                            $stype = "";
+                        }
                         //Set Filter berdasarkan query string
                         $filter="";
                         if ($kname)
@@ -153,6 +168,12 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                             $filter = $filter . " AND z.nik LIKE '%" . $nik . "%'";
                         if ($tgl)
                             $filter = $filter . " AND z.tanggal LIKE '%" .date("Y-m-d", strtotime($tgl)) . "%'";
+                        if ($smonth)
+                            $filter = $filter . " AND  month(z.tanggal) LIKE '%" . $smonth . "%'";
+                        if ($syear)
+                            $filter = $filter . " AND  year(z.tanggal) LIKE '%" . $syear . "%'";
+                        if ($stype)
+                            $filter = $filter . " AND  z.jenis LIKE '%" . $stype . "%'";
                         //database
                         $q = "SELECT * ";
                         $q.= "FROM `aki_izin` z left join aki_tabel_master m on m.nik=z.nik";
