@@ -203,44 +203,87 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                 
                                 $filter1="";
                                 if ($month)
-                                    $filter1 = $filter1 . " AND tanggal BETWEEN '" . date("Y") . "-".($month-1)."-26' and '". date("Y")."-".$month."-25'";
-                                $q = "SELECT nik,Year(tanggal) as years,month(tanggal) as month,COUNT(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6)>if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (scan1) END) AS masuk FROM `aki_absensi` where 1=1 ". $filter1." GROUP by nik";
+                                    $filter1 = $filter1 . " AND tanggal BETWEEN '" . date("Y") . "-".($month-1)."-25' and '". date("Y")."-".$month."-26'";
+                                $q = "SELECT ab.nik,um,transport,komunikasi,Year(tanggal) as years,month(tanggal) as month,COUNT(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6)>if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (scan1) END) AS masuk FROM `aki_absensi`ab left join aki_tunjangan t on ab.nik=t.nik where 1=1 ". $filter1." GROUP by nik";
                                 $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
                                 $absen=array();
                                 while ($query_data = $rs1->fetchArray()) {
                                     $absen[$query_data['nik']][$month]=$query_data['masuk'];
                                     $absen['nik']['years']=$query_data['years'];
-                                    $absen[$query_data['nik']]['tunjangan']=$query_data['masuk']*10000;
+                                    $tunjangan = 0;
+                                    if ($query_data['um']==1) {
+                                        $tunjangan=$query_data['masuk']*10000;
+                                    }
+                                    if($query_data['transport']==1){
+                                        $tunjangan=$tunjangan+$query_data['masuk']*10000;
+                                    }
+                                    if($query_data['komunikasi']==1){
+                                        $tunjangan=$tunjangan+$query_data['masuk']*10000;
+                                    }
+                                    $absen[$query_data['nik']]['tunjangan']=$tunjangan;
                                 }
-                                $q='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,jenis,COUNT(CASE WHEN (TIME_TO_SEC(timediff(end, start)))>=30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time FROM `aki_izin` WHERE jenis!="cuti" '. $filter1.'GROUP by jenis,nik,month(tanggal)';
+                                $q='SELECT az.nik,um,transport,komunikasi,Year(tanggal) as years,month(tanggal) as month ,jenis,COUNT(CASE WHEN (TIME_TO_SEC(timediff(end, start)))>=30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time FROM `aki_izin`az left join aki_tunjangan t on az.nik=t.nik WHERE aktif=1 and jenis!="cuti" '. $filter1.'GROUP by jenis,nik';
                                 $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
                                 $absen2=array();
                                 while ($query_data = $rs1->fetchArray()) {
                                     $absen2[$query_data['nik']][$month]+=$query_data['time'];
                                     $absen2['nik']['years']=$query_data['years'];
                                     if ($query_data['jenis'] == 'Izin Meninggalkan Pekerjaan') {
-                                        $absen2[$query_data['nik']]['tunjangan']=$query_data['time']*20000;
+                                        $tunjangan = 0;
+                                        if($query_data['transport']==1){
+                                            $tunjangan=$tunjangan+$query_data['masuk']*10000;
+                                        }
+                                        if($query_data['komunikasi']==1){
+                                            $tunjangan=$tunjangan+$query_data['masuk']*10000;
+                                        }
+                                        $absen2[$query_data['nik']]['tunjangan']+=$tunjangan;
                                     }else if ($query_data['jenis'] == 'Izin Terlambat') {
-                                        $absen2[$query_data['nik']]['tunjangan']+=$query_data['time']*20000;
+                                        $tunjangan = 0;
+                                        if($query_data['transport']==1){
+                                            $tunjangan=$tunjangan+$query_data['masuk']*10000;
+                                        }
+                                        if($query_data['komunikasi']==1){
+                                            $tunjangan=$tunjangan+$query_data['masuk']*10000;
+                                        }
+                                        $absen2[$query_data['nik']]['tunjangan']+=$tunjangan;
                                     }else if ($query_data['jenis'] == 'Izin Sakit') {
-                                        $absen2[$query_data['nik']]['tunjangan']+=$query_data['time']*10000;
+                                        $tunjangan = 0;
+                                        if($query_data['komunikasi']==1){
+                                            $tunjangan=$tunjangan+$query_data['masuk']*10000;
+                                        }
+                                        $absen2[$query_data['nik']]['tunjangan']+=$tunjangan;
                                     }else if ($query_data['jenis'] == 'Izin Menikah') {
-                                        $absen2[$query_data['nik']]['tunjangan']+=$query_data['time']*10000;
+                                        $tunjangan = 0;
+                                        if($query_data['komunikasi']==1){
+                                            $tunjangan=$tunjangan+$query_data['masuk']*10000;
+                                        }
+                                        $absen2[$query_data['nik']]['tunjangan']+=$tunjangan;
                                     }else if ($query_data['jenis'] == 'Izin Keluarga Meninggal') {
-                                        $absen2[$query_data['nik']]['tunjangan']+=$query_data['time']*10000;
+                                        $tunjangan = 0;
+                                        if($query_data['komunikasi']==1){
+                                            $tunjangan=$tunjangan+$query_data['masuk']*10000;
+                                        }
+                                        $absen2[$query_data['nik']]['tunjangan']+=$tunjangan;
                                     }
                                 }
-                                $q='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,jenis,sum(CASE WHEN (TIME_TO_SEC(timediff(end, start)))<30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time,count(nik) as jml FROM `aki_izin` WHERE 1 and jenis="Izin 1/2 Hari"'. $filter1.' GROUP by nik,month(tanggal)';
+                                $q='SELECT az.nik,um,transport,komunikasi,Year(tanggal) as years,month(tanggal) as month ,jenis,sum(CASE WHEN (TIME_TO_SEC(timediff(end, start)))<30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time,count(az.nik) as jml FROM `aki_izin` az left join aki_tunjangan t on az.nik=t.nik WHERE aktif=1 and 1 and jenis="Izin 1/2 Hari"'. $filter1.' GROUP by az.nik';
                                 $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
                                 $absen3=array();
                                 while ($query_data = $rs1->fetchArray()) {
                                     $absen3[$query_data['nik']][$month]=gmdate("H:i:s", $query_data['time']);
                                     $absen3[$query_data['nik']]['years']=$query_data['years'];
                                     if ($query_data['jenis'] == 'Izin 1/2 Hari') {
-                                        $absen3[$query_data['nik']]['tunjangan']=$query_data['jml']*20000;
+                                        $tunjangan = 0;
+                                        if($query_data['transport']==1){
+                                            $tunjangan=$tunjangan+$query_data['jml']*10000;
+                                        }
+                                        if($query_data['komunikasi']==1){
+                                            $tunjangan=$tunjangan+$query_data['jml']*10000;
+                                        }
+                                        $absen3[$query_data['nik']]['tunjangan']+=$tunjangan;
                                     }
                                 }
-                                $q = "SELECT *,Year(tanggal) as years,month(tanggal) as month,COUNT(jenis) as cuti FROM aki_izin where jenis='Cuti' ". $filter1." GROUP BY nik,month(tanggal)";
+                                $q = "SELECT az.*,um,transport,komunikasi,Year(tanggal) as years,month(tanggal) as month,COUNT(jenis) as cuti FROM aki_izin az left join aki_tunjangan t on az.nik=t.nik where aktif=1 and jenis='Cuti' ". $filter1." GROUP BY az.nik";
                                 $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
                                 $absen4=array();
                                 while ($query_data = $rs1->fetchArray()) {

@@ -331,7 +331,7 @@ function AddPage($orientation='', $size='', $rotation=0)
 	$this->ColorFlag = $cf;
 	// Page header
 	$this->InHeader = true;
-	$this->Header();
+	//$this->Header();
 	$this->InHeader = false;
 	// Restore line width
 	if($this->LineWidth!=$lw)
@@ -357,13 +357,22 @@ function AddPage($orientation='', $size='', $rotation=0)
 	$this->ColorFlag = $cf;
 }
 
-function Header()
-{
-	$this->SetMargins(12, 20, 10, true);
-    $this->image('../dist/img/cop-aki.jpg',12,12,190,30);
-    // Line break
-    $this->Ln(35);
-}
+// function Header()
+// {
+// 	if ( $this->PageNo() !== 1 ) {
+// 		$this->SetFont('helvetica', 'B', 8.5); 
+// 		$this->SetFillColor(230, 172, 48);
+// 		$this->Cell(6,6,'No',1,0,'C',1);
+// 		$this->Cell(50,6,'Name',1,0,'C',1);
+// 		for ($i = 1; $i <= 12; ) {
+// 			$dateObj   = DateTime::createFromFormat('!m', $i);
+// 			$monthName = $dateObj->format('F'); 
+// 			$this->Cell(18,6,$monthName,1,0,'C',1);
+// 			$i++;
+// 		} 
+// 		$this->Cell(1,6,'',0,1,'C',0);
+//     }
+// }
 
 function Footer()
 {

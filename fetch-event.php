@@ -63,6 +63,17 @@ $nik = $_GET['nik'];
         $data['end']=$row['tanggal'].' '.$row['end'];
         array_push($eventArray, $data);
     }
+    mysqli_free_result($result);$sqlQuery = "SELECT * FROM `aki_libur` WHERE 1";
+
+    $result = mysqli_query($dbLink, $sqlQuery);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $data =array();
+        $data['backgroundColor']='#fc030f';
+        $data['title']=$row['keterangan'];
+        $data['start']=$row['tanggal'].' 00:00:00';
+        $data['end']=$row['tanggal'].' 00:00:00';
+        array_push($eventArray, $data);
+    }
     mysqli_free_result($result);
     $sqlQuery = "SELECT 'Scan 3 ' as 'title', CONCAT(tanggal,' ',scan3) as 'start',CONCAT(tanggal,' ',scan3) as 'end',scan3 FROM `aki_absensi` WHERE (nik)='".$nik."'";
 
