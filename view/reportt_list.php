@@ -46,18 +46,24 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         });
     });
     function topdf() {
+        var gol = '';
+        if ($("#txtGol").val()==2) {
+            gol = 'Manajemen';
+        }else if($("#txtGol").val()==3){
+            gol = 'Produksi';
+        }
         if ($("#txtJenis").val() == 1) {
-            location.href='pdf/pdf_absensi.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val();
+            location.href='pdf/pdf_absensi.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
         }else if($("#txtJenis").val() == 2){
-            location.href='pdf/pdf_absensi2.php?&years='+$("#txtTahun").val();
+            location.href='pdf/pdf_absensi2.php?&years='+$("#txtTahun").val()+'&gol='+gol;
         }else if($("#txtJenis").val() == 3){
-            location.href='pdf/pdf_absensi3.php?&years='+$("#txtTahun").val();
+            location.href='pdf/pdf_absensi3.php?&years='+$("#txtTahun").val()+'&gol='+gol;
         }else if($("#txtJenis").val() == 4){
-            location.href='pdf/pdf_absensi4.php?&years='+$("#txtTahun").val();
+            location.href='pdf/pdf_absensi4.php?&years='+$("#txtTahun").val()+'&gol='+gol;
         }else if($("#txtJenis").val() == 5){
-            location.href='pdf/pdf_absensi5.php?&years='+$("#txtTahun").val();
+            location.href='pdf/pdf_absensi5.php?&years='+$("#txtTahun").val()+'&gol='+gol;
         }else if($("#txtJenis").val() == 6){
-            location.href='pdf/pdf_absensi6.php?&years='+$("#txtTahun").val();
+            location.href='pdf/pdf_absensi6.php?&years='+$("#txtTahun").val()+'&gol='+gol;
         }
         
     }
@@ -97,6 +103,11 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                             echo "<option value=".$month_val .">".$month_str ."</option>";
                         } 
                     ?>
+                </select><br>
+                <select class="form-control" name="txtGol" id="txtGol" >
+                    <option value="1">All</option>
+                    <option value="2">Kantor</option>
+                    <option value="3">Produksi</option>
                 </select>
             </div>
             <div class="modal-footer">
