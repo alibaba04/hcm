@@ -19,14 +19,7 @@
         $absen[$labsen['nik']][$labsen['day']]=$labsen['masuk'];
         $absen[$labsen['nik']]['hk']=$labsen['masuk'];
     }
-    $qabsenC = "SELECT nik,DAYNAME(tanggal) dayname,day(tanggal) as day,month(tanggal) as month,year(tanggal) as year,(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN COUNT(nik) END) AS masuk FROM `aki_absensi` where tanggal BETWEEN '".$tgl1."' and '".$tgl2."' group by nik order by nik,month,day";
-    $resultC=mysqli_query($dbLink,$qabsenC);
-    $absenC=array();
-    $tot=0;
-    while ($labsenC = mysqli_fetch_array($resultC)) {
-        $tot++;
-        $absenC[$labsenC['nik']]['hk']=$labsenC['masuk'];
-    }
+    
     $absen2=array();
     $qizin="SELECT nik,Year(tanggal) as years,month(tanggal) as month ,day(tanggal) as day ,jenis,sum(CASE WHEN (TIME_TO_SEC(timediff(end, start)))<30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time,count(nik) as jml FROM `aki_izin` WHERE aktif=1 and tanggal BETWEEN '".$tgl1."' and '".$tgl2."' group by nik,tanggal";
     $result1=mysqli_query($dbLink,$qizin);
@@ -161,7 +154,7 @@
         $filter = $filter . " AND nik LIKE '%" . $nik . "%'";
     if ($gol)
         $filter = $filter . " AND g.gol_kerja='" . $gol . "'";
-    $q = "SELECT * FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik where m.status='Aktif '" . $filter." order by m.nik";
+    $q = "SELECT * FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik left join aki_tunjangan at on m.nik=at.nik where m.status='Aktif '" . $filter." order by m.nik";
     $result=mysqli_query($dbLink,$q);
     $no=1;
     $pdf->SetFont('helvetica', '', 6.5);
@@ -182,7 +175,7 @@
         $totalAbsen=0;
         for ($i=26; $i <= $cday; $i++) { 
             if (empty($absen[$lap['nik']][$i])) {
-                if (date('l', strtotime('2021-06-'.$i)) == 'Sunday') {
+                if (date('l', strtotime($years.'-'.((int)$month-1).'-'.$i)) == 'Sunday') {
                     $pdf->SetTextColor(220,50,50);
                     $pdf->Cell(5,4,'M',1,0,'C',0);
                     $pdf->SetTextColor(0);
@@ -201,55 +194,55 @@
                             if ($lap['nik']) {
                                 $totalImp++;
                             }
-                        }else if ($absen2[$lap['nik']][$i] == 'Izin Terlambat') {
+                        } if ($absen2[$lap['nik']][$i] == 'Izin Terlambat') {
                             $pdf->SetFillColor(133, 106, 98);
                             $pdf->Cell(5,4,"TL",1,0,'C',1);
                             if ($lap['nik']) {
                                 $totalTl++;
                             }
-                        }else if ($absen2[$lap['nik']][$i] == 'Izin Sakit') {
+                        } if ($absen2[$lap['nik']][$i] == 'Izin Sakit') {
                             $pdf->SetFillColor(157, 196, 245);
                             $pdf->Cell(5,4,"S",1,0,'C',1);
                             if ($lap['nik']) {
                                 $totalS++;
                             }
-                        }else if ($absen2[$lap['nik']][$i] == 'Izin Menikah') {
+                        } if ($absen2[$lap['nik']][$i] == 'Izin Menikah') {
                             $pdf->SetFillColor(237, 69, 74);
                             $pdf->Cell(5,4,"NKH",1,0,'C',1);
                             if ($lap['nik']) {
                                 $totalNkh++;
                             }
-                        }else if ($absen2[$lap['nik']][$i] == 'Izin Keluarga Meninggal') {
+                        } if ($absen2[$lap['nik']][$i] == 'Izin Keluarga Meninggal') {
                             $pdf->SetFillColor(225, 250, 0);
                             $pdf->Cell(5,4,"MGL",1,0,'C',1);
                             if ($lap['nik']) {
                                 $totalMgl++;
                             }
-                        }else if($absen2[$lap['nik']][$i] == 'Izin 1/2 Hari'){
+                        } if($absen2[$lap['nik']][$i] == 'Izin 1/2 Hari'){
                             $pdf->SetFillColor(244,176,131);
                             $pdf->Cell(5,4,"SH",1,0,'C',1);
                             if ($lap['nik']) {
                                 $totalSh++;
                             }
-                        }else if($absen2[$lap['nik']][$i] == 'Izin Tidak Masuk'){
+                        } if($absen2[$lap['nik']][$i] == 'Izin Tidak Masuk'){
                             $pdf->SetFillColor(220,50,50);
                             $pdf->Cell(5,4,"A",1,0,'C',1);
                             if ($lap['nik']) {
                                 $totalA++;
                             }
-                        }else if($absen2[$lap['nik']][$i] == 'Dinas'){
+                        } if($absen2[$lap['nik']][$i] == 'Dinas'){
                             $pdf->SetFillColor(37, 250, 0);
                             $pdf->Cell(5,4,"D",1,0,'C',1);
                             if ($lap['nik']) {
                                 $totalD++;
                             }
-                        }else if($absen2[$lap['nik']][$i] == 'Cuti Tahunan'){
+                        } if($absen2[$lap['nik']][$i] == 'Cuti Tahunan'){
                             $pdf->SetFillColor(235, 240, 189);
                             $pdf->Cell(5,4,"CT",1,0,'C',1);
                             if ($lap['nik']) {
                                 $totalCt++;
                             }
-                        }else if($absen2[$lap['nik']][$i] == 'Cuti Melahirkan'){
+                        } if($absen2[$lap['nik']][$i] == 'Cuti Melahirkan'){
                             $pdf->SetFillColor(227, 14, 202);
                             $pdf->Cell(5,4,"CM",1,0,'C',1);
                             if ($lap['nik']) {
@@ -264,32 +257,98 @@
                     $totalAbsen++;
                 }
             }
-
         }
         for ($i=1; $i < 26; $i++) { 
             if (empty($absen[$lap['nik']][$i])) {
-                if (date('l', strtotime('2021-07-'.$i)) == 'Sunday') {
+                if (date('l', strtotime($years.'-'.$month.'-'.$i)) == 'Sunday') {
                     $pdf->SetTextColor(220,50,50);
                     $pdf->Cell(5,4,'M',1,0,'C',0);
                     $pdf->SetTextColor(0);
                 }else{
-                    if (empty($absen3[$i])) {
-                        $pdf->Cell(5,4,'',1,0,'C',0);
+                    if (empty($absen2[$lap['nik']][$i])) {
+                        if (empty($absen3[$i])) {
+                            $pdf->Cell(5,4,'',1,0,'C',0);
+                        }else{
+                            $pdf->SetFillColor(204, 54, 51);
+                            $pdf->Cell(5,4,$absen3[$i],1,0,'C',1);
+                        }
                     }else{
-                        $pdf->SetFillColor(207, 120, 114);
-                        $pdf->Cell(5,4,$absen3[$i],1,0,'C',1);
+                        if ($absen2[$lap['nik']][$i] == 'Izin Meninggalkan Pekerjaan') {
+                            $pdf->SetFillColor(240, 127, 127);
+                            $pdf->Cell(5,4,"IMP",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalImp++;
+                            }
+                        } if ($absen2[$lap['nik']][$i] == 'Izin Terlambat') {
+                            $pdf->SetFillColor(133, 106, 98);
+                            $pdf->Cell(5,4,"TL",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalTl++;
+                            }
+                        } if ($absen2[$lap['nik']][$i] == 'Izin Sakit') {
+                            $pdf->SetFillColor(157, 196, 245);
+                            $pdf->Cell(5,4,"S",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalS++;
+                            }
+                        } if ($absen2[$lap['nik']][$i] == 'Izin Menikah') {
+                            $pdf->SetFillColor(237, 69, 74);
+                            $pdf->Cell(5,4,"NKH",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalNkh++;
+                            }
+                        } if ($absen2[$lap['nik']][$i] == 'Izin Keluarga Meninggal') {
+                            $pdf->SetFillColor(225, 250, 0);
+                            $pdf->Cell(5,4,"MGL",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalMgl++;
+                            }
+                        } if($absen2[$lap['nik']][$i] == 'Izin 1/2 Hari'){
+                            $pdf->SetFillColor(244,176,131);
+                            $pdf->Cell(5,4,"SH",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalSh++;
+                            }
+                        } if($absen2[$lap['nik']][$i] == 'Izin Tidak Masuk'){
+                            $pdf->SetFillColor(220,50,50);
+                            $pdf->Cell(5,4,"A",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalA++;
+                            }
+                        } if($absen2[$lap['nik']][$i] == 'Dinas'){
+                            $pdf->SetFillColor(37, 250, 0);
+                            $pdf->Cell(5,4,"D",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalD++;
+                            }
+                        } if($absen2[$lap['nik']][$i] == 'Cuti Tahunan'){
+                            $pdf->SetFillColor(235, 240, 189);
+                            $pdf->Cell(5,4,"CT",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalCt++;
+                            }
+                        } if($absen2[$lap['nik']][$i] == 'Cuti Melahirkan'){
+                            $pdf->SetFillColor(227, 14, 202);
+                            $pdf->Cell(5,4,"CM",1,0,'C',1);
+                            if ($lap['nik']) {
+                                $totalCm++;
+                            }
+                        }
                     }
                 }
             }else{
                 $pdf->Cell(5,4,$absen[$lap['nik']][$i],1,0,'C',0);
+                if ($lap['nik']) {
+                    $totalAbsen++;
+                }
             }
         }
         $pdf->SetFillColor(122, 120, 116);
         $pdf->Cell(5,4,'',1,0,'C',1);
-        if (empty($absenC[$lap['nik']]['hk'])) {
-            $pdf->Cell(5,4,'0',1,0,'C',0);
+        if ($totalAbsen == 0) {
+            $pdf->Cell(5,4,'0',1,0,'C',1);
         }else{
-            $pdf->Cell(5,4,$absenC[$lap['nik']]['hk'],1,0,'C',0);
+            $pdf->Cell(5,4,$totalAbsen,1,0,'C',0);
         }
         $pdf->SetFillColor(247, 207, 121);
         if ($totalD == 0) {
@@ -344,15 +403,25 @@
         }else{
             $pdf->Cell(5,4,$totalCm,1,0,'C',0);
         }
-        if (empty($absenC[$lap['nik']]['hk'])) {
-            $pdf->Cell(6,4,'0',1,0,'C',0);
+        if ($lap['um']==1) {
+            $pdf->Cell(6,4,(int)$totalAbsen+(int)$totalCt,1,0,'C',0);
         }else{
-            $pdf->Cell(6,4,$absenC[$lap['nik']]['hk'],1,0,'C',0);
+            $pdf->Cell(6,4,'0',1,0,'C',0);
         }
-        $trans = (int)$absenT[$lap['nik']]['tunjangan']+(int)$absenC[$lap['nik']]['hk'];
-        $pdf->Cell(6,4,$trans,1,0,'C',0);
-        $komn = (int)$absenK[$lap['nik']]['tunjangan']+(int)$absenC[$lap['nik']]['hk'];
-        $pdf->Cell(6,4,$komn,1,0,'C',0);
+        if ($lap['transport']==1) {
+            $trans = (int)$absenT[$lap['nik']]['tunjangan']+(int)$totalAbsen;
+            $pdf->Cell(6,4,$trans,1,0,'C',0);
+        }else{
+            $pdf->Cell(6,4,'0',1,0,'C',0);
+        }
+        if ($lap['komunikasi']==1) {
+            $komn = (int)$absenK[$lap['nik']]['tunjangan']+(int)$totalAbsen;
+            $pdf->Cell(6,4,$komn,1,0,'C',0);
+        }else{
+            $pdf->Cell(6,4,'0',1,0,'C',0);
+        }
+        
+        
         $pdf->Cell(5,4,'',0,1,'C',0);
         $no++;
     }

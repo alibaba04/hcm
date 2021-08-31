@@ -24,12 +24,12 @@
     }
 
     $pdf->Cell(0, 7, "DATA ABSENSI ".$years, 0, 1, 'C');
-    $qabsen = "SELECT nik,day(tanggal) as day,month(tanggal) as month,year(tanggal) as year,(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN count(nik) END) AS masuk FROM `aki_absensi` where year(tanggal)=".$years." and day(tanggal) BETWEEN 1 and 25 group by nik,month order by nik,month";
+    $qabsen = "SELECT nik,day(tanggal) as day,month(tanggal) as month,year(tanggal) as year,(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN 1 END) AS masuk FROM `aki_absensi` where year(tanggal)=".$years." and day(tanggal) BETWEEN 1 and 25 order by nik,month";
     $result=mysqli_query($dbLink,$qabsen);
     $absen=array();
     while ($labsen = mysqli_fetch_array($result)) {
-        if ($labsen['nik']) {
-            $absen[$labsen['nik']][$labsen['month']]=$labsen['masuk'];
+        if ($labsen['masuk'] != null) {
+            $absen[$labsen['nik']][$labsen['month']]+=$labsen['masuk'];
         }
     }
     $qabsen = "SELECT nik,day(tanggal) as day,month(tanggal) as month,year(tanggal) as year,(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN 1 END) AS masuk FROM `aki_absensi` where year(tanggal)=".$years." and day(tanggal) BETWEEN 26 and 31 order by nik,month";
@@ -88,7 +88,6 @@
         $pdf->Cell(6,5,$no,1,0,'C',1);
         $pdf->Cell(50,5,$lap["kname"],1,0,'L',1);
         for ($i = 1; $i <= 12; ) {
-            
             if ($lap["nik"]) {
                 $jml = (int)$absen[$lap["nik"]][$i]+(int)$absen2[$lap["nik"]][$i-1];
                 $pdf->Cell(18,5,$jml,1,0,'C',1);
