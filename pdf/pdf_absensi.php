@@ -19,7 +19,7 @@
         $absen[$labsen['nik']][$labsen['day']]=$labsen['masuk'];
         $absen[$labsen['nik']]['hk']=$labsen['masuk'];
     }
-    
+
     $absen2=array();
     $qizin="SELECT nik,Year(tanggal) as years,month(tanggal) as month ,day(tanggal) as day ,jenis,sum(CASE WHEN (TIME_TO_SEC(timediff(end, start)))<30600 THEN (TIME_TO_SEC(timediff(end, start))) END) as time,count(nik) as jml FROM `aki_izin` WHERE aktif=1 and tanggal BETWEEN '".$tgl1."' and '".$tgl2."' group by nik,tanggal";
     $result1=mysqli_query($dbLink,$qizin);
@@ -154,13 +154,13 @@
         $filter = $filter . " AND nik LIKE '%" . $nik . "%'";
     if ($gol)
         $filter = $filter . " AND g.gol_kerja='" . $gol . "'";
-    $q = "SELECT * FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik left join aki_tunjangan at on m.nik=at.nik where m.status='Aktif '" . $filter." order by m.nik";
+    $q = "SELECT m.nik,t.um,t.transport,t.komunikasi,t.fungsional FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik left join aki_tunjangan t on m.nik=t.nik where m.status='Aktif '" . $filter." order by m.nik";
     $result=mysqli_query($dbLink,$q);
     $no=1;
     $pdf->SetFont('helvetica', '', 6.5);
     while ($lap = mysqli_fetch_array($result)) {
         $pdf->Cell(5,4,$no,1,0,'C',0);
-        $pdf->Cell(47,4,$lap["kname"],1,0,'L',0);
+        $pdf->Cell(47,4,$lap["nik"],1,0,'L',0);
         $cday = cal_days_in_month(CAL_GREGORIAN,6,2021);
         $totalImp=0;
         $totalTl=0;
