@@ -60,6 +60,12 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             $("#myPesan").modal({backdrop: 'static'});
         }
         $("#stanggal").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
+        $('#btnAdd').click(function(){
+            $("#myModal").modal({backdrop: 'static'});
+        });
+        $('#txtdatepicker').datepicker({
+          autoclose: true
+        });
     });
 </script>
 <section class="content-header">
@@ -77,7 +83,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     <!-- Main row -->
     <div class="row">
         <div class="col-md-3">
-            <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/izin_detail&mode=add'; ?>" class="btn btn-primary btn-block margin-bottom">Add</a>
+            <a href="#" class="btn btn-primary btn-block margin-bottom" id="btnAdd">Add</a>
           <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
             <input type="hidden" name="page" value="<?php echo $curPage; ?>">
             <div class="input-group input-group-sm">
@@ -104,7 +110,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         echo "<option value=".$date_str .">".$date_str ."</option>";
                     } ?>
                 </select>
-                
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
                 </span>
@@ -132,8 +137,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         }else{
                             $syear = "";
                         }
-                       
-                        //Set Filter berdasarkan query string
                         $filter="";
                         if ($smonth)
                             $filter = $filter . " AND  month(z.tanggal) LIKE '%" . $smonth . "%'";
@@ -151,14 +154,12 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
               <div class="table-responsive mailbox-messages">
                 <table class="table table-hover table-striped">
                     <thead>
-                        <th>`</th>
-                        <th>Tanggal</th>
-                        <th>Keterangan</th>
+                        <td>Aksi</td>
+                        <td>Tanggal</td>
+                        <td>Keterangan</td>
+                        <td>User</td>
                     </thead>
                     <?php
-                    
-                //Paging
-                    
                     $rowCounter=1;
                     $totDebet = 0; $totKredit = 0;
                     while ($query_data = $rs->fetchArray()) {
@@ -177,10 +178,12 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         }
                         echo "
                         <tr>
-                            <td><button type='button' class='btn btn-primary' onclick=\"if(confirm('Apakah anda yakin akan menghapus data ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["no"]) . "'}\" style='cursor:pointer;'>";
-                            echo '<i class="fa fa-trash"></i></button></td><td class="mailbox-star">'.$query_data['nik'].'</td>
-                            <td>'.date("d F Y", strtotime($query_data["tanggal"])).'</td>';
-                        echo '<td><b>'.$query_data['keterangan'].'</td></tr>';
+                            <td><button type='button' class='btn btn-primary' onclick=\"if(confirm('Apakah anda yakin akan menghapus data ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["no"]) . "'}\" style='cursor:pointer;'><i class='fa fa-trash'></i></button> ";
+                        echo "<button type='button' onclick=location.href='".$_SERVER["PHP_SELF"]."?page=view/izin_detail&mode=edit&kode=" . ($query_data["no"]) . "' class='btn btn-primary' style='cursor:pointer;'><i class='fa fa-pencil'></i></button></td>";
+
+                        echo '<td><b>'.date("d F Y", strtotime($query_data["tanggal"])).'</td>';
+                        echo '<td><b>'.$query_data['keterangan'].'</td>';
+                        echo '<td>'.$query_data['user'].'</td></tr>';
                         $rowCounter++;
                     }
                     if (!$rs->getNumPages()) {
@@ -189,13 +192,9 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         echo("</tr>");
                     }
                     ?>
-                  
                 </table>
-                <!-- /.table -->
               </div>
-              <!-- /.mail-box-messages -->
             </div>
-            <!-- /.box-body -->
             <div class="box-footer no-padding">
             <div class="box-body no-padding">
                 <div class="mailbox-controls">
@@ -206,20 +205,27 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
             </div>
           </div>
-          <!-- /. box -->
         </div>
         <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
+                    <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">IMPORT EXCEL</h4>
+                        <h4 class="modal-title">Add</h4>
                     </div>
                     <div class="modal-body">
-                        <form method="post" enctype="multipart/form-data" action="uploaddata.php">
-                            <input type="file" name="filepegawai" required>
-                        
+                        <div class="form-group">
+                            <label>Tanggal</label>
+                            <div class="input-group date">
+                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right" name="txtdatepicker" id="txtdatepicker" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                          <label>Keterangan</label>
+                          <textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <input type="submit" name="upload" class="btn btn-primary" value="Import" >
@@ -228,5 +234,4 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
         </div>
     </div>
-    <!-- /.row -->
 </section>
