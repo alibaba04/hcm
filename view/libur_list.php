@@ -2,7 +2,7 @@
 //=======  : Alibaba
 //Memastikan file ini tidak diakses secara langsung (direct access is not allowed)
 defined('validSession') or die('Restricted access');
-$curPage = "view/izin_list";
+$curPage = "view/libur_list";
 error_reporting( error_reporting() & ~E_NOTICE );
 //Periksa hak user pada modul/menu ini
 $judulMenu = 'Data Izin';
@@ -17,12 +17,22 @@ if ($hakUser < 10) {
 //Periksa apakah merupakan proses headerless (tambah, edit atau hapus) dan apakah hak user cukup
 if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 
-    require_once("./class/c_izin.php");
-    $tmpIzin = new c_izin;
-
+    require_once("./class/c_libur.php");
+    $tmpLibur = new c_libur;
+    if ($_POST["txtMode"] == "Add") {
+        $pesan = $tmpLibur->add($_POST);
+    }
+//Jika Mode Ubah/Edit
+    if ($_POST["txtMode"] == "Edit") {
+        $pesan = $tmpLibur->edit($_POST);
+    }
+//Jika Mode Upload
+    if ($_POST["txtMode"] == "Upload") {
+        $pesan = $tmpLibur->upload($_POST);
+    }
 //Jika Mode Hapus/Delete
     if ($_GET["txtMode"] == "Delete") {
-        $pesan = $tmpIzin->delete($_GET["kode"]);
+        $pesan = $tmpLibur->delete($_GET["kode"]);
     }
 //Seharusnya semua transaksi Add dan Edit Sukses karena data sudah tervalidasi dengan javascript di form detail.
 //Jika masih ada masalah, berarti ada exception/masalah yang belum teridentifikasi dan harus segera diperbaiki!
@@ -34,23 +44,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     exit;
 }
 ?>
-<div class="modal fade" id="myPesan" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Message</h4>
-            </div>
-            <div class="modal-body">
-                <p><?php echo "Warning!!, please text to " . $mailSupport . " for support this error!."; ?></p>
-                <p id="pesanErr"></p>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
-</div> 
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function () {
         $(".select2").select2();
@@ -59,7 +52,11 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         if (res == 'pesan=Gagal') {
             $("#myPesan").modal({backdrop: 'static'});
         }
-        $("#stanggal").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
+        var mEdit = link.match(/mode=edit/g);
+        if (mEdit == 'mode=edit') {
+            $("#myModal").modal({backdrop: 'static'});
+        } 
+        $("#txtdatepicker").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
         $('#btnAdd').click(function(){
             $("#myModal").modal({backdrop: 'static'});
         });
@@ -68,6 +65,19 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         });
     });
 </script>
+
+<?php
+if ($_GET["mode"] == "edit") {
+    $q = "SELECT * FROM `aki_libur` WHERE 1=1 and id=".$_GET["kode"];
+    $rsTemp = mysql_query($q, $dbLink);
+    if ($dataId = mysql_fetch_array($rsTemp)) {
+        echo "<input type='hidden' id='txtid' name='txtid' value='" . $dataId["id"] . "'>";
+    } 
+    echo "<input type='hidden' name='txtMode' value='Edit'>";
+}else{
+    echo "<input type='hidden' name='txtMode' value='Add'>";
+}
+?>
 <section class="content-header">
     <h1>
         Data Izin
@@ -87,12 +97,13 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
           <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
             <input type="hidden" name="page" value="<?php echo $curPage; ?>">
             <div class="input-group input-group-sm">
-                <select name="year" id="month" class="form-control select2">
+                <select name="month" id="month" class="form-control select2">
                     <option value="">Select</option>
                     <?php
                     for ($i = 0; $i < 12; ) {
+                        $date_val = date('m', strtotime($i." months"));
                         $date_str = date('F', strtotime($i++." months"));
-                        echo "<option value=".$date_str .">".$date_str ."</option>";
+                        echo "<option value=".$date_val .">".$date_str ."</option>";
                     } ?>
                 </select>
                 
@@ -116,6 +127,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
         </div>
         </form>
+        <form action="index2.php?page=view/libur_list" method="post" name="frmSiswaDetail" onSubmit="return validasiForm(this);" autocomplete="off">
         <div class="col-md-9">
           <div class="box box-primary">
             <div class="box-header with-border">
@@ -127,21 +139,21 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <div class="btn-group">
                     </div>
                     <ul class="pagination pagination-sm inline"><?php 
-                        if (isset($_GET["smonth"])){
-                            $smonth = secureParam($_GET["smonth"], $dbLink);
+                        if (isset($_GET["month"])){
+                            $smonth = secureParam($_GET["month"], $dbLink);
                         }else{
                             $smonth = "";
                         }
-                        if (isset($_GET["syear"])){
-                            $syear = secureParam($_GET["syear"], $dbLink);
+                        if (isset($_GET["year"])){
+                            $syear = secureParam($_GET["year"], $dbLink);
                         }else{
                             $syear = "";
                         }
                         $filter="";
                         if ($smonth)
-                            $filter = $filter . " AND  month(z.tanggal) LIKE '%" . $smonth . "%'";
+                            $filter = $filter . " AND  month(tanggal) = '" . $smonth . "'";
                         if ($syear)
-                            $filter = $filter . " AND  year(z.tanggal) LIKE '%" . $syear . "%'";
+                            $filter = $filter . " AND  year(tanggal) = '" . $syear . "'";
                         //database
                         $q = "SELECT * ";
                         $q.= "FROM `aki_libur` ";
@@ -179,7 +191,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         echo "
                         <tr>
                             <td><button type='button' class='btn btn-primary' onclick=\"if(confirm('Apakah anda yakin akan menghapus data ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["no"]) . "'}\" style='cursor:pointer;'><i class='fa fa-trash'></i></button> ";
-                        echo "<button type='button' onclick=location.href='".$_SERVER["PHP_SELF"]."?page=view/izin_detail&mode=edit&kode=" . ($query_data["no"]) . "' class='btn btn-primary' style='cursor:pointer;'><i class='fa fa-pencil'></i></button></td>";
+                        echo "<button type='button' onclick=location.href='".$_SERVER["PHP_SELF"]."?page=view/libur_list&mode=edit&kode=" . ($query_data["id"]) . "' class='btn btn-primary' style='cursor:pointer;'><i class='fa fa-pencil'></i></button></td>";
 
                         echo '<td><b>'.date("d F Y", strtotime($query_data["tanggal"])).'</td>';
                         echo '<td><b>'.$query_data['keterangan'].'</td>';
@@ -210,7 +222,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
-                    <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
+                    
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Add</h4>
@@ -219,19 +231,20 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         <div class="form-group">
                             <label>Tanggal</label>
                             <div class="input-group date">
-                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right" name="txtdatepicker" id="txtdatepicker" value="">
+                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right" name="txtdatepicker" id="txtdatepicker" value="<?php if($_GET["mode"] == "edit"){echo date("d-m-Y", strtotime($dataId["tanggal"]));}?>">
                             </div>
                         </div>
                         <div class="form-group">
                           <label>Keterangan</label>
-                          <textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                          <textarea class="form-control" rows="3" placeholder="Enter ..." name="txtket" id="txtket"><?php if($_GET["mode"] == "edit"){echo $dataId["keterangan"];}?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" name="upload" class="btn btn-primary" value="Import" >
-                    </div></form>
+                        <input type="submit" name="upload" class="btn btn-primary" value="Add" >
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+</form>
