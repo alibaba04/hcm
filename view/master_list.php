@@ -100,12 +100,35 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         <li class="active">Master</li>
     </ol>
 </section>
+<section class="col-lg-6">
+    <?php
+//informasi hasil input/update Sukses atau Gagal
+    if (isset($_GET["pesan"]) != "") {
+        ?>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <i class="fa fa-warning"></i>
+                <h3 class="box-title">Pesan</h3>
+            </div>
+            <div class="box-body">
+
+                <?php
+                if (substr($_GET["pesan"], 0, 5) == "Gagal") {
+                    echo '<div class="callout callout-danger">'. $_GET["pesan"] . '</div>';
+                } else {
+                    echo '<div class="callout callout-success">'. $_GET["pesan"] . '</div>';
+                }
+                ?>
+            </div>
+        </div>
+    <?php } ?>
+</section>
 <!-- Main content -->
 <section class="content">
     <!-- Main row -->
     <div class="row">
         <div class="col-md-3">
-          <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/profile_detail'; ?>" class="btn btn-primary btn-block margin-bottom">ADD</a>
+          <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/profile_detail&mode=Add'; ?>" class="btn btn-primary btn-block margin-bottom">ADD</a>
           <a href="#" class="btn btn-primary btn-block margin-bottom" id="btnimport">Import Presence</a>
           <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
             <input type="hidden" name="page" value="<?php echo $curPage; ?>">
@@ -204,7 +227,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <ul class="pagination pagination-sm inline"><?php echo $rs->getPageNav($_SERVER['QUERY_STRING']) ?></ul>
                     <!--Cetak PDF dan Export Excel -->
                     <!-- <a href="index2.php?page=<?= $curPage; ?>&mode=lap&tgl1=<?= $tglKirim1; ?>&tgl2=<?= $tglKirim2; ?>" title="Expot Excel"><i class="fa fa-file-excel-o pull-right inline"></i></a><i></i> -->
-                    <a href="pdf/pdf_perkiraan.php" title="Cetak PDF CoA"><button type="button" class="btn btn-primary pull-right"><i class="fa fa-print "></i> Print COA</button></a>
+                    <!-- <a href="pdf/pdf_perkiraan.php" title="Cetak PDF CoA"><button type="button" class="btn btn-primary pull-right"><i class="fa fa-print "></i> Print COA</button></a> -->
                     <!--End Cetak PDF dan Export Excel -->
                 </div>
 

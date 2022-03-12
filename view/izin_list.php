@@ -240,13 +240,13 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
             <!-- /.box-body -->
             <div class="box-footer no-padding">
-            <div class="box-body no-padding">
-                <div class="mailbox-controls">
-                    <div class="btn-group">
+                <div class="box-body no-padding">
+                    <div class="mailbox-controls">
+                        <div class="btn-group">
+                        </div>
+                        <ul class="pagination pagination-sm inline"><?php echo $rs->getPageNav($_SERVER['QUERY_STRING']) ?></ul>
                     </div>
-                    <ul class="pagination pagination-sm inline"><?php echo $rs->getPageNav($_SERVER['QUERY_STRING']) ?></ul>
                 </div>
-            </div>
             </div>
           </div>
           <!-- /. box -->

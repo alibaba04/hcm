@@ -29,6 +29,9 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 ?>
 <!-- Include script date di bawah jika ada field tanggal -->
 <!-- End of Script Tanggal -->
+<script type="text/javascript" charset="utf-8">
+
+</script>
 
 <section class="content-header">
     <h1>
@@ -36,7 +39,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Examples</a></li>
         <li class="active">User profile</li>
     </ol>
 </section>
@@ -67,6 +69,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
       <!-- Profile Image -->
       <div class="box box-primary">
         <div class="box-body box-profile">
+          <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/profile_detail&mode=Edit&nik='.md5($dataKaryawan["nik"]); ?>" id="upload_link"><i class="fa fa-pencil-square-o pull-right"></i></a>
           <img class="profile-user-img img-responsive img-circle" src="dist/img/logo-qoobah.png" alt="User profile picture">
 
           <h3 class="profile-username text-center"><?php echo $dataKaryawan["kname"];?></h3>
@@ -139,8 +142,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
       <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
           <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
-          <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
-          <li><a href="#settings" data-toggle="tab">Settings</a></li>
         </ul>
         <div class="tab-content">
           <div class="active tab-pane" id="activity">
@@ -152,13 +153,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
               <!-- /.box-body -->
             </div>
           </div>
-          <!-- /.tab-pane -->
-          <div class="tab-pane" id="timeline">
-          </div>
-          <!-- /.tab-pane -->
-          <div class="tab-pane" id="settings">
-          </div>
-          <!-- /.tab-pane -->
         </div>
         <!-- /.tab-content -->
       </div>
