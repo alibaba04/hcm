@@ -23,7 +23,7 @@
         $pdf->Cell(1,6,'',0,1,'C',0);
     }
 
-    $pdf->Cell(0, 7, "DATA ABSENSI HARI ".$years, 0, 1, 'C');
+    $pdf->Cell(0, 7, "DATA ABSENSI ".$_GET['month'].' '.$years, 0, 1, 'C');
     $qt='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,jenis,COUNT(nik) as jml FROM `aki_izin`WHERE aktif=1 and jenis ="Dinas" and year(tanggal)='.$years.' GROUP by month,nik';
     $result=mysqli_query($dbLink,$qt);
     $absen=array();
@@ -38,12 +38,8 @@
     $pdf->SetFillColor(230, 172, 48);
     $pdf->Cell(6,6,'No',1,0,'C',1);
     $pdf->Cell(50,6,'Nama',1,0,'C',1);
-    $pdf->Cell(20,6,'Tanggal',1,0,'C',1);
-    $pdf->Cell(20,6,'Hari',1,0,'C',1);
-    $pdf->Cell(20,6,'Masuk',1,0,'C',1);
-    $pdf->Cell(20,6,'Istirahat1',1,0,'C',1);
-    $pdf->Cell(20,6,'Istirahat2',1,0,'C',1);
-    $pdf->Cell(20,6,'Pulang',1,0,'C',1);
+    $pdf->Cell(20,6,'Bulan',1,0,'C',1);
+    $pdf->Cell(20,6,'Kehadiran',1,0,'C',1);
     $pdf->SetFillColor(230, 172, 48);
     $pdf->Cell(5,6,'',1,0,'C',1);
     $pdf->Cell(20,6,'Result',1,0,'C',1);
@@ -75,7 +71,7 @@
     $years = $_GET['years'];
     $tgl1 = $years.'-'.((int)$month-1).'-26';
     $tgl2 = $years.'-'.$month.'-25';
-    $q = "SELECT m.kname,g.gol_kerja,tanggal,DAYNAME(tanggal) dayname,year(tanggal) as year,ab.*,if(gol_kerja='Manajemen', sum(CASE WHEN (scan1)<time( '07:30:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (1) else '-'END) ,sum(if(DAYNAME(tanggal)='Saturday',(CASE WHEN (scan1)<time( '07:30:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > time('12:00:00') then 1 end),(CASE WHEN (scan1)<time('07:30:00') and (scan2)>time('12:00:00') and (scan3)<time( '13:00:00') and (scan4)>time( '16:00:00' ) THEN (1) else '-' END)))) AS masuk FROM `aki_absensi` ab RIGHT join aki_tabel_master m on ab.nik=m.nik left join aki_golongan_kerja g on m.nik=g.nik where tanggal BETWEEN '".$tgl1."' and '".$tgl2."'" . $filter." group by m.nik order by masuk desc";
+    $q = "SELECT m.kname,g.gol_kerja,MONTHNAME(tanggal) as month,DAYNAME(tanggal) dayname,year(tanggal) as year,if(gol_kerja='Manajemen', sum(CASE WHEN (scan1)<time( '07:30:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (1) else '-'END) ,sum(if(DAYNAME(tanggal)='Saturday',(CASE WHEN (scan1)<time( '07:30:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > time('12:00:00') then 1 end),(CASE WHEN (scan1)<time('07:30:00') and (scan2)>time('12:00:00') and (scan3)<time( '13:00:00') and (scan4)>time( '16:00:00' ) THEN (1) else '-' END)))) AS masuk,count(ab.nik) as hadir FROM `aki_absensi` ab RIGHT join aki_tabel_master m on ab.nik=m.nik left join aki_golongan_kerja g on m.nik=g.nik where tanggal BETWEEN '".$tgl1."' and '".$tgl2."'" . $filter." group by m.nik order by masuk desc";
     $result=mysqli_query($dbLink,$q);
     $no=1;
     $pdf->SetFont('helvetica', '', 7);
@@ -90,10 +86,10 @@
 
         $pdf->Cell(6,5,$no,1,0,'C',1);
         $pdf->Cell(50,5,$lap["kname"],1,0,'L',1);
-        $pdf->Cell(20,5,$lap["tanggal"],1,0,'C',1);
-        $pdf->Cell(20,5,$lap["dayname"],1,0,'C',1);
+        $pdf->Cell(20,5,$lap["month"],1,0,'C',1);
+        $pdf->Cell(20,5,$lap["hadir"],1,0,'C',1);
 
-        $pdf->Cell(20,5,$lap["scan1"],1,0,'C',1);
+        /*$pdf->Cell(20,5,$lap["scan1"],1,0,'C',1);
         if ($lap["gol_kerja"] == 'Manajemen') {
             $pdf->Cell(20,5,'-',1,0,'C',1);
             $pdf->Cell(20,5,'-',1,0,'C',1);
@@ -117,7 +113,7 @@
         }else{
             $pdf->Cell(20,5,'-',1,0,'C',1);
             $pdf->Cell(20,5,'-',1,0,'C',1);
-        }
+        }*/
         $pdf->Cell(5,5,'',1,0,'C',1);
         if ($lap["gol_kerja"] == 'Manajemen') {
             $pdf->Cell(20,5,$lap["masuk"],1,0,'C',1);
