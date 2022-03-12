@@ -5,7 +5,7 @@
     error_reporting(0);
 
     $pdf=new FPDF();
-    $pdf->AddPage('L');
+    $pdf->AddPage();
     $years = $_GET['years'];
     $pdf->SetFont('Helvetica', '', 14);
 
@@ -32,20 +32,21 @@
             $absen[$labsen['nik']][$labsen['month']]=$labsen['jml'];
         }
     }
-    $pdf->SetMargins(12,10,0,0);
+    $pdf->SetMargins(13,10,0,0);
     $pdf->Ln(5);
     $pdf->SetFont('helvetica', 'B', 8); 
     $pdf->SetFillColor(230, 172, 48);
     $pdf->Cell(6,6,'No',1,0,'C',1);
     $pdf->Cell(50,6,'Name',1,0,'C',1);
     $pdf->Cell(20,6,'Tanggal',1,0,'C',1);
-    $pdf->Cell(20,6,'Result',1,0,'C',1);
+    $pdf->Cell(20,6,'Hari',1,0,'C',1);
+    $pdf->Cell(20,6,'Masuk',1,0,'C',1);
     $pdf->Cell(20,6,'Istirahat1',1,0,'C',1);
     $pdf->Cell(20,6,'Istirahat2',1,0,'C',1);
     $pdf->Cell(20,6,'Pulang',1,0,'C',1);
     $pdf->SetFillColor(230, 172, 48);
     $pdf->Cell(5,6,'',1,0,'C',1);
-    $pdf->Cell(20,6,'Result',1,0,'C',1);
+    //$pdf->Cell(20,6,'Result',1,0,'C',1);
     
     $pdf->Cell(1,6,'',0,1,'C',0);
     $filter="";
@@ -74,7 +75,7 @@
     $years = $_GET['years'];
     $tgl1 = $years.'-'.((int)$month-1).'-26';
     $tgl2 = $years.'-'.$month.'-25';
-    $q = "SELECT m.kname,ab.nik,g.gol_kerja,tanggal,DAYNAME(tanggal) dayname,day(tanggal) as day,month(tanggal) as month,year(tanggal) as year,(CASE WHEN (scan1)<time('07:36:00') then 1 else 0 end) as masuk,(CASE WHEN (scan2)>time('12:00:00') then 1 else 0 end) as istirahat1,(CASE WHEN (scan3)<time( '13:00:00') then 1 else 0 end) as istirahat2,(CASE WHEN (scan4)<time( '16:00:00' ) then 1 else 0 end) as pulang,(CASE WHEN (scan1)<time('07:36:00') and (scan2)>time('12:00:00') and (scan3)<time( '13:00:00') and (scan4)<time( '16:00:00' ) THEN 1 else 0 END) AS result FROM `aki_absensi` ab RIGHT join aki_tabel_master m on ab.nik=m.nik left join aki_golongan_kerja g on m.nik=g.nik where tanggal BETWEEN '".$tgl1."' and '".$tgl2."' order by ab.nik,month,day";
+    $q = "SELECT m.kname,g.gol_kerja,DAYNAME(tanggal) dayname,MONTHNAME(tanggal) as month,DAYNAME(tanggal) dayname,year(tanggal) as year,ab.* FROM `aki_absensi` ab RIGHT join aki_tabel_master m on ab.nik=m.nik left join aki_golongan_kerja g on m.nik=g.nik where tanggal BETWEEN '".$tgl1."' and '".$tgl2."'" . $filter." order by m.nik";
     $result=mysqli_query($dbLink,$q);
     $no=1;
     $pdf->SetFont('helvetica', '', 7);
@@ -88,10 +89,32 @@
         $pdf->Cell(6,5,$no,1,0,'C',1);
         $pdf->Cell(50,5,$lap["kname"],1,0,'L',1);
         $pdf->Cell(20,5,$lap["tanggal"],1,0,'C',1);
-        $pdf->Cell(20,5,$lap["masuk"],1,0,'C',1);
-        $pdf->Cell(20,5,$lap["istirahat1"],1,0,'C',1);
-        $pdf->Cell(20,5,$lap["istirahat2"],1,0,'C',1);
-        $pdf->Cell(20,5,$lap["pulang"],1,0,'C',1);
+        $pdf->Cell(20,5,$lap["dayname"],1,0,'C',1);
+        $pdf->Cell(20,5,$lap["scan1"],1,0,'C',1);
+        if ($lap["gol_kerja"] == 'Manajemen') {
+            $pdf->Cell(20,5,'-',1,0,'C',1);
+            $pdf->Cell(20,5,'-',1,0,'C',1);
+            if ($lap["scan6"] != '00:00:00') {
+                $pdf->Cell(20,5,$lap["scan6"],1,0,'C',1);
+            }else if($lap["scan5"] != '00:00:00'){
+                $pdf->Cell(20,5,$lap["scan5"],1,0,'C',1);
+            }else if($lap["scan4"] != '00:00:00'){
+                $pdf->Cell(20,5,$lap["scan4"],1,0,'C',1);
+            }else if($lap["scan3"] != '00:00:00'){
+                $pdf->Cell(20,5,$lap["scan3"],1,0,'C',1);
+            }else if($lap["scan2"] != '00:00:00'){
+                $pdf->Cell(20,5,$lap["scan2"],1,0,'C',1);
+            }else{
+                $pdf->Cell(20,5,'-',1,0,'C',1);
+            }
+        }else if ($lap["gol_kerja"] == 'Produksi'){
+            $pdf->Cell(20,5,$lap["scan2"],1,0,'C',1);
+            $pdf->Cell(20,5,$lap["scan3"],1,0,'C',1);
+            $pdf->Cell(20,5,$lap["scan4"],1,0,'C',1);
+        }else{
+            $pdf->Cell(20,5,'-',1,0,'C',1);
+            $pdf->Cell(20,5,'-',1,0,'C',1);
+        }
         $pdf->Cell(5,5,'',1,0,'C',1);
         if ($lap["gol_kerja"] == 'Manajemen') {
             if ($lap["masuk"]!= 0 && $lap["pulang"]!= 0) {

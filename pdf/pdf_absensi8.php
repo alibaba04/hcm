@@ -5,7 +5,7 @@
     error_reporting(0);
 
     $pdf=new FPDF();
-    $pdf->AddPage('L');
+    $pdf->AddPage();
     $years = $_GET['years'];
     $pdf->SetFont('Helvetica', '', 14);
 
@@ -23,7 +23,7 @@
         $pdf->Cell(1,6,'',0,1,'C',0);
     }
 
-    $pdf->Cell(0, 7, "DATA ABSENSI ".$_GET['month'].' '.$years, 0, 1, 'C');
+    $pdf->Cell(0, 7, "DATA ABSENSI ".$_GET['month'].'-'.$years, 0, 1, 'C');
     $qt='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,jenis,COUNT(nik) as jml FROM `aki_izin`WHERE aktif=1 and jenis ="Dinas" and year(tanggal)='.$years.' GROUP by month,nik';
     $result=mysqli_query($dbLink,$qt);
     $absen=array();
@@ -32,17 +32,17 @@
             $absen[$labsen['nik']][$labsen['month']]=$labsen['jml'];
         }
     }
-    $pdf->SetMargins(12,10,0,0);
+    $pdf->SetMargins(25,10,0,0);
     $pdf->Ln(5);
     $pdf->SetFont('helvetica', 'B', 8); 
     $pdf->SetFillColor(230, 172, 48);
-    $pdf->Cell(6,6,'No',1,0,'C',1);
+    $pdf->Cell(10,6,'No',1,0,'C',1);
     $pdf->Cell(50,6,'Nama',1,0,'C',1);
-    $pdf->Cell(20,6,'Bulan',1,0,'C',1);
-    $pdf->Cell(20,6,'Kehadiran',1,0,'C',1);
+    $pdf->Cell(30,6,'Bulan',1,0,'C',1);
+    $pdf->Cell(30,6,'Kehadiran',1,0,'C',1);
     $pdf->SetFillColor(230, 172, 48);
     $pdf->Cell(5,6,'',1,0,'C',1);
-    $pdf->Cell(20,6,'Result',1,0,'C',1);
+    $pdf->Cell(30,6,'Result',1,0,'C',1);
     
     $pdf->Cell(1,6,'',0,1,'C',0);
     $filter="";
@@ -84,10 +84,10 @@
             $pdf->SetFillColor(255, 255, 255);
         }
 
-        $pdf->Cell(6,5,$no,1,0,'C',1);
+        $pdf->Cell(10,5,$no,1,0,'C',1);
         $pdf->Cell(50,5,$lap["kname"],1,0,'L',1);
-        $pdf->Cell(20,5,$lap["month"],1,0,'C',1);
-        $pdf->Cell(20,5,$lap["hadir"],1,0,'C',1);
+        $pdf->Cell(30,5,$lap["month"],1,0,'C',1);
+        $pdf->Cell(30,5,$lap["hadir"],1,0,'C',1);
 
         /*$pdf->Cell(20,5,$lap["scan1"],1,0,'C',1);
         if ($lap["gol_kerja"] == 'Manajemen') {
@@ -114,17 +114,23 @@
             $pdf->Cell(20,5,'-',1,0,'C',1);
             $pdf->Cell(20,5,'-',1,0,'C',1);
         }*/
+        $pdf->SetFillColor(230, 172, 48);
         $pdf->Cell(5,5,'',1,0,'C',1);
+        if ($no % 2 == 0) {
+            $pdf->SetFillColor(223, 231, 242);
+        }else{
+            $pdf->SetFillColor(255, 255, 255);
+        }
         if ($lap["gol_kerja"] == 'Manajemen') {
-            $pdf->Cell(20,5,$lap["masuk"],1,0,'C',1);
+            $pdf->Cell(30,5,$lap["masuk"],1,0,'C',1);
         }else if ($lap["gol_kerja"] == 'Produksi'){
             if ($lap["dayname"] == 'Saturday') {
-                $pdf->Cell(20,5,$lap["masuk"],1,0,'C',1);
+                $pdf->Cell(30,5,$lap["masuk"],1,0,'C',1);
             }else{
-                $pdf->Cell(20,5,$lap["masuk2"],1,0,'C',1);
+                $pdf->Cell(30,5,$lap["masuk2"],1,0,'C',1);
             }
         }else{
-            $pdf->Cell(20,5,'-',1,0,'C',1);
+            $pdf->Cell(30,5,'-',1,0,'C',1);
         }
 
         $no++;

@@ -67,6 +67,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         }
         else if($("#txtJenis").val() == 7){
             location.href='pdf/pdf_absensi8.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+        }else if($("#txtJenis").val() == 8){
+            location.href='pdf/pdf_absensi7.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
         }
         
     }
@@ -89,6 +91,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <option value="5">Cuti Per Bulan</option>
                     <option value="6">Dinas Per Bulan</option>
                     <option value="7">Reward</option>
+                    <option value="8">Reward Detail</option>
                 </select><label></label>
                 <select class="form-control" name="txtTahun" id="txtTahun">
                     <?php
