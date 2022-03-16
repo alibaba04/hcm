@@ -74,7 +74,7 @@ class c_libur
 			$q = "INSERT INTO `aki_libur`(`id`, `tanggal`, `keterangan`, `user`)  VALUES ";
 			$q.= "('".$id."',  '".$tanggal."', '".$keterangan."', '".$pembuat."');";
 			if (!mysql_query( $q, $dbLink))
-				throw new Exception($jumData.'Gagal tambah data izin.');
+				throw new Exception($q.'Gagal tambah data izin.');
 			@mysql_query("COMMIT", $dbLink);
 			$this->strResults="Sukses Tambah Data Izin";
 		}
@@ -165,7 +165,7 @@ class c_libur
 			if (!mysql_query( $q, $dbLink))
 				throw new Exception('Gagal hapus data izin.');
 			@mysql_query("COMMIT", $dbLink);
-			$this->strResults=$no."Sukses Hapus Data Jurnal Umum ";
+			$this->strResults="Sukses Hapus Data Jurnal Umum ";
 		}
 		catch(Exception $e) 
 		{

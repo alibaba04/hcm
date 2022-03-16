@@ -125,9 +125,10 @@ if ($_GET["mode"] == "edit") {
                     <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
                 </span>
             </div>
+           </form>
         </div>
-        </form>
         <form action="index2.php?page=view/libur_list" method="post" name="frmSiswaDetail" onSubmit="return validasiForm(this);" autocomplete="off">
+        <input type='hidden' name='txtMode' value='Add'>
         <div class="col-md-9">
           <div class="box box-primary">
             <div class="box-header with-border">

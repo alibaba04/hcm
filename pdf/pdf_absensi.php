@@ -104,8 +104,8 @@
     $pdf->Ln(5);
     $pdf->SetFont('helvetica', 'B', 6.5); 
     $pdf->SetFillColor(230, 172, 48);
-    $pdf->Cell(5,5,'No',1,0,'C',1);
-    $pdf->Cell(47,5,'Nama',1,0,'C',1);
+    $pdf->Cell(15,5,'No',1,0,'C',1);
+    $pdf->Cell(35,5,'Nama',1,0,'C',1);
     $cday = cal_days_in_month(CAL_GREGORIAN,6,2021);
     for ($i=26; $i <= $cday; $i++) { 
         $pdf->Cell(5,5,$i,1,0,'C',1);
@@ -154,13 +154,13 @@
         $filter = $filter . " AND nik LIKE '%" . $nik . "%'";
     if ($gol)
         $filter = $filter . " AND g.gol_kerja='" . $gol . "'";
-    $q = "SELECT m.nik,t.um,t.transport,t.komunikasi,t.fungsional FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik left join aki_tunjangan t on m.nik=t.nik where m.status='Aktif '" . $filter." order by m.nik";
+    $q = "SELECT m.nik,m.kname,t.um,t.transport,t.komunikasi,t.fungsional FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik left join aki_tunjangan t on m.nik=t.nik where m.status='Aktif '" . $filter." order by m.nik";
     $result=mysqli_query($dbLink,$q);
     $no=1;
     $pdf->SetFont('helvetica', '', 6.5);
     while ($lap = mysqli_fetch_array($result)) {
-        $pdf->Cell(5,4,$no,1,0,'C',0);
-        $pdf->Cell(47,4,$lap["nik"],1,0,'L',0);
+        $pdf->Cell(15,4,$lap["nik"],1,0,'C',0);
+        $pdf->Cell(35,4,$lap["kname"],1,0,'L',0);
         $cday = cal_days_in_month(CAL_GREGORIAN,6,2021);
         $totalImp=0;
         $totalTl=0;

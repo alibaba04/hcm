@@ -36,8 +36,18 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         }else{
             $("#txtBulan").prop('disabled', false);
         }
+        if ($("#txtJenis").val()!=7) {
+            $("#txthari").prop('disabled', true);
+        }else{
+            $("#txthari").prop('disabled', false);
+        }
     }
-    $(document).ready(function () { 
+    $(document).ready(function () {
+        /*if ($("#txtJenis").val()==7) {
+            $("#txthari").prop('disabled', false);
+        }else{
+            $("#txthari").prop('disabled', true);
+        }*/
         $("#myModal").modal({backdrop: 'static'});
         $(".select2").select2();
         $("#stanggal").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
@@ -66,9 +76,9 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             location.href='pdf/pdf_absensi6.php?&years='+$("#txtTahun").val()+'&gol='+gol;
         }
         else if($("#txtJenis").val() == 7){
-            location.href='pdf/pdf_absensi8.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+            location.href='pdf/pdf_absensi8.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val();
         }else if($("#txtJenis").val() == 8){
-            location.href='pdf/pdf_absensi7.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+            location.href='pdf/pdf_absensi7.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val();
         }
         
     }
@@ -90,9 +100,12 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <option value="4">Izin 1/2 Hari Per Bulan</option>
                     <option value="5">Cuti Per Bulan</option>
                     <option value="6">Dinas Per Bulan</option>
-                    <option value="7">Reward</option>
-                    <option value="8">Reward Detail</option>
+                    <option value="7">Insentif</option>
+                    <option value="8">Insentif Detail</option>
                 </select><label></label>
+                <div class="input-group" id="dday"><span class="input-group-addon">Hari Efektif</span>
+                    <input type="number" name="txthari" id="txthari" class="form-control" placeholder="0" >
+                </div>
                 <select class="form-control" name="txtTahun" id="txtTahun">
                     <?php
                         for ($i = 0; $i < 5; ) {
