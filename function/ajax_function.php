@@ -35,7 +35,27 @@ switch ($_POST['fungsi']) {
             echo "no";
         }
         break;
-
+    case "getjobs":
+        $result = mysql_query("SELECT m.nik,kname,g.* FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik where m.nik ='" . secureParamAjax($_POST['nik'], $dbLink) . "'", $dbLink);
+        if (mysql_num_rows($result)>0) {
+            while ( $data = mysql_fetch_assoc($result)) {
+                echo json_encode(array("nik"=>$data['nik'], "jobs"=>$data['jabatan']));
+            } 
+            break;
+        }
+        break;
+    case "ambilnik":
+        $result = mysql_query("SELECT m.nik,kname,g.* FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik where tanggal_nonaktif='0000-00-00' order by m.nik", $dbLink);
+            if (mysql_num_rows($result)>0) {
+                $idx = 0;
+                while ( $data = mysql_fetch_assoc($result)) {
+                    $output[$idx] = array("val"=>$data['nik'],"text"=>$data['nik'].' - '.$data['kname'],"gol"=>$data['jabatan']);
+                    $idx++;
+                 } 
+                echo json_encode($output);
+                break;
+            }
+    break;
     case "cekpass":
         $kodeUser = secureParamAjax($_POST['kodeUser'], $dbLink);
         $pass = HASH('SHA512',$passSalt.secureParamAjax($_POST['pass'], $dbLink));
@@ -60,12 +80,14 @@ switch ($_POST['fungsi']) {
         }
         break;
     case "getabsesnsi":
-        $result = mysql_query("SELECT * FROM `aki_absensi` WHERE md5(nik)='" . secureParamAjax($_POST['nik']. "'", $dbLink);
+        $result = mysql_query("SELECT * FROM `aki_absensi` WHERE md5(nik)='" . secureParamAjax($_POST['nik'], $dbLink). "'", $dbLink);
         if (mysql_num_rows($result)) {
            echo "yes";
         } else {
            echo "no";
         }
    break;
+   
+   
 }
 ?>
