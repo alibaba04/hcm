@@ -80,7 +80,7 @@ class MySQLPagedResultSet
 	($this->getPageNum()-1)."&".$queryvars."\"><i class='fa fa-chevron-left'></i></a></button>";
 	$nav .= "<button type='button' class='btn btn-default btn-sm'><a href=\"?resultpage=".
 	($this->getPageNum()+1)."&".$queryvars."\"><i class='fa fa-chevron-right'></i></a></button>";
-	$nav.=" ".number_format(mysql_num_rows($this->results), 0, ',', '.')." Records. Page: ".$this->page."/".$this->getNumPages()." &nbsp; ";
+	$nav.=" ".number_format(mysql_num_rows($this->results), 0, ',', '.')." Data. Page: ".$this->page."/".$this->getNumPages()." &nbsp; ";
 
 	/*if (!$this->isFirstPage())
 	{

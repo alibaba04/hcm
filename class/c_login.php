@@ -81,12 +81,12 @@ class c_login
                     {
                         //alert($ip);
                     }
-                    date_default_timezone_set("Asia/Jakarta");
+                    /*date_default_timezone_set("Asia/Jakarta");
                     $tgl = date("Y-m-d h:i:sa");
                     $q4 = "INSERT INTO `aki_report`( `kodeUser`, `datetime`, `ket`) VALUES";
                     $q4.= "('".$userId."','".$tgl."','User Login ip : ".$_SERVER['REMOTE_ADDR']."');";
                     if (!mysql_query( $q4, $dbLink))
-                        throw new Exception($q4.'Gagal update report. ');
+                        throw new Exception($q4.'Gagal update report. ');*/
                     return "Sukses";
                 }
                 else

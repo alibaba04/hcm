@@ -2,10 +2,10 @@
 //=======  : Alibaba
 //Memastikan file ini tidak diakses secara langsung (direct access is not allowed)
 defined('validSession') or die('Restricted access');
-$curPage = "view/izin_list";
+$curPage = "view/dinas_list";
 error_reporting( error_reporting() & ~E_NOTICE );
 //Periksa hak user pada modul/menu ini
-$judulMenu = 'Data Izin';
+$judulMenu = 'Data dinas';
 $hakUser = getUserPrivilege($curPage);
 $pesan='';
 if ($hakUser < 10) {
@@ -17,12 +17,12 @@ if ($hakUser < 10) {
 //Periksa apakah merupakan proses headerless (tambah, edit atau hapus) dan apakah hak user cukup
 if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 
-    require_once("./class/c_izin.php");
-    $tmpIzin = new c_izin;
+    require_once("./class/c_dinas.php");
+    $tmpdinas = new c_dinas;
 
 //Jika Mode Hapus/Delete
     if ($_GET["txtMode"] == "Delete") {
-        $pesan = $tmpIzin->delete($_GET["kode"]);
+        $pesan = $tmpdinas->delete($_GET["kode"]);
     }
 //Seharusnya semua transaksi Add dan Edit Sukses karena data sudah tervalidasi dengan javascript di form detail.
 //Jika masih ada masalah, berarti ada exception/masalah yang belum teridentifikasi dan harus segera diperbaiki!
@@ -43,7 +43,13 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 <h4 class="modal-title">Message</h4>
             </div>
             <div class="modal-body">
-                <p><?php echo "Warning!!, please text to " . $mailSupport . " for support this error!."; ?></p>
+                <p><?php 
+                        //if (strtoupper(substr($pesan, 0, 5)) == "GAGAL"){
+                            echo $_GET["pesan"]."Warning!!, please text to " . $mailSupport . " for support this error!.</p>"; 
+                        /*}else{
+                            echo "Success!.</p>"; 
+                        }*/
+                ?>
                 <p id="pesanErr"></p>
             </div>
             <div class="modal-footer">
@@ -53,22 +59,29 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 </div> 
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function () {
+        $('table tbody tr').click(function(){
+            window.location = $(this).attr('href');
+            return false;
+        });
         var link = window.location.href;
         var res = link.match(/pesan=Gagal/g); 
+        var res2 = link.match(/pesan=Sukses/g); 
         if (res == 'pesan=Gagal') {
             $("#myPesan").modal({backdrop: 'static'});
-        }
-        $("#stanggal").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
+        }/*else if(res2 == 'pesan=Sukses'){
+            $("#myPesan").modal({backdrop: 'static'});
+        }*/
+        $("#stanggal").daterangepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
     });
 </script>
 <section class="content-header">
     <h1>
-        Data Izin
+        Data dinas
     </h1>
     <ol class="breadcrumb">
         <li><a href="index.php"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Input</li>
-        <li class="active">Izin</li>
+        <li class="active">Dinas</li>
     </ol>
 </section>
 <!-- Main content -->
@@ -79,43 +92,24 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/dinas_detail&mode=add'; ?>" class="btn btn-primary btn-block margin-bottom">Add</a>
           <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
             <input type="hidden" name="page" value="<?php echo $curPage; ?>">
-            <div class="input-group input-group-sm">
-                <input type="text" class="form-control" name="snik" id="snik" placeholder="NIK ...."
-                <?php
-                if ($_GET["pesan"] != "") {
-
-                            echo $_GET["pesan"];
-                        }
-                if (isset($_GET["nik"])) {
-                    echo("value='" . $_GET["nik"] . "'");
-                }
-                ?>
+            <div class="input-group input-group">
+                <input type="text" class="form-control" name="sno" id="sno" placeholder="No Surat ...."
                 onKeyPress="return handleEnter(this, event)">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
                 </span>
             </div>
             <p>- or -</p>
-            <div class="input-group input-group-sm">
-                <input type="text" class="form-control" name="skname" id="skname" placeholder="Name ...."
+            <div class="form-group input-group">
+                <input type="text" class="form-control" name="stanggal" id="stanggal" 
                 <?php
-                if (isset($_GET["kname"])) {
-                    echo("value='" . $_GET["kname"] . "'");
+                if (isset($_GET["tanggal"])) {
+                    echo("value='" . $_GET["tgl"] . "'");
                 }
-
                 ?>
-                onKeyPress="return handleEnter(this, event)">
+                onKeyPress="return handleEnter(this, event)" placeholder="Range Date">
                 <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-            <p>- or -</p>
-            <div class="input-group input-group-sm">
-                <input name="stanggal" id="stanggal" maxlength="30" class="form-control" 
-                value="<?php ?>" placeholder="Tanggal" onKeyPress="return handleEnter(this, event)">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-search"></i></button>
-                </span>
+                    <button type="Submit" class="btn btn-primary pull-flat"><i class="fa fa-search"></i></button></span>
             </div>
         </div>
         </form>
@@ -130,61 +124,41 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <div class="btn-group">
                     </div>
                     <ul class="pagination pagination-sm inline"><?php 
-                        if (isset($_GET["skname"])){
-                            $kname = secureParam($_GET["skname"], $dbLink);
+                        $filter = "";
+                        if (isset($_GET["sno"])){
+                            $sno = secureParam($_GET["sno"], $dbLink);
                         }else{
-                            $kname = "";
-                        }
-                        if (isset($_GET["snik"])){
-                            $nik = secureParam($_GET["snik"], $dbLink);
-                        }else{
-                            $nik = "";
+                            $sno = "";
                         }
                         if (isset($_GET["stanggal"])){
                             $tgl = secureParam($_GET["stanggal"], $dbLink);
+                            $tgl = explode(" - ", $tgl);
+                            $tgl1 = $tgl[0];
+                            $tgl2 = $tgl[1];
+                            $tgl=$_GET["tgl"];
                         }else{
-                            $tgl = "";
+                            $tgl1 = "";
+                            $tgl2 = "";
                         }
-                        if (isset($_GET["smonth"])){
-                            $smonth = secureParam($_GET["smonth"], $dbLink);
-                        }else{
-                            $smonth = "";
-                        }
-                        if (isset($_GET["syear"])){
-                            $syear = secureParam($_GET["syear"], $dbLink);
-                        }else{
-                            $syear = "";
-                        }
-                        if (isset($_GET["stype"])){
-                            $stype = secureParam($_GET["stype"], $dbLink);
-                        }else{
-                            $stype = "";
-                        }
-                        //Set Filter berdasarkan query string
-                        $filter="";
-                        if ($kname)
-                            $filter = $filter . " AND m.kname LIKE '%" . $kname . "%'";
-                        if ($nik)
-                            $filter = $filter . " AND z.nik LIKE '%" . $nik . "%'";
-                        if ($tgl)
-                            $filter = $filter . " AND z.tanggal LIKE '%" .date("Y-m-d", strtotime($tgl)) . "%'";
-                        if ($smonth)
-                            $filter = $filter . " AND  month(z.tanggal) LIKE '%" . $smonth . "%'";
-                        if ($syear)
-                            $filter = $filter . " AND  year(z.tanggal) LIKE '%" . $syear . "%'";
-                        if ($stype)
-                            $filter = $filter . " AND  z.jenis LIKE '%" . $stype . "%'";
+                        if ($sno)
+                            $filter = $filter . " AND d.nodinas LIKE '%" . $sno . "%'";
+                        if ($tgl1 && $tgl2)
+                            $filter = $filter . " AND d.tgl_pengajuan BETWEEN '" . tgl_mysql($tgl1) . "' AND '" . tgl_mysql($tgl2) . "'  ";
                         //database
-                        $q = "SELECT * ";
-                        $q.= "FROM `aki_izin` z left join aki_tabel_master m on m.nik=z.nik";
-                        $q.= " WHERE 1=1 and z.aktif=1 " . $filter." order by z.tanggal desc";
+                        $q = "SELECT * FROM `aki_dinas` d where d.aktif=1 ".$filter." order by d.tgl_pengajuan desc";
                         $rs = new MySQLPagedResultSet($q, 100, $dbLink);
                         echo $rs->getPageNav($_SERVER['QUERY_STRING']);
                     ?></ul>
                 </div>
             </div>
               <div class="table-responsive mailbox-messages">
-                <table class="table table-hover table-striped">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                            <th style="width: 5%">Report</th>
+                            <th style="width: 30%">No</th>
+                            <th style="width: 20%">Date</th>
+                            <th style="width: 40%">Desc</th>
+                    </thead><tbody>
                     <?php
                     
                 //Paging
@@ -192,38 +166,16 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     $rowCounter=1;
                     $totDebet = 0; $totKredit = 0;
                     while ($query_data = $rs->fetchArray()) {
-                        $gol='';
-                        $aktif = '';
-                        if ($query_data['status']=='Aktif') {
-                            $gol=$query_data['gol_kerja'];
-                            $aktif = 'bg-green';
-                        }else if($query_data['status']=='Non Aktif'){
-                            $gol = "Nonaktif";
-                            $aktif = 'bg-green-active';
-                        }
-                        else{
-                            $gol = "Mutasi";
-                            $aktif = 'bg-light-green';
-                        }
-                        echo "<tbody>
-                        <tr>
-                            <td><button type='button' class='btn btn-primary' onclick=\"if(confirm('Apakah anda yakin akan menghapus data ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["no"]) . "'}\" style='cursor:pointer;'>";
-                            echo '<i class="fa fa-trash"></i></button></td><td class="mailbox-star">'.$query_data['nik'].'</td>
-                            <td class="mailbox-name"><a href="'.$_SERVER["PHP_SELF"].'?page=view/izin_detail&mode=edit&no='.$query_data['no'].'&nik='.md5($query_data['nik']).'"><b>'.$query_data['kname'].'</b></a></td>
-                            <td class="mailbox-date">'.date("d F Y", strtotime($query_data["tanggal"])).'</td>';
-                        if ($query_data["start"] =='07:30:00' && $query_data["end"] =='16:00:00') {
-                            if ($query_data["jenis"] =='Cuti') {
-                                echo '<td class="mailbox-attachment" colspan="2"> - Cuti</td>';
-                            }else{
-                                echo '<td class="mailbox-attachment" colspan="2"> - Satu Hari</td>';
-                            }
-                            
+                        echo "<tr href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'>";
+                        if ($query_data["report"]==0) {
+                            echo "<td><center>-</center></td>";
                         }else{
-                            echo '<td class="mailbox-attachment">'.$query_data["start"].'</td>';
-                            echo '<td class="mailbox-attachment">'.$query_data["end"].'</td>';
+                            /*echo "<td><center><button type='button' class='btn btn-primary' onclick=\"if(confirm('Laporan sudah diterima ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["report"]) . "'}\" style='cursor:pointer;'><i class='fa fa-check'></i></button></center></td>";*/
+                            echo "<td><center><i class='fa fa-check'></i></center></td>";
                         }
-                        echo '<td class="mailbox-subject"><b>'.$query_data['jenis'].'</b>  -  '.$query_data['keterangan'].'</td></tr>
-                        </tbody>';
+                            echo '<td class="mailbox-name"><b>'.$query_data['nodinas'].'</b></td>
+                            <td class="mailbox-date">'.date("d F Y", strtotime($query_data["tgl_pengajuan"])).'</td>';
+                            echo '<td class="mailbox-subject"><b>'.$query_data['ket'].'</td></tr>';
                         $rowCounter++;
                     }
                     if (!$rs->getNumPages()) {
@@ -232,7 +184,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         echo("</tr>");
                     }
                     ?>
-                  
+                 </tbody> 
                 </table>
                 <!-- /.table -->
               </div>

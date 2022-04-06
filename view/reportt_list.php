@@ -55,6 +55,17 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             location.href='index.php';
         });
     });
+    function toexcel() {
+        var gol = '';
+        if ($("#txtGol").val()==2) {
+            gol = 'Manajemen';
+        }else if($("#txtGol").val()==3){
+            gol = 'Produksi';
+        }
+        if ($("#txtJenis").val() == 1) {
+            location.href='excel/export.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+        }
+    }
     function topdf() {
         var gol = '';
         if ($("#txtGol").val()==2) {
@@ -79,8 +90,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             location.href='pdf/pdf_absensi8.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val();
         }else if($("#txtJenis").val() == 8){
             location.href='pdf/pdf_absensi7.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val();
-        }
-        
+        }   
     }
 </script>
 <!-- Modal -->
@@ -116,13 +126,25 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     ?>
                 </select>
                 <select class="form-control" name="txtBulan" id="txtBulan">
-                    <?php
-                        for ($i = 0; $i < 12; ) {
+                    <option value='01'>January</option>
+                    <option value='02'>February</option>
+                    <option value='03'>March</option>
+                    <option value='04'>April</option>
+                    <option value='05'>May</option>
+                    <option value='06'>June</option>
+                    <option value='07'>July</option>
+                    <option value='08'>August</option>
+                    <option value='09'>September</option>
+                    <option value='10'>October</option>
+                    <option value='11'>November</option>
+                    <option value='12'>December</option>
+                    <!-- <?php
+                        for ($i = 0; $i < 12;$i++ ) {
                             $month_val = date('m', strtotime($i." months"));
-                            $month_str = date('F', strtotime($i++." months"));
+                            $month_str = date('F', strtotime($i." months"));
                             echo "<option value=".$month_val .">".$month_str ."</option>";
                         } 
-                    ?>
+                    ?> -->
                 </select><br>
                 <select class="form-control" name="txtGol" id="txtGol" >
                     <option value="1">All</option>
@@ -132,7 +154,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
             <div class="modal-footer">
             <?php
-                echo "<button><a style='cursor:pointer;' onclick='topdf()'><i class='fa fa-download'></i>&nbsp;Download</a></button>";
+                echo '<div class="input-group input-group-sm col-lg-1 pull-left"><a><button class="btn btn-info pull-right" onclick="toexcel()"><i class="ion ion-ios-download"></i> Export Excel</button></a></div><div><span></span></div>';
+                echo '<div class="input-group input-group-sm col-lg-1 pull-right"><a><button class="btn btn-info pull-right" onclick="topdf()"><i class="ion ion-ios-download"></i> Download</button></a></div>';
             ?>
             </div>
         </div>
