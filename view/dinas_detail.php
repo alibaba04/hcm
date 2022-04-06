@@ -55,8 +55,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         });
         $('#txtdateout').datepicker({ format: 'dd-mm-yyyy', autoclose:true });
         $("#txtdatein").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
-        $("#txtdatehome").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
-       
         $(".select2").select2();
     });
 </script>
@@ -75,6 +73,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         });
     }
     function reprtmodal() {
+        $("#txtdatehome").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
         $("#reprtmodal").modal({backdrop: 'static'});
         $("#txtMode").val('Report');
     }
@@ -392,7 +391,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 </div>
                 <div class="modal-body">
                     <input type="text" class="form-control pull-right" name="txtdatehome" id="txtdatehome" value="<?php if($_GET["mode"]=='edit'){ 
-                        if($dataDinas["tgl_pulang"]!='0000-00-00'){echo date('d-m-Y', strtotime($dataDinas["tgl_pulang"]));} }?>" required>
+                        if($dataDinas["tgl_pulang"]!='0000-00-00'){echo date('d-m-Y', strtotime($dataDinas["tgl_pulang"]));} }?>">
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-primary" value="Save"  id="btnUpdate">
