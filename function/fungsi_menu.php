@@ -8,15 +8,11 @@ require_once('./class/c_user.php');
 function menu() {
     global $dbLink;
     $filter="";
-    if (isset($_GET['page'])) {
+    if (!empty($_GET['page'])) {
         $db_menu = "SELECT * FROM aki_menu WHERE link = '".$_GET['page']."'";
         $d_menu  = mysql_query($db_menu, $dbLink);
         $d_m     = mysql_fetch_assoc($d_menu);
-        if(is_null($d_m['link'])){
-            $page   = '';
-        }else{
-            $page    = substr($d_m['link'],5);
-        }
+        $page    = substr($d_m['link'],5);
         $k_page  = substr($d_m['kodeMenu'],0,2);
     } else {
         $page   = '';
