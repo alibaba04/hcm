@@ -22,7 +22,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 
 //Jika Mode Hapus/Delete
     if ($_GET["txtMode"] == "Delete") {
-        $pesan = $tmpdinas->delete($_GET["kode"]);
+        $pesan = $tmpdinas->delete($_GET["nodinas"]);
     }
 //Seharusnya semua transaksi Add dan Edit Sukses karena data sudah tervalidasi dengan javascript di form detail.
 //Jika masih ada masalah, berarti ada exception/masalah yang belum teridentifikasi dan harus segera diperbaiki!
@@ -59,7 +59,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 </div> 
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function () {
-        $('table tbody tr').click(function(){
+        $('.link').click(function(){
             window.location = $(this).attr('href');
             return false;
         });
@@ -157,7 +157,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                             <th style="width: 5%">Report</th>
                             <th style="width: 30%">No</th>
                             <th style="width: 20%">Date</th>
-                            <th style="width: 40%">Desc</th>
+                            <th style="width: 40%" colspan="2">Desc</th>
                     </thead><tbody>
                     <?php
                     
@@ -166,16 +166,17 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     $rowCounter=1;
                     $totDebet = 0; $totKredit = 0;
                     while ($query_data = $rs->fetchArray()) {
-                        echo "<tr href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'>";
+                        echo "<tr >";
                         if ($query_data["report"]==0) {
                             echo "<td><center>-</center></td>";
                         }else{
                             /*echo "<td><center><button type='button' class='btn btn-primary' onclick=\"if(confirm('Laporan sudah diterima ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["report"]) . "'}\" style='cursor:pointer;'><i class='fa fa-check'></i></button></center></td>";*/
-                            echo "<td><center><i class='fa fa-check'></i></center></td>";
+                            echo "<td href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'><center><i class='fa fa-check'></i></center></td>";
                         }
-                            echo '<td class="mailbox-name"><b>'.$query_data['nodinas'].'</b></td>
-                            <td class="mailbox-date">'.date("d F Y", strtotime($query_data["tgl_pengajuan"])).'</td>';
-                            echo '<td class="mailbox-subject"><b>'.$query_data['ket'].'</td></tr>';
+                            echo "<td class='mailbox-name link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'><b>".$query_data["nodinas"]."</b></td>";
+                            echo "<td class='mailbox-date link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'>".date("d F Y", strtotime($query_data["tgl_pengajuan"]))."</td>";
+                            echo "<td class='mailbox-subject link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'>".$query_data['ket']."</td>";
+                            echo "<td><center><button type='button' class='btn btn-default' onclick=\"if(confirm('Laporan sudah diterima ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&nodinas=" . ($query_data["nodinas"]) . "'}\" style='cursor:pointer;'><i class='fa fa-trash'></i></button></center></td></tr>";
                         $rowCounter++;
                     }
                     if (!$rs->getNumPages()) {

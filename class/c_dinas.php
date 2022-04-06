@@ -61,32 +61,6 @@ class c_dinas
 		}
 		return $this->strResults;
 	}
-
-	function validateDelete($kode) 
-	{
-		global $dbLink;
-		$temp=FALSE;
-		if(empty($kode))
-		{
-			$this->strResults.="Nama Rekening tidak ditemukan!<br/>";
-			$temp=FALSE;
-		}
-
-		//cari ID inisiasi di tabel penyusunan
-		$rsTemp=mysql_query("SELECT id_transaksi, kode_rekening FROM aki_tabel_transaksi WHERE md5(id_transaksi) = '".$kode."'", $dbLink);
-                $rows = mysql_num_rows($rsTemp);
-                if($rows==0)
-		{
-			$temp=TRUE;
-		} 
-		else
-        {
-            $this->strResults.="Data Transaksi Jurnal masih terpakai dalam Salah satu tabel!<br />";
-            $temp=FALSE;
-        }
-		
-		return $temp;
-	}
 	
 	function add(&$params) 
 	{
@@ -229,18 +203,11 @@ class c_dinas
 		return $this->strResults;
 	}
 	
-	function delete($kode)
+	function delete($nodinas)
 	{
 		global $dbLink;
 
-		//Jika input tidak valid, langsung kembalikan pesan error ke user ($this->strResults)
-		if(!$this->validateDelete($kode))
-		{	//Pesan error harus diawali kata "Gagal"
-			$this->strResults="Gagal Hapus Data Jurnal Umum - ".$this->strResults;
-			return $this->strResults;
-		}
-
-		$no = secureParam($kode, $dbLink);
+		$nodinas = secureParam($nodinas, $dbLink);
         $pembatal = $_SESSION["my"]->id;
 
 		try
@@ -253,18 +220,17 @@ class c_dinas
 
 			date_default_timezone_set("Asia/Jakarta");
 			$tgl = date("Y-m-d h:i:s");
-			$pesan = $params["txtUpdate"];
-			$ket = "Pesan : ".$pesan." -has delete, datetime: ".$tgl;
+			$ket = "Pesan : No Dinas ".$nodinas." -has delete, datetime: ".$tgl;
 			$q4 = "INSERT INTO `aki_report`( `kodeUser`, `datetime`, `ket`) VALUES";
 			$q4.= "('".$pembatal."','".$tgl."','".$ket."');";
 			if (!mysql_query( $q4, $dbLink))
 				throw new Exception('Gagal tambah report. ');
 			
-			$q = "UPDATE `aki_dinas` SET `aktif`=0 WHERE no='".$no."'";
+			$q = "UPDATE `aki_dinas` SET `aktif`=0 WHERE nodinas='".$nodinas."'";
 			if (!mysql_query( $q, $dbLink))
 				throw new Exception('Gagal hapus data dinas.');
 			@mysql_query("COMMIT", $dbLink);
-			$this->strResults=$no."Sukses Hapus Data Jurnal Umum ";
+			$this->strResults=$no."Sukses Hapus Data";
 		}
 		catch(Exception $e) 
 		{
