@@ -181,7 +181,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 
 <form action="index2.php?page=view/dinas_detail" method="post" name="frmSiswaDetail" onSubmit="return validasiForm(this);" autocomplete="off">
     <?php
-        if ($_GET["mode"] == "edit") {
+        if (isset($_GET["mode"] == "edit")) {
             $nodinas = secureParam($_GET["nodinas"], $dbLink);
             $q = "SELECT * FROM `aki_dinas`d WHERE 1=1 and md5(d.nodinas)='".($_GET["nodinas"])."'";
             $rsTemp = mysql_query($q, $dbLink);
@@ -232,7 +232,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 <div class="box-header with-border">
                   <h3 class="box-title">Header </h3>
                   <?php 
-                    if ($_GET["mode"] == "edit") {
+                    if (isset($_GET["mode"] == "edit")) {
                         echo '<input type="button" class="btn btn-success pull-right" onclick="reprtmodal()" value="Report">';
                     }
                   ?>
@@ -311,7 +311,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     </thead>
                     <tbody id="kendali">
                         <?php 
-                            if ($_GET['mode']=='edit'){
+                            if (isset($_GET["mode"] == "edit")){
                                 $q = 'SELECT dd.*,m.kname,g.jabatan FROM aki_ddinas dd left join `aki_tabel_master` m on dd.nik=m.nik left join aki_golongan_kerja g on dd.nik=g.nik WHERE md5(dd.nodinas)="'.$_GET["nodinas"].'" order by dd.nik ';
                                 $sqldinas = mysql_query($q,$dbLink);
                                 $iJurnal = 0;
