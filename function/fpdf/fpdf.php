@@ -377,11 +377,14 @@ function AddPage($orientation='', $size='', $rotation=0)
 function Footer()
 {
     // Position at 1.5 cm from bottom
-    $this->SetY(-15);
+    $this->SetY(-10);
     // Arial italic 8
     $this->SetFont('Arial','I',8);
     // Page number
-    $this->Cell(0,10,'Page '.$this->PageNo(),0,0,'C');
+    $this->SetTextColor(180);
+    date_default_timezone_set("Asia/Jakarta");
+    $tgl = date("d/m/Y H:i:s a");
+    //$this->Cell(0,10,'Dept. SDM & Umum - '.$tgl,0,0,'C');
 }
 function PageNo()
 {

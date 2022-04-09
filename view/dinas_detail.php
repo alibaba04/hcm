@@ -240,7 +240,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <div class="form-group" >
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-arrow-right"></i> No</div>
-                            <input name="txtnodinas" id="txtnodinas" maxlength="30" class="form-control" readonly value="<?php if($_GET["mode"]=='edit'){ echo $dataDinas["nodinas"]; }else{echo $no;}?>" placeholder="Nomor otomatis dibuat">
+                            <input name="txtnodinas" id="txtnodinas" maxlength="30" class="form-control" value="<?php if($_GET["mode"]=='edit'){ echo $dataDinas["nodinas"]; }else{echo $no;}?>" placeholder="Nomor otomatis dibuat">
                         </div>
                     </div>
                     <div class="form-group">
@@ -324,7 +324,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                        while ($dnik = mysql_fetch_array($nikoption)) {
                                             echo '<option value="'.$dnik['nik'].'">'.$dnik['nik'].' - '.$dnik['kname'].'</option>';
                                         }
-                                    echo '</select></div></td><td><div class="form-group"><input type="text" class="form-control" placeholder="Enter ..." name="txtJobs_' . $iJurnal . '" id="txtJobs_' . $iJurnal . '" value="'.$rs_dinas['jabatan'].'" disabled></div></td>';
+                                    echo '</select></div></td><td><div class="form-group"><input type="text" class="form-control" placeholder="Enter ..." name="txtJobs_' . $iJurnal . '" id="txtJobs_' . $iJurnal . '" value="'.$rs_dinas['jabatan'].'" ></div></td>';
                                     echo '<td><div class="form-group"><input type="text" class="form-control" placeholder="Enter ..." name="txtKet_' . $iJurnal . '" id="txtKet_' . $iJurnal . '" value="'.$rs_dinas['ket'].'"></div></td></tr>';
                                     $iJurnal++;
                                 }  

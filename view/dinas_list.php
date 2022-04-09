@@ -145,7 +145,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         if ($tgl1 && $tgl2)
                             $filter = $filter . " AND d.tgl_pengajuan BETWEEN '" . tgl_mysql($tgl1) . "' AND '" . tgl_mysql($tgl2) . "'  ";
                         //database
-                        $q = "SELECT * FROM `aki_dinas` d where d.aktif=1 ".$filter." order by d.tgl_pengajuan desc";
+                        $q = "SELECT * FROM `aki_dinas` d where d.aktif=1 ".$filter." order by d.tgl_pengajuan asc";
                         $rs = new MySQLPagedResultSet($q, 100, $dbLink);
                         echo $rs->getPageNav($_SERVER['QUERY_STRING']);
                     ?></ul>
@@ -154,10 +154,10 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
               <div class="table-responsive mailbox-messages">
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
-                            <th style="width: 5%">Report</th>
-                            <th style="width: 30%">No</th>
-                            <th style="width: 20%">Date</th>
-                            <th style="width: 40%" colspan="2">Desc</th>
+                            <th style="width: 3%">Report</th>
+                            <th style="width: 25%">No</th>
+                            <th style="width: 15%">Date</th>
+                            <th style="width: 52%" colspan="3">Desc</th>
                     </thead><tbody>
                     <?php
                     
@@ -176,7 +176,9 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                             echo "<td class='mailbox-name link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'><b>".$query_data["nodinas"]."</b></td>";
                             echo "<td class='mailbox-date link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'>".date("d F Y", strtotime($query_data["tgl_pengajuan"]))."</td>";
                             echo "<td class='mailbox-subject link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'>".$query_data['ket']."</td>";
-                            echo "<td><center><button type='button' class='btn btn-default' onclick=\"if(confirm('Laporan sudah diterima ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&nodinas=" . ($query_data["nodinas"]) . "'}\" style='cursor:pointer;'><i class='fa fa-trash'></i></button></center></td></tr>";
+                            echo "<td class='pull-right'><center><button type='button' class='btn btn-default' onclick=\"location.href='pdf/pdf_lapdinas.php?nodinas=".md5($query_data["nodinas"])."'\" style='cursor:pointer;'><i class='fa fa-print'></i></button></center></td>";
+                            echo "<td class='pull-right'><center><button type='button' class='btn btn-default' onclick=\"if(confirm('Laporan sudah diterima ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&nodinas=" . ($query_data["nodinas"]) . "'}\" style='cursor:pointer;'><i class='fa fa-trash'></i></button></center></td></tr>";
+                            
                         $rowCounter++;
                     }
                     if (!$rs->getNumPages()) {
