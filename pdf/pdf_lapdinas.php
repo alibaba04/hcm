@@ -133,7 +133,7 @@
     $pdf->SetFont('Calibri', '', 11);
     $pdf->Cell(118,6,'',0,0,'C',0);
     $pdf->Cell(50,5,'Direktur Utama',0,1,'L',0);
-    $pdf->SetTextColor(180);
+    //$pdf->SetTextColor(180);
     $pdf->Ln(22);
     $pdf->SetFont('Calibri', '', 9);
     date_default_timezone_set("Asia/Jakarta");
