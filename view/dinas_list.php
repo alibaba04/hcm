@@ -175,8 +175,13 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         }
                             echo "<td class='mailbox-name link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'><b>".$query_data["nodinas"]."</b></td>";
                             echo "<td class='mailbox-date link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'>".date("d F Y", strtotime($query_data["tgl_pengajuan"]))."</td>";
-                            echo "<td class='mailbox-subject link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'>".$query_data['ket']."</td>";
-                            echo "<td class='pull-right'><center><button type='button' class='btn btn-default' onclick=\"location.href='pdf/pdf_lapdinas.php?nodinas=".md5($query_data["nodinas"])."'\" style='cursor:pointer;'><i class='fa fa-print'></i></button></center></td>";
+                            echo "<td class='mailbox-subject link' href='".$_SERVER["PHP_SELF"]."?page=view/dinas_detail&mode=edit&nodinas=".md5($query_data['nodinas'])."'>";
+                                if (strlen($query_data['ket'])>=20) {
+                                     echo substr($query_data['ket'], 0, 30)." . . . .";
+                                 }else{
+                                    echo $query_data['ket'];
+                                 }
+                            echo "</td><td class='pull-right'><center><button type='button' class='btn btn-default' onclick=\"location.href='pdf/pdf_lapdinas.php?nodinas=".md5($query_data["nodinas"])."'\" style='cursor:pointer;'><i class='fa fa-print'></i></button></center></td>";
                             echo "<td class='pull-right'><center><button type='button' class='btn btn-default' onclick=\"if(confirm('Laporan sudah diterima ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&nodinas=" . ($query_data["nodinas"]) . "'}\" style='cursor:pointer;'><i class='fa fa-trash'></i></button></center></td></tr>";
                             
                         $rowCounter++;

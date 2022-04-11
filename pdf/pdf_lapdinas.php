@@ -70,12 +70,14 @@
     $pdf->Cell(7,6,'',0,0,'L',0);
     $pdf->Cell(38,6,'Lokasi Tujuan',0,0,'L',0);
     $pdf->SetFont('Calibri', '', 11);
-    $pdf->MultiCell(150,6,": ".$hasil['alamat'],0,'J',0);
+    $pdf->Cell(2,5,':',0,0,'L',0);
+    $pdf->MultiCell(140,5,$hasil['alamat'],0,'J',0);
     $pdf->SetFont('Calibri', 'B', 11);
     $pdf->Cell(7,6,'',0,0,'L',0);
     $pdf->Cell(38,6,'Keperluan',0,0,'L',0);
     $pdf->SetFont('Calibri', '', 11);
-    $pdf->MultiCell(150,6,": ".$hasil['ket'],0,'J',0);
+    $pdf->Cell(2,5,':',0,0,'L',0);
+    $pdf->MultiCell(140,5,$hasil['ket'],0,'J',0);
     $pdf->SetFont('Calibri', 'B', 11);
     $pdf->Cell(7,6,'',0,0,'L',0);
     $pdf->Cell(38,6,'Transportasi',0,0,'L',0);
@@ -133,8 +135,8 @@
     $pdf->SetFont('Calibri', '', 11);
     $pdf->Cell(118,6,'',0,0,'C',0);
     $pdf->Cell(50,5,'Direktur Utama',0,1,'L',0);
-    //$pdf->SetTextColor(180);
-    $pdf->Ln(15);
+    $pdf->SetTextColor(180);
+    $pdf->SetY(290);
     $pdf->SetFont('Calibri', '', 9);
     date_default_timezone_set("Asia/Jakarta");
     $tgl = date("d/m/Y H:i:s a");
