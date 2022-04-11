@@ -23,7 +23,7 @@
         $pdf->Cell(1,6,'',0,1,'C',0);
     }
 
-    $pdf->Cell(0, 7, "DATA IZIN 1/2 HARI ".$years, 0, 1, 'C');
+    $pdf->Cell(0, 7, "DATA DINAS LUAR ".$years, 0, 1, 'C');
     $qt='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,jenis,COUNT(nik) as jml FROM `aki_izin`WHERE aktif=1 and jenis ="Dinas" and year(tanggal)='.$years.' GROUP by month,nik';
     $result=mysqli_query($dbLink,$qt);
     $absen=array();
