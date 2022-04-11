@@ -138,7 +138,7 @@
     $pdf->SetFont('Calibri', '', 9);
     date_default_timezone_set("Asia/Jakarta");
     $tgl = date("d/m/Y H:i:s a");
-    $pdf->Cell(116,6,'Printed by SDM Dept. '.$tgl,0,0,'R',0);
+    $pdf->Cell(185,6,'Printed by SDM Dept. '.$tgl,0,1,'C',0);
     $pdf->SetTextColor(0);
     // LAPORAN //
     $pdf->AddPage();
