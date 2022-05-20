@@ -41,19 +41,24 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         }else{
             $("#txthari").prop('disabled', false);
         }
+        if ($("#txtJenis").val() != 1) {
+            $(".btnexcel").prop('disabled', true);
+        }
+        if ($("#txtJenis").val() == 1) {
+            $(".btnexcel").prop('disabled', false);
+        }
     }
     $(document).ready(function () {
-        /*if ($("#txtJenis").val()==7) {
-            $("#txthari").prop('disabled', false);
-        }else{
-            $("#txthari").prop('disabled', true);
-        }*/
+        if ($("#txtJenis").val() != 1) {
+            $(".btnexcel").prop('disabled', true);
+        }
         $("#myModal").modal({backdrop: 'static'});
         $(".select2").select2();
         $("#stanggal").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
         $('#btnClose').click(function(){
             location.href='index.php';
         });
+        
     });
     function toexcel() {
         var gol = '';
@@ -105,8 +110,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             <div class="modal-body">
                 <select class="form-control" name="txtJenis" id="txtJenis" onchange="myFchange()">
                     <option value="1">Kehadiran Per Hari</option>
-                    <option value="2">Absensi Per Bulan</option>
-                    <option value="3">Izin Per Bulan</option>
+                    <option value="2">Absensi Per Tahun</option>
+                    <option value="3">Izin Per Tahun</option>
                     <option value="4">Izin 1/2 Hari Per Bulan</option>
                     <option value="5">Cuti Per Bulan</option>
                     <option value="6">Dinas Per Bulan</option>
@@ -154,7 +159,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             </div>
             <div class="modal-footer">
             <?php
-                echo '<div class="input-group input-group-sm col-lg-1 pull-left"><a><button class="btn btn-info pull-right" onclick="toexcel()"><i class="ion ion-ios-download"></i> Export Excel</button></a></div><div><span></span></div>';
+                echo '<div class="input-group input-group-sm col-lg-1 pull-left"><a><button class="btn btn-info pull-right btnexcel" onclick="toexcel()"><i class="ion ion-ios-download"></i> Export Excel</button></a></div><div><span></span></div>';
                 echo '<div class="input-group input-group-sm col-lg-1 pull-right"><a><button class="btn btn-info pull-right" onclick="topdf()"><i class="ion ion-ios-download"></i> Download</button></a></div>';
             ?>
             </div>

@@ -52,8 +52,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         if (res == 'pesan=Gagal') {
             $("#myPesan").modal({backdrop: 'static'});
         }
-        var mEdit = link.match(/mode=edit/g);
-        if (mEdit == 'mode=edit') {
+        var mEdit = link.match(/mode=Edit/g);
+        if (mEdit == 'mode=Edit') {
             $("#myModal").modal({backdrop: 'static'});
         } 
         $("#txtdatepicker").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
@@ -66,18 +66,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     });
 </script>
 
-<?php
-if ($_GET["mode"] == "edit") {
-    $q = "SELECT * FROM `aki_libur` WHERE 1=1 and id=".$_GET["kode"];
-    $rsTemp = mysql_query($q, $dbLink);
-    if ($dataId = mysql_fetch_array($rsTemp)) {
-        echo "<input type='hidden' id='txtid' name='txtid' value='" . $dataId["id"] . "'>";
-    } 
-    echo "<input type='hidden' name='txtMode' value='Edit'>";
-}else{
-    echo "<input type='hidden' name='txtMode' value='Add'>";
-}
-?>
 <section class="content-header">
     <h1>
         Data Izin
@@ -128,7 +116,6 @@ if ($_GET["mode"] == "edit") {
            </form>
         </div>
         <form action="index2.php?page=view/libur_list" method="post" name="frmSiswaDetail" onSubmit="return validasiForm(this);" autocomplete="off">
-        <input type='hidden' name='txtMode' value='Add'>
         <div class="col-md-9">
           <div class="box box-primary">
             <div class="box-header with-border">
@@ -139,7 +126,18 @@ if ($_GET["mode"] == "edit") {
                 <div class="mailbox-controls">
                     <div class="btn-group">
                     </div>
-                    <ul class="pagination pagination-sm inline"><?php 
+                    <ul class="pagination pagination-sm inline">
+                    <?php 
+                        if ($_GET["mode"] == "Edit") {
+                            $q = "SELECT * FROM `aki_libur` WHERE 1=1 and id=".$_GET["kode"];
+                            $rsTemp = mysql_query($q, $dbLink);
+                            if ($dataId = mysql_fetch_array($rsTemp)) {
+                                echo "<input type='hidden' id='txtid' name='txtid' value='" . $dataId["id"] . "'>";
+                            } 
+                            echo "<input type='hidden' name='txtMode' value='Edit'>";
+                        }else{
+                            echo "<input type='hidden' name='txtMode' value='Add'>";
+                        }
                         if (isset($_GET["month"])){
                             $smonth = secureParam($_GET["month"], $dbLink);
                         }else{
@@ -191,8 +189,8 @@ if ($_GET["mode"] == "edit") {
                         }
                         echo "
                         <tr>
-                            <td><button type='button' class='btn btn-primary' onclick=\"if(confirm('Apakah anda yakin akan menghapus data ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["no"]) . "'}\" style='cursor:pointer;'><i class='fa fa-trash'></i></button> ";
-                        echo "<button type='button' onclick=location.href='".$_SERVER["PHP_SELF"]."?page=view/libur_list&mode=edit&kode=" . ($query_data["id"]) . "' class='btn btn-primary' style='cursor:pointer;'><i class='fa fa-pencil'></i></button></td>";
+                            <td><button type='button' class='btn btn-primary' onclick=\"if(confirm('Apakah anda yakin akan menghapus data ?')){location.href='index2.php?page=" . $curPage . "&txtMode=Delete&kode=" . ($query_data["id"]) . "'}\" style='cursor:pointer;'><i class='fa fa-trash'></i></button> ";
+                        echo "<button type='button' onclick=location.href='".$_SERVER["PHP_SELF"]."?page=view/libur_list&mode=Edit&kode=" . ($query_data["id"]) . "' class='btn btn-primary' style='cursor:pointer;'><i class='fa fa-pencil'></i></button></td>";
 
                         echo '<td><b>'.date("d F Y", strtotime($query_data["tanggal"])).'</td>';
                         echo '<td><b>'.$query_data['keterangan'].'</td>';
@@ -232,12 +230,12 @@ if ($_GET["mode"] == "edit") {
                         <div class="form-group">
                             <label>Tanggal</label>
                             <div class="input-group date">
-                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right" name="txtdatepicker" id="txtdatepicker" value="<?php if($_GET["mode"] == "edit"){echo date("d-m-Y", strtotime($dataId["tanggal"]));}?>">
+                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right" name="txtdatepicker" id="txtdatepicker" value="<?php if($_GET["mode"] == "Edit"){echo date("d-m-Y", strtotime($dataId["tanggal"]));}?>">
                             </div>
                         </div>
                         <div class="form-group">
                           <label>Keterangan</label>
-                          <textarea class="form-control" rows="3" placeholder="Enter ..." name="txtket" id="txtket"><?php if($_GET["mode"] == "edit"){echo $dataId["keterangan"];}?></textarea>
+                          <textarea class="form-control" rows="3" placeholder="Enter ..." name="txtket" id="txtket"><?php if($_GET["mode"] == "Edit"){echo $dataId["keterangan"];}?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

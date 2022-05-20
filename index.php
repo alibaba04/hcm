@@ -36,7 +36,7 @@ require_once('./function/fungsi_formatdate.php');
         <link rel="stylesheet" href="plugins/fullcalendar/fullcalendar.print.css" media="print">
         <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
         <!-- Ionicons -->
-<!--        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">-->
+        <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
         <link rel="stylesheet" href="ionicons/css/ionicons.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="dist/css/AdminLTE.css">
@@ -247,7 +247,8 @@ require_once('./function/fungsi_formatdate.php');
         <script src="dist/js/demo.js"></script>
         <script src="plugins/fullcalendar/fullcalendar.min.js"></script>    
         <script src="plugins/timepicker/bootstrap-timepicker.min.js"></script>
-
+        <script src="plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
     </body>
     
     

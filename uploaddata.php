@@ -10,7 +10,6 @@ include "excel_reader2.php";
 //upload file xls
 $target = basename($_FILES['filepegawai']['name']);
 move_uploaded_file($_FILES['filepegawai']['tmp_name'], $target);
-
 //beri permision agar file xls dapat dibaca
 chmod($_FILES['filepegawai']['name'], 0777);
 
@@ -32,12 +31,14 @@ for($i = 2; $i <= $jumlah_baris; $i++)
 	$scan4 = $data->val($i, 11);
 	$scan5 = $data->val($i, 12);
 	$scan6 = $data->val($i, 13);
+	date_default_timezone_set("Asia/Jakarta");
+	$tgl = date("Y-m-d h:i:s");
 
 	//buat pengujian jika nama,alamat & telp tidak kosong
 	if($nik != "" && $tanggal != "" && $scan1 != ""){
 		//persiapkan insert data ke database
 		$fixtanggal = date("y-m-d", strtotime($tanggal));
-		$q="INSERT INTO aki_absensi (`nik`, `tanggal`, `scan1`, `scan2`, `scan3`, `scan4`, `scan5`, `scan6`)  VALUES ($nik', '$fixtanggal', '$scan1', '$scan2', '$scan3', '$scan4', '$scan5', '$scan6')";
+		$q="INSERT INTO aki_absensi (`nik`, `tanggal`, `scan1`, `scan2`, `scan3`, `scan4`, `scan5`, `scan6`, `tgl_create`)  VALUES ($nik', '$fixtanggal', '$scan1', '$scan2', '$scan3', '$scan4', '$scan5', '$scan6' , '$tgl')";
 		mysql_query( $q,$dbLink);
 		$berhasil++;
 	}

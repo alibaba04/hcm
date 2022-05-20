@@ -141,7 +141,7 @@ class c_libur
 			return $this->strResults;
 		}
 
-		$no = secureParam($kode, $dbLink);
+		$id = secureParam($kode, $dbLink);
         $pembatal = $_SESSION["my"]->id;
 
 		try
@@ -154,14 +154,13 @@ class c_libur
 
 			date_default_timezone_set("Asia/Jakarta");
 			$tgl = date("Y-m-d h:i:s");
-			$pesan = $params["txtUpdate"];
-			$ket = "Pesan : ".$pesan." -has delete, datetime: ".$tgl;
+			$ket = "Pesan : id ".$id." -has delete, datetime: ".$tgl;
 			$q4 = "INSERT INTO `aki_report`( `kodeUser`, `datetime`, `ket`) VALUES";
 			$q4.= "('".$pembatal."','".$tgl."','".$ket."');";
 			if (!mysql_query( $q4, $dbLink))
 				throw new Exception('Gagal tambah report. ');
 			
-			$q = "UPDATE `aki_izin` SET `aktif`=0 WHERE no='".$no."'";
+			$q = "DELETE FROM `aki_libur` WHERE id='".$id."'";
 			if (!mysql_query( $q, $dbLink))
 				throw new Exception('Gagal hapus data izin.');
 			@mysql_query("COMMIT", $dbLink);

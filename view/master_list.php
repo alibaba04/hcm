@@ -60,6 +60,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         btnproduksi.classList.remove("active");
     }
     $(document).ready(function () { 
+        $("#example1").DataTable();
         $('#btnall').click(function(){
             $("#btnall").addClass("active");
         });
@@ -127,7 +128,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 <section class="content">
     <!-- Main row -->
     <div class="row">
-        <div class="col-md-3">
+
+        <!-- <div class="col-md-3">
           <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/profile_detail&mode=Add'; ?>" class="btn btn-primary btn-block margin-bottom">ADD</a>
           <a href="#" class="btn btn-primary btn-block margin-bottom" id="btnimport">Import Presence</a>
           <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
@@ -178,12 +180,12 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 </li>
               </ul>
             </div>
-            <!-- /.box-body -->
           </div>
-        </div>
-        </form>
-        <section class="col-lg-9 connectedSortable">
+          </form>
+        </div> -->
+        <section class="col-lg-12 connectedSortable">
             <div class="box box-primary">
+
                 <?php
                 if (isset($_GET["kname"])){
                     $kname = secureParam($_GET["kname"], $dbLink);
@@ -217,55 +219,81 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     $filter = $filter . " AND m.status='" . $status . "'";
                 //database
                 $q = "SELECT * ";
-                $q.= "FROM aki_tabel_master m left join aki_golongan_kerja g on m.nik=g.nik";
+                $q.= "FROM aki_tabel_master m right join aki_golongan_kerja g on m.nik=g.nik";
                 $q.= " WHERE 1=1 " . $filter." order by m.nik";
                 //Paging
                 $rs = new MySQLPagedResultSet($q, 500, $dbLink);
                 ?>
                 <div class="box-header">
-                    <i class="ion ion-clipboard"></i>
-                    <ul class="pagination pagination-sm inline"><?php echo $rs->getPageNav($_SERVER['QUERY_STRING']) ?></ul>
+                    <div>
+                        <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/profile_detail&mode=Add'; ?>" class="btn btn-primary margin-bottom">ADD</a>
+                        <a href="#" class="btn btn-primary margin-bottom" id="btnimport">Import Presence</a>
+                    </div>
+                    <!-- <ul class="pagination pagination-sm inline"><?php echo $rs->getPageNav($_SERVER['QUERY_STRING']) ?></ul> -->
                     <!--Cetak PDF dan Export Excel -->
                     <!-- <a href="index2.php?page=<?= $curPage; ?>&mode=lap&tgl1=<?= $tglKirim1; ?>&tgl2=<?= $tglKirim2; ?>" title="Expot Excel"><i class="fa fa-file-excel-o pull-right inline"></i></a><i></i> -->
                     <!-- <a href="pdf/pdf_perkiraan.php" title="Cetak PDF CoA"><button type="button" class="btn btn-primary pull-right"><i class="fa fa-print "></i> Print COA</button></a> -->
                     <!--End Cetak PDF dan Export Excel -->
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>img</th>
+                                <th>NIK</th>
+                                <th>Nama</th>
+                                <th>Departemen</th>
+                                <th>Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                while ($query_data = $rs->fetchArray()) {
+                                    $gol='';
+                                    $aktif = '';
+                                    if ($query_data['status']=='Aktif') {
+                                        $gol=$query_data['gol_kerja'];
+                                        $aktif = 'bg-green';
+                                    }else if($query_data['status']=='Non Aktif'){
+                                        $gol = "Nonaktif";
+                                        $aktif = 'bg-green-active';
+                                    }
+                                    else{
+                                        $gol = "Mutasi";
+                                        $aktif = 'bg-light-green';
+                                    }
+                                    echo '<tr>';
+                                    echo '<td><a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'"><span class="info-box-icon '.$aktif.'" style="border-radius: 10px;"><img class="img " src="dist/img/logo-qoobah.png" alt="User Avatar"></span></a></td>';
+                                    echo "<td>".$query_data['nik']."</td>";
+                                    echo "<td>".$query_data['kname']."</td>";
+                                    echo "<td>".$query_data['departemen']."</td>";
+                                    if ($query_data['unit']=="") {
+                                        echo "<td>-</td></tr>";
+                                    }else{
+                                        echo "<td>".$query_data['unit']."</td></tr>";
+                                    }
+                                    
+                                    /*echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'"><div class="col-sm-4 col-xs-12">
+                                    <div class="info-box with-border">
+                                    <span class="info-box-icon '.$aktif.'" style="border-radius: 10px;"><img class="img " src="dist/img/logo-qoobah.png" alt="User Avatar"></span>
+                                    <div class="info-box-content" style="color: black;">
+                                    <span class="info-box-number">'.$query_data['kname'].'</span>
+                                    <span class="info-box-text">NIK : '.$query_data['nik'].'</span>
+                                    </div></div>
+                                    </div></a>';*/
+                                    $rowCounter++;
+                                }
+                            ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>img</th>
+                                <th>NIK</th>
+                                <th>Nama</th>
+                                <th>Departemen</th>
+                                <th>Unit</th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-
-                <div class="box-body">
-                    <?php
-                    $rowCounter=1;
-                    $totDebet = 0; $totKredit = 0;
-                    while ($query_data = $rs->fetchArray()) {
-                        $gol='';
-                        $aktif = '';
-                        if ($query_data['status']=='Aktif') {
-                            $gol=$query_data['gol_kerja'];
-                            $aktif = 'bg-green';
-                        }else if($query_data['status']=='Non Aktif'){
-                            $gol = "Nonaktif";
-                            $aktif = 'bg-green-active';
-                        }
-                        else{
-                            $gol = "Mutasi";
-                            $aktif = 'bg-light-green';
-                        }
-                        echo '<a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'"><div class="col-sm-4 col-xs-12">
-                        <div class="info-box with-border">
-                        <span class="info-box-icon '.$aktif.'" style="border-radius: 10px;"><img class="img " src="dist/img/logo-qoobah.png" alt="User Avatar"></span>
-                        <div class="info-box-content" style="color: black;">
-                        <span class="info-box-number">'.$query_data['kname'].'</span>
-                        <span class="info-box-text">NIK : '.$query_data['nik'].'</span>
-                        </div></div>
-                        </div></a>';
-                        $rowCounter++;
-                    }
-                    if (!$rs->getNumPages()) {
-                        echo("<tr class='even'>");
-                        echo ("<td colspan='10' align='center'>No Data Found!</td>");
-                        echo("</tr>");
-                    }
-                    ?>
-                </div> 
             </div>
         </section>
         <div class="modal fade" id="myModal" role="dialog">

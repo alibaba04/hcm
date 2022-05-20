@@ -189,7 +189,7 @@
 			$totalCt=0;
 			$totalCm=0;
 			$totalAbsen=0;
-			echo "<tr><td>".$lap['nik']."</td>";
+			echo "<tr><td>'".$lap['nik']."</td>";
 			echo "<td>".$lap['kname']."</td>";
 			for ($i=26; $i <= $cday; $i++) { 
 				if (empty($absen[$lap['nik']][$i])) {
