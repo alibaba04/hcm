@@ -112,9 +112,9 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <option value="1">Kehadiran Per Hari</option>
                     <option value="2">Absensi Per Tahun</option>
                     <option value="3">Izin Per Tahun</option>
-                    <option value="4">Izin 1/2 Hari Per Bulan</option>
-                    <option value="5">Cuti Per Bulan</option>
-                    <option value="6">Dinas Per Bulan</option>
+                    <option value="4">Izin 1/2 Hari Per Tahun</option>
+                    <option value="5">Cuti Per Tahun</option>
+                    <option value="6">Dinas Per Tahun</option>
                     <option value="7">Insentif</option>
                     <option value="8">Insentif Detail</option>
                 </select><label></label>
