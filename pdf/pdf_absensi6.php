@@ -24,7 +24,7 @@
     }
 
     $pdf->Cell(0, 7, "DATA DINAS LUAR ".$years, 0, 1, 'C');
-    $qt='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,jenis,COUNT(nik) as jml FROM `aki_izin`WHERE aktif=1 and jenis ="Dinas" and year(tanggal)='.$years.' GROUP by month,nik';
+    $qt='SELECT dd.nik,d.tgl_berangkat,month(tgl_berangkat) as month,COUNT(dd.nik) as jml FROM `aki_dinas` d left join aki_ddinas dd on d.nodinas=dd.nodinas WHERE aktif=1 and year(tgl_berangkat)="'.$years.'" GROUP by month,nik';
     $result=mysqli_query($dbLink,$qt);
     $absen=array();
     while ($labsen = mysqli_fetch_array($result)) {

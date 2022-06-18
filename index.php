@@ -27,7 +27,7 @@ require_once('./function/fungsi_formatdate.php');
         <meta charset="utf-8">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>HCM</title>
+        <title>SDM</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.6 -->
@@ -114,7 +114,7 @@ require_once('./function/fungsi_formatdate.php');
                         <!-- Sidebar toggle button-->
                         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                             <span class="sr-only">Toggle navigation</span>
-                            <span style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">HCM</span>
+                            <span style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">SDM</span>
                         </a>
                         
 
@@ -198,7 +198,7 @@ require_once('./function/fungsi_formatdate.php');
                 <footer class="main-footer">
 
                     <div class="pull-right hidden-xs">
-                        <b>HCM App</b> v 2.2.0 &nbsp;&nbsp;<strong>Created by : <a href="http://instagram.com/baihaqial">alibaba</a>.
+                        <b>SDM App</b> v 2.2.0 &nbsp;&nbsp;<strong>Created by : <a href="http://instagram.com/baihaqial">alibaba</a>.
                     </div>
                     <strong>.</strong>
                 </footer>

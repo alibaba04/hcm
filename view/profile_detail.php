@@ -47,16 +47,13 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 <!-- Include script date di bawah jika ada field tanggal -->
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function () { 
-        $("#txtTglTransaksi").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
+        $(".datepicker").datepicker({ format: 'dd/mm/yyyy', autoclose:true }); 
         $(".select2").select2();
         if($("#cbogol").val() == 'management'){
           document.getElementById("cboUnit").disabled = true;
           let element = document.getElementById("cboUnit");
             element.value = "-";
         }
-        /*$("#btnn").click(function(){
-            alert($("#cboUnit").val());
-        });*/
         $("#cbogol").change(function(){
           var cbogol = $("#cbogol").val();  
           if(cbogol == 'management'){
@@ -72,11 +69,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
       $("#upload_link").on('click', function(e){
         e.preventDefault();
         $("#upload:hidden").trigger('click');
-      });
-      $('#datepicker').datepicker({
-        autoclose: true
-      });
-      
+      }); 
     });
     var loadFile = function(event) {
       var output = document.getElementById('output');
@@ -177,9 +170,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                     <input type="text" class="form-control" id="inputPLaceb" name="inputPLaceb" required placeholder="Place" value="<?php if(($_GET["mode"]) == "Edit"){echo $dataKaryawan["tempat_lahir"];}  ?>">
                   </div>
                   <label for="inputDate" class="col-sm-2 control-label">Date of Birth</label>
-
                   <div class="col-sm-5">
-                    <input type="text" name="inputDate" class="form-control pull-right" value="<?php if(($_GET["mode"]) == "Edit"){echo date('d/m/Y', strtotime($dataKaryawan["tanggal_lahir"]));} ?>" id="datepicker">
+                    <input type="text" name="inputDate" class="form-control pull-right datepicker" value="<?php if(($_GET["mode"]) == "Edit"){echo date('d/m/Y', strtotime($dataKaryawan["tanggal_lahir"]));} ?>">
                   </div>
                 </div>
                 <div class="form-group">
@@ -227,10 +219,9 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 </div>
                 <div class="form-group">
                   <label for="inputActive" class="col-sm-2 control-label">Active</label>
-
                   <div class="col-sm-10">
                     <div class="input-group date">
-                      <input type="text" name="inputActive" class="form-control pull-right" value="<?php if(($_GET["mode"]) == "Edit"){echo date('d/m/Y', strtotime($dataKaryawan["tanggal_aktif"]));} ?>" id="datepicker">
+                      <input type="text" name="inputActive" class="form-control pull-right datepicker" value="<?php if(($_GET["mode"]) == "Edit"){echo date('d/m/Y', strtotime($dataKaryawan["tanggal_lahir"]));} ?>" >
                     </div>
                   </div>
                 </div>

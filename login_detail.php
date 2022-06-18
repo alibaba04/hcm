@@ -83,7 +83,7 @@ if (isset($_POST[txtUserID])) {
     <footer class="login-footer" style="padding-right: 20px;">
         
         <div class="pull-right hidden-xs" style="color: white;">
-            <b>HCM App</b> v 2.2.0 &nbsp;&nbsp;<strong>Created by : <a href="http://instagram.com/baihaqial" style="color: white;">alibaba</a>.
+            <b>SDM App</b> v 2.2.0 &nbsp;&nbsp;<strong>Created by : <a href="http://instagram.com/baihaqial" style="color: white;">alibaba</a>.
             </div>
     </footer>
     <!-- /.login-box -->

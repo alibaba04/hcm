@@ -41,17 +41,9 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         }else{
             $("#txthari").prop('disabled', false);
         }
-        if ($("#txtJenis").val() != 1) {
-            $(".btnexcel").prop('disabled', true);
-        }
-        if ($("#txtJenis").val() == 1) {
-            $(".btnexcel").prop('disabled', false);
-        }
     }
     $(document).ready(function () {
-        if ($("#txtJenis").val() != 1) {
-            $(".btnexcel").prop('disabled', true);
-        }
+       
         $("#myModal").modal({backdrop: 'static'});
         $(".select2").select2();
         $("#stanggal").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
@@ -67,8 +59,23 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         }else if($("#txtGol").val()==3){
             gol = 'Produksi';
         }
+        //alert('excel/export2.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol);
         if ($("#txtJenis").val() == 1) {
             location.href='excel/export.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+        }else if($("#txtJenis").val() == 2){
+            location.href='excel/export2.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+        }else if($("#txtJenis").val() == 3){
+            location.href='excel/export3.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+        }else if($("#txtJenis").val() == 4){
+            location.href='excel/export4.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+        }else if($("#txtJenis").val() == 5){
+            location.href='excel/export5.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+        }else if($("#txtJenis").val() == 6){
+            location.href='excel/export6.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+        }else if($("#txtJenis").val() == 7){
+            location.href='excel/export7.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+        }else if($("#txtJenis").val() == 8){
+            location.href='excel/export8.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
         }
     }
     function topdf() {
@@ -90,8 +97,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             location.href='pdf/pdf_absensi5.php?&years='+$("#txtTahun").val()+'&gol='+gol;
         }else if($("#txtJenis").val() == 6){
             location.href='pdf/pdf_absensi6.php?&years='+$("#txtTahun").val()+'&gol='+gol;
-        }
-        else if($("#txtJenis").val() == 7){
+        }else if($("#txtJenis").val() == 7){
             location.href='pdf/pdf_absensi8.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val();
         }else if($("#txtJenis").val() == 8){
             location.href='pdf/pdf_absensi7.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val();
@@ -110,11 +116,11 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             <div class="modal-body">
                 <select class="form-control" name="txtJenis" id="txtJenis" onchange="myFchange()">
                     <option value="1">Kehadiran Per Hari</option>
-                    <option value="2">Absensi Per Tahun</option>
-                    <option value="3">Izin Per Tahun</option>
-                    <option value="4">Izin 1/2 Hari Per Tahun</option>
-                    <option value="5">Cuti Per Tahun</option>
-                    <option value="6">Dinas Per Tahun</option>
+                    <option value="2">Absensi Per Bulan</option>
+                    <option value="3">Izin Per Bulan</option>
+                    <option value="4">Izin 1/2 Hari Per Bulan</option>
+                    <option value="5">Cuti Per Bulan</option>
+                    <option value="6">Dinas Per Bulan</option>
                     <option value="7">Insentif</option>
                     <option value="8">Insentif Detail</option>
                 </select><label></label>

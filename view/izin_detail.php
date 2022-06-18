@@ -52,7 +52,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             showInputs: false
         });
         $('#txtdatepicker_0').datepicker({
-          autoclose: true
+            format: 'dd-mm-yyyy',
+            autoclose: true
         });
     });
 </script>
@@ -116,7 +117,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         var td = document.createElement("TD");
         td.setAttribute("align","left");
         td.style.verticalAlign = 'top';
-        td.innerHTML+='<div class="form-group"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right" name="txtdatepicker_'+tcounter+'" id="txtdatepicker_'+tcounter+'"></div></div>';
+        td.innerHTML+='<div class="form-group"><div class="input-group date"><input type="text" class="form-control pull-right" name="txtdatepicker_'+tcounter+'" id="txtdatepicker_'+tcounter+'"></div></div>';
         trow.appendChild(td);
 
         //Kolom 4 awal
@@ -181,11 +182,11 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
 <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
     <section class="content">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/izin_list'; ?>" class="btn btn-primary btn-block margin-bottom">Back</a>
             <input type="hidden" name="page" value="<?php echo $curPage; ?>">
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10">
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">Add New </h3>
@@ -220,8 +221,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                            <th style="width: 1%"><i class='fa fa-edit'></i></th>
                            <th style="width: 15%">Jenis Izin</th>
                            <th style="width: 10%">Tanggal</th>
-                           <th style="width: 8%">Jam Awal</th>
-                           <th style="width: 8%">Jam Akhir</th>
+                           <th style="width: 10%">Jam Awal</th>
+                           <th style="width: 10%">Jam Akhir</th>
                            <th style="width: 30%">Keterangan</th>
                         </tr>
                     </thead>

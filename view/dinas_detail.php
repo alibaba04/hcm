@@ -304,7 +304,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                         <tr>
                            <th style="width: 1%"><i class='fa fa-edit'></i></th>
                            <th style="">NIK</th>
-                           <th style="width: 25%">Job</th>
+                           <th style="width: 20%">Job</th>
                            <th style="width: 30%">Description</th>
                         </tr>
                     </thead>

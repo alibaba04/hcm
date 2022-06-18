@@ -47,7 +47,7 @@ defined( 'validSession' ) or die( 'Restricted access' );
             <div class="box box-primary">
                 <div class="box-header">
                     <i class="ion ion-clipboard"></i>
-                    <h3 class="box-title">HCM </h3>
+                    <h3 class="box-title">SDM </h3>
                 </div>
                 <div class="box-body">
                     <ul class="todo-list">
