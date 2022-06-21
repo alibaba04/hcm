@@ -188,5 +188,5 @@
         $pdf->Cell(20,5,($resulta),1,1,'C',1);
         $no2++;
     }
-    $pdf->Output('TransaksiKas.pdf', 'I'); //download file pdf
+    $pdf->Output('Report_insentif_detail_'.$month.'/'.$years.'.pdf', 'I'); //download file pdf
 ?>

@@ -98,5 +98,5 @@
         $pdf->Cell(1,5,'',0,1,'C',0);
         $no++;
     }
-    $pdf->Output('TransaksiKas.pdf', 'I'); //download file pdf
+    $pdf->Output('Report_cuti_'.$month.'/'.$years.'.pdf', 'I'); //download file pdf
 ?>

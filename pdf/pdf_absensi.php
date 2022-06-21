@@ -426,5 +426,5 @@
         $no++;
     }
     //output file PDF
-    $pdf->Output('TransaksiKas.pdf', 'I'); //download file pdf
+    $pdf->Output('Report_absensi_'.$month.'/'.$years.'pdf', 'I'); //download file pdf
 ?>
