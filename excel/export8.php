@@ -89,49 +89,98 @@
 			$result=mysqli_query($dbLink,$q);
 			$no=1;
 			$absenR=array();
+			 
 			while ($lap = mysqli_fetch_array($result)) {
-				echo "<tr>";
+				$red=''; $red2=''; $red3=''; $red4=''; 
+				if ($no % 2 == 0) {
+					echo "<tr style='background: lightblue;'>";
+				}else{
+					echo "<tr>";
+				}
 				echo "<td><center>".$no."</center></td>";
 				echo "<td><center>".$lap['nik']."</center></td>";
 				echo "<td><center>".$lap['kname']."</center></td>";
 				echo "<td><center>".$lap['tanggal']."</center></td>";
 				echo "<td><center>".$lap['dayname']."</center></td>";
-
+				if ($lap["scan1"]>'07:30:00') {
+					$red="style='background: lightblue;'";
+				}
 				if ($lap["jabatan"] == 'Kerumahtanggaan') {
-					echo "<td><center>".$lap['scan1']."</center></td>";
+					if ($lap["scan1"]>'06:30:00') {
+						$red="style='background: red;'";
+					}
+					echo "<td ".$red."><center>".$lap['scan1']."</center></td>";
 				}else{
-					echo "<td><center>".$lap['scan1']."</center></td>";
+					if ($lap["scan1"]>'07:30:00') {
+						$red="style='background: red;'";
+					}
+					echo "<td ".$red."><center>".$lap['scan1']."</center></td>";
 				}
 				
 				if ($lap["gol_kerja"] == 'Manajemen') {
 					if ($lap["jabatan"] == 'Kerumahtanggaan'){
 						if ($lap["dayname"] != 'Saturday') {
-							echo "<td><center>".$lap['scan2']."</center></td>";
-							echo "<td><center>".$lap['scan3']."</center></td>";
-							echo "<td><center>".$lap['scan4']."</center></td>";
+							if ($lap["dayname"] == 'Friday') {
+								if ($lap["scan2"]<'11:00:00' || $lap["scan2"] > '12:00:00') {
+									$red2="style='background: red;'";
+								}
+							}else{
+								if ($lap["scan2"]<'12:00:00' || $lap["scan2"] > '12:30:00') {
+									$red2="style='background: red;'";
+								}
+							}
+							if ($lap["scan3"]=='00:00:00' || $lap["scan3"]<'12:30:00'|| $lap["scan3"] > '13:00:00') {
+								$red3="style='background: red;'";
+							}
+							if ($lap["scan4"]<'17:00:00') {
+								$red4="style='background: red;'";
+							}
+							echo "<td><center ".$red2.">".$lap['scan2']."</center></td>";
+							echo "<td><center ".$red3.">".$lap['scan3']."</center></td>";
+							echo "<td><center ".$red4.">".$lap['scan4']."</center></td>";
 						}else{
+							if ($lap["mpulang"]<'17:00:00' && $lap["dayname"] != 'Saturday') {
+								$red4="style='background: red;'";
+							}
 							echo "<td><center>-</center></td>";
 							echo "<td><center>-</center></td>";
-							echo "<td><center>".$lap['mpulang']."</center></td>";
+							echo "<td ".$red4."><center>".$lap['mpulang']."</center></td>";
 						}
 					}else{
+						if ($lap["mpulang"]<'16:00:00' && $lap["dayname"] != 'Saturday') {
+							$red4="style='background: red;'";
+						}
 						echo "<td><center>-</center></td>";
 						echo "<td><center>-</center></td>";
-						echo "<td><center>".$lap['mpulang']."</center></td>";
-						
+						echo "<td ".$red4."><center>".$lap['mpulang']."</center></td>";
 					}
-
 				}else if ($lap["gol_kerja"] == 'Produksi'){
 					if ($lap["dayname"] != 'Saturday') {
-						echo "<td><center>".$lap['scan2']."</center></td>";
-						echo "<td><center>".$lap['scan3']."</center></td>";
-						echo "<td><center>".$lap['scan4']."</center></td>";
-						
+						if ($lap["dayname"] == 'Friday') {
+							if ($lap["scan2"]<'11:00:00' || $lap["scan2"] > '12:00:00') {
+								$red2="style='background: red;'";
+							}
+						}else{
+							if ($lap["scan2"]<'12:00:00' || $lap["scan2"] > '12:30:00') {
+								$red2="style='background: red;'";
+							}
+						}
+						if ($lap["scan3"]=='00:00:00' || $lap["scan3"]<'12:30:00'|| $lap["scan3"] > '13:00:00') {
+							$red3="style='background: red;'";
+						}
+						if ($lap["scan4"]<'16:00:00') {
+							$red4="style='background: red;'";
+						}
+						echo "<td ".$red2."><center>".$lap['scan2']."</center></td>";
+						echo "<td ".$red3."><center>".$lap['scan3']."</center></td>";
+						echo "<td ".$red4."><center>".$lap['mpulang']."</center></td>";
 					}else{
-						$absenR[$lap['nik']]['istirahat1']+=1;
-						$absenR[$lap['nik']]['istirahat2']+=1;
 						echo "<td><center>-</center></td>";
 						echo "<td><center>-</center></td>";
+						if ($lap["mpulang"]<'16:00:00' && $lap["dayname"] != 'Saturday') {
+							$red4="style='background: red;'";
+						}
+						echo "<td ".$red4."><center>".$lap['mpulang']."</center></td>";
 					}
 				}else{
 					echo "<td><center>-</center></td>";
