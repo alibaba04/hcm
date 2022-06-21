@@ -23,7 +23,7 @@
         $pdf->Cell(1,6,'',0,1,'C',0);
     }
 
-    $pdf->Cell(0, 7, "DATA ABSENSI per HARI ".$years, 0, 1, 'C');
+    $pdf->Cell(0, 7, "DATA ABSENSI DETAIL per HARI ".$years, 0, 1, 'C');
     $qt='SELECT nik,Year(tanggal) as years,month(tanggal) as month ,jenis,COUNT(nik) as jml FROM `aki_izin`WHERE aktif=1 and jenis ="Dinas" and year(tanggal)='.$years.' GROUP by month,nik';
     $result=mysqli_query($dbLink,$qt);
     $absen=array();
@@ -36,6 +36,7 @@
     $pdf->Ln(5);
     $pdf->SetFont('helvetica', 'B', 8); 
     $pdf->SetFillColor(230, 172, 48);
+    $pdf->Cell(7,6,'No',1,0,'L',1);
     $pdf->Cell(15,6,'NIK',1,0,'C',1);
     $pdf->Cell(50,6,'Nama',1,0,'C',1);
     $pdf->Cell(20,6,'Tanggal',1,0,'C',1);
@@ -78,13 +79,14 @@
     $result=mysqli_query($dbLink,$q);
     $no=1;
     $pdf->SetFont('helvetica', '', 7);
+    $absenR=array();
     while ($lap = mysqli_fetch_array($result)) {
         if ($no % 2 == 0) {
             $pdf->SetFillColor(223, 231, 242);
         }else{
             $pdf->SetFillColor(255, 255, 255);
         }
-
+        $pdf->Cell(7,5,$no,1,0,'L',1);
         $pdf->Cell(15,5,$lap["nik"],1,0,'L',1);
         $pdf->Cell(50,5,$lap["kname"],1,0,'L',1);
         $pdf->Cell(20,5,$lap["tanggal"],1,0,'C',1);
@@ -95,11 +97,15 @@
         if ($lap["jabatan"] == 'Kerumahtanggaan') {
             if ($lap["scan1"]>'06:30:00') {
                 $pdf->SetFillColor(255, 0, 0);
+            }else{
+                $absenR[$lap['nik']]['masuk']+=1;
             }
             $pdf->Cell(20,5,$lap["scan1"],1,0,'C',1);
         }else{
             if ($lap["scan1"]>'07:30:00') {
                 $pdf->SetFillColor(255, 0, 0);
+            }else{
+                $absenR[$lap['nik']]['masuk']+=1;
             }
             $pdf->Cell(20,5,$lap["scan1"],1,0,'C',1);
         }
@@ -111,8 +117,18 @@
         if ($lap["gol_kerja"] == 'Manajemen') {
             if ($lap["jabatan"] == 'Kerumahtanggaan'){
                 if ($lap["dayname"] != 'Saturday') {
-                    if ($lap["scan2"]<'12:00:00' || $lap["scan2"] > '12:30:00') {
-                        $pdf->SetFillColor(255, 0, 0);
+                    if ($lap["dayname"] == 'Friday') {
+                        if ($lap["scan2"]<'11:00:00' || $lap["scan2"] > '12:30:00') {
+                            $pdf->SetFillColor(255, 0, 0);
+                        }else{
+                            $absenR[$lap['nik']]['istirahat1']+=1;
+                        }
+                    }else{
+                        if ($lap["scan2"]<'12:00:00' || $lap["scan2"] > '12:30:00') {
+                            $pdf->SetFillColor(255, 0, 0);
+                        }else{
+                            $absenR[$lap['nik']]['istirahat1']+=1;
+                        }
                     }
                     $pdf->Cell(20,5,$lap["scan2"],1,0,'C',1);
                     if ($no % 2 == 0) {
@@ -122,6 +138,8 @@
                     }
                     if ($lap["scan3"]=='00:00:00' || $lap["scan3"]<'12:30:00'|| $lap["scan3"] > '13:00:00') {
                         $pdf->SetFillColor(255, 0, 0);
+                    }else{
+                        $absenR[$lap['nik']]['istirahat2']+=1;
                     }
                     $pdf->Cell(20,5,$lap["scan3"],1,0,'C',1);
                     if ($no % 2 == 0) {
@@ -131,6 +149,8 @@
                     }
                     if ($lap["scan4"]<'17:00:00') {
                         $pdf->SetFillColor(255, 0, 0);
+                    }else{
+                        $absenR[$lap['nik']]['pulang']+=1;
                     }
                     $pdf->Cell(20,5,$lap["scan4"],1,0,'C',1);
                     if ($no % 2 == 0) {
@@ -143,6 +163,8 @@
                     $pdf->Cell(20,5,'-',1,0,'C',1);
                     if ($lap["mpulang"]<'17:00:00' && $lap["dayname"] != 'Saturday') {
                         $pdf->SetFillColor(255, 0, 0);
+                    }else{
+                        $absenR[$lap['nik']]['pulang']+=1;
                     }
                     $pdf->Cell(20,5,$lap["mpulang"],1,0,'C',1);
                     if ($no % 2 == 0) {
@@ -156,6 +178,8 @@
                 $pdf->Cell(20,5,'-',1,0,'C',1);
                 if ($lap["mpulang"]<'16:00:00' && $lap["dayname"] != 'Saturday') {
                     $pdf->SetFillColor(255, 0, 0);
+                }else{
+                    $absenR[$lap['nik']]['pulang']+=1;
                 }
                 $pdf->Cell(20,5,$lap["mpulang"],1,0,'C',1);
                 if ($no % 2 == 0) {
@@ -167,8 +191,18 @@
             
         }else if ($lap["gol_kerja"] == 'Produksi'){
             if ($lap["dayname"] != 'Saturday') {
-                if ($lap["scan2"]<'12:00:00' || $lap["scan2"] > '12:30:00') {
-                    $pdf->SetFillColor(255, 0, 0);
+                if ($lap["dayname"] == 'Friday') {
+                    if ($lap["scan2"]<'11:00:00' || $lap["scan2"] > '12:30:00') {
+                        $pdf->SetFillColor(255, 0, 0);
+                    }else{
+                        $absenR[$lap['nik']]['istirahat1']+=1;
+                    }
+                }else{
+                    if ($lap["scan2"]<'12:00:00' || $lap["scan2"] > '12:30:00') {
+                        $pdf->SetFillColor(255, 0, 0);
+                    }else{
+                        $absenR[$lap['nik']]['istirahat1']+=1;
+                    }
                 }
                 $pdf->Cell(20,5,$lap["scan2"],1,0,'C',1);
                 if ($no % 2 == 0) {
@@ -178,6 +212,8 @@
                 }
                 if ($lap["scan3"]=='00:00:00' || $lap["scan3"]<'12:30:00'|| $lap["scan3"] > '13:00:00') {
                     $pdf->SetFillColor(255, 0, 0);
+                }else{
+                    $absenR[$lap['nik']]['istirahat2']+=1;
                 }
                 $pdf->Cell(20,5,$lap["scan3"],1,0,'C',1);
                 if ($no % 2 == 0) {
@@ -187,6 +223,8 @@
                 }
                 if ($lap["scan4"]<'16:00:00') {
                     $pdf->SetFillColor(255, 0, 0);
+                }else{
+                    $absenR[$lap['nik']]['pulang']+=1;
                 }
                 $pdf->Cell(20,5,$lap["scan4"],1,0,'C',1);
                 if ($no % 2 == 0) {
@@ -196,9 +234,13 @@
                 }
             }else{
                 $pdf->Cell(20,5,'-',1,0,'C',1);
+                $absenR[$lap['nik']]['istirahat1']+=1;
                 $pdf->Cell(20,5,'-',1,0,'C',1);
+                $absenR[$lap['nik']]['istirahat2']+=1;
                 if ($lap["mpulang"]<'16:00:00' && $lap["dayname"] != 'Saturday') {
                     $pdf->SetFillColor(255, 0, 0);
+                }else{
+                    $absenR[$lap['nik']]['pulang']+=1;
                 }
                 $pdf->Cell(20,5,$lap["mpulang"],1,0,'C',1);
                 if ($no % 2 == 0) {

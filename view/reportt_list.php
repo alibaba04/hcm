@@ -86,21 +86,46 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             gol = 'Produksi';
         }
         if ($("#txtJenis").val() == 1) {
-            location.href='pdf/pdf_absensi.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol;
+            window.open(
+                'pdf/pdf_absensi.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol,
+                '_blank'
+            );
         }else if($("#txtJenis").val() == 2){
+            window.open(
+                'pdf/pdf_absensi2.php?&years='+$("#txtTahun").val()+'&gol='+gol,
+                '_blank'
+            );
             location.href='pdf/pdf_absensi2.php?&years='+$("#txtTahun").val()+'&gol='+gol;
         }else if($("#txtJenis").val() == 3){
-            location.href='pdf/pdf_absensi3.php?&years='+$("#txtTahun").val()+'&gol='+gol;
+            window.open(
+                'pdf/pdf_absensi3.php?&years='+$("#txtTahun").val()+'&gol='+gol,
+                '_blank'
+            );
         }else if($("#txtJenis").val() == 4){
-            location.href='pdf/pdf_absensi4.php?&years='+$("#txtTahun").val()+'&gol='+gol;
+            window.open(
+                'pdf/pdf_absensi4.php?&years='+$("#txtTahun").val()+'&gol='+gol,
+                '_blank'
+            );
         }else if($("#txtJenis").val() == 5){
-            location.href='pdf/pdf_absensi5.php?&years='+$("#txtTahun").val()+'&gol='+gol;
+            window.open(
+                'pdf/pdf_absensi5.php?&years='+$("#txtTahun").val()+'&gol='+go,
+                '_blank'
+            );
         }else if($("#txtJenis").val() == 6){
-            location.href='pdf/pdf_absensi6.php?&years='+$("#txtTahun").val()+'&gol='+gol;
+            window.open(
+                'pdf/pdf_absensi6.php?&years='+$("#txtTahun").val()+'&gol='+gol,
+                '_blank'
+            );
         }else if($("#txtJenis").val() == 7){
-            location.href='pdf/pdf_absensi8.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val();
+            window.open(
+                'pdf/pdf_absensi8.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val(),
+                '_blank'
+            );
         }else if($("#txtJenis").val() == 8){
-            location.href='pdf/pdf_absensi7.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val();
+            window.open(
+                'pdf/pdf_absensi7.php?&month='+$("#txtBulan").val()+'&years='+$("#txtTahun").val()+'&gol='+gol+'&day='+$("#txthari").val(),
+                '_blank'
+            );
         }   
     }
 </script>
