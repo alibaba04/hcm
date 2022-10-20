@@ -220,7 +220,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 //database
                 $q = "SELECT * ";
                 $q.= "FROM aki_tabel_master m right join aki_golongan_kerja g on m.nik=g.nik";
-                $q.= " WHERE 1=1 " . $filter." order by m.nik";
+                $q.= " WHERE 1=1 order by m.nik";
                 //Paging
                 $rs = new MySQLPagedResultSet($q, 500, $dbLink);
                 ?>
@@ -239,8 +239,11 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                             <tr>
                                 <th>img</th>
                                 <th>NIK</th>
+                                <th>Status</th>
                                 <th>Nama</th>
+                                <th>Jabatan</th>
                                 <th>Departemen</th>
+                                <th>Divisi</th>
                                 <th>Unit</th>
                             </tr>
                         </thead>
@@ -254,7 +257,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                         $aktif = 'bg-green';
                                     }else if($query_data['status']=='Non Aktif'){
                                         $gol = "Nonaktif";
-                                        $aktif = 'bg-green-active';
+                                        $aktif = 'bg-olive-active';
                                     }
                                     else{
                                         $gol = "Mutasi";
@@ -263,8 +266,11 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                     echo '<tr>';
                                     echo '<td><a href="'.$_SERVER["PHP_SELF"].'?page=view/profile_list&nik='.md5($query_data['nik']).'"><span class="info-box-icon '.$aktif.'" style="border-radius: 10px;"><img class="img " src="dist/img/logo-qoobah.png" alt="User Avatar"></span></a></td>';
                                     echo "<td>".$query_data['nik']."</td>";
+                                    echo "<td>".$gol."</td>";
                                     echo "<td>".$query_data['kname']."</td>";
+                                    echo "<td>".$query_data['jabatan']."</td>";
                                     echo "<td>".$query_data['departemen']."</td>";
+                                    echo "<td>".$query_data['divisi']."</td>";
                                     if ($query_data['unit']=="") {
                                         echo "<td>-</td></tr>";
                                     }else{
@@ -283,15 +289,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                 }
                             ?>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>img</th>
-                                <th>NIK</th>
-                                <th>Nama</th>
-                                <th>Departemen</th>
-                                <th>Unit</th>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>

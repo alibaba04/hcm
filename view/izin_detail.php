@@ -51,6 +51,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         $(".timepicker").timepicker({
             showInputs: false
         });
+        $("#txtdatepicker_0").datepicker({ format: 'dd-mm-yyyy', autoclose:true }); 
         $('#txtdatepicker_0').datepicker({
             format: 'dd-mm-yyyy',
             autoclose: true

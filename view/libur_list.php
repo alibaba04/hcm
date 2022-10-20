@@ -60,9 +60,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
         $('#btnAdd').click(function(){
             $("#myModal").modal({backdrop: 'static'});
         });
-        $('#txtdatepicker').datepicker({
-          autoclose: true
-        });
     });
 </script>
 
