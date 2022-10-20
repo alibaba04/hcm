@@ -221,7 +221,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                   <label for="inputActive" class="col-sm-2 control-label">Active</label>
                   <div class="col-sm-10">
                     <div class="input-group date">
-                      <input type="text" name="inputActive" class="form-control pull-right datepicker" value="<?php if(($_GET["mode"]) == "Edit"){echo date('d/m/Y', strtotime($dataKaryawan["tanggal_lahir"]));} ?>" >
+                      <input type="text" name="inputActive" class="form-control pull-right datepicker" value="<?php if(($_GET["mode"]) == "Edit"){echo date('d/m/Y', strtotime($dataKaryawan["tanggal_aktif"]));} ?>" >
                     </div>
                   </div>
                 </div>
