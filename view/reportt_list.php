@@ -108,7 +108,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             );
         }else if($("#txtJenis").val() == 5){
             window.open(
-                'pdf/pdf_absensi5.php?&years='+$("#txtTahun").val()+'&gol='+go,
+                'pdf/pdf_absensi5.php?&years='+$("#txtTahun").val()+'&gol='+gol,
                 '_blank'
             );
         }else if($("#txtJenis").val() == 6){
