@@ -5,6 +5,29 @@ require_once('../function/secureParam.php');
 //require_once('../function/mysql.php');
 
 switch ($_POST['fungsi']) {
+    case "cekpass":
+        $kodeUser = secureParamAjax($_POST['kodeUser'], $dbLink);
+        $pass = HASH('SHA512',$passSalt.secureParamAjax($_POST['pass'], $dbLink));
+        $result = mysql_query("SELECT kodeUser, nama FROM aki_user WHERE kodeUser='".$kodeUser."' AND  password='".$pass."' AND aktif='Y'", $dbLink);
+        if (mysql_num_rows($result)) {
+            echo "yes";
+        } else {
+            echo $pass;
+        }
+    break;
+    case "updatejamkerja":
+        $masuk = date("H:i:s", strtotime(secureParamAjax($_POST["jmasuk"], $dbLink)));
+        $istirahat1 = date("H:i:s", strtotime(secureParamAjax($_POST["jistirahat1"], $dbLink)));
+        $istirahat2 = date("H:i:s", strtotime(secureParamAjax($_POST["jistirahat2"], $dbLink)));
+        $pulang = date("H:i:s", strtotime(secureParamAjax($_POST["jpulang"], $dbLink)));
+        $sabtu = date("H:i:s", strtotime(secureParamAjax($_POST["jsabtu"], $dbLink)));
+        $q = "UPDATE `aki_jamkerja` SET `masuk`='".$masuk."',`istirahat1`='".$istirahat1."',`istirahat2`='".$istirahat2."',`pulang`='".$pulang."',`sabtu`='".$sabtu."' WHERE aktif='1'";
+        if (mysql_query($q, $dbLink)) {
+            echo "yes";
+        } else {
+            echo $q;
+        }
+    break;
     case "checkKodeMenu":
 
         //echo "yes";

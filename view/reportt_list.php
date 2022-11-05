@@ -95,7 +95,6 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                 'pdf/pdf_absensi2.php?&years='+$("#txtTahun").val()+'&gol='+gol,
                 '_blank'
             );
-            location.href='pdf/pdf_absensi2.php?&years='+$("#txtTahun").val()+'&gol='+gol;
         }else if($("#txtJenis").val() == 3){
             window.open(
                 'pdf/pdf_absensi3.php?&years='+$("#txtTahun").val()+'&gol='+gol,

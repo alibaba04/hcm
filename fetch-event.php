@@ -3,12 +3,20 @@ $dbLink = mysqli_connect("localhost","u8364183_marketing","PVMMA0Akp4;(","u83641
 $nik = $_GET['nik'];
  $sqlQuery = "SELECT *,'Scan 1 ' as 'title',CONCAT(tanggal,' ',scan1) as 'start',if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',CONCAT(tanggal,' ',scan2),CONCAT(tanggal,' ',scan3)),CONCAT(tanggal,' ',scan4)),CONCAT(tanggal,' ',scan5)),CONCAT(tanggal,' ',scan6)) as 'end',if(scan1>'07:35:00','#dd4b39','#3a87ad') as 'backgroundColor',CONCAT(tanggal,' ','16:00:00') as 'pulang',CONCAT(tanggal,' ','12:00:00') as 'break1',CONCAT(tanggal,' ','13:00:00') as 'break2',if(scan2 <'12:00:00',CONCAT(tanggal,' ',scan2),if(scan3 <'12:00:00',CONCAT(tanggal,' ',scan3),if(scan4 <'12:00:00',CONCAT(tanggal,' ',scan4),if(scan5 <'12:00:00',CONCAT(tanggal,' ',scan5),CONCAT(tanggal,' ',scan6))))) as istirahat,if(scan2 like '12%',CONCAT(tanggal,' ',scan2),if(scan3 like '12%',CONCAT(tanggal,' ',scan3),if(scan4 like '12%',CONCAT(tanggal,' ',scan4),if(scan5 like '12%',CONCAT(tanggal,' ',scan5),scan6)))) as istirahat1, if(scan6 like '12%',CONCAT(tanggal,' ',scan6),if(scan5 like '12%',CONCAT(tanggal,' ',scan5),if(scan4 like '12%',CONCAT(tanggal,' ',scan4),if(scan3 like '12%',CONCAT(tanggal,' ',scan3),scan2)))) as istirahat2 FROM `aki_absensi` WHERE (nik)='".$nik."'";
 
+
+     $qjamkerja = "SELECT * FROM `aki_jamkerja` WHERE aktif='1'";
+     $rjamkerja=mysqli_query($dbLink,$qjamkerja);
+     $jmasuk='';$jistirahat1='';$jistirahat2='';$jpulang='';$jsabtu='';
+     while ($labjamkerja = mysqli_fetch_array($rjamkerja)) {
+        $jmasuk=$labjamkerja['masuk'];$jistirahat1=$labjamkerja['istirahat1'];$jistirahat2=$labjamkerja['istirahat2'];$jpulang=$labjamkerja['pulang'];$jsabtu=$labjamkerja['sabtu'];
+    }
+
     $result = mysqli_query($dbLink, $sqlQuery);
     $eventArray = array();
     while ($row = mysqli_fetch_assoc($result)) {
         if ($row['scan1']!='00:00:00') {
             $data =array();
-            if ($row['scan1'] >'07:36:00') {
+            if ($row['scan1'] >$jmasuk) {
                 $data['backgroundColor']='#dd4b39';
             }else{
                 $data['backgroundColor']='#3a87ad';
@@ -47,7 +55,7 @@ $nik = $_GET['nik'];
             $data['start']= $row['end'];
         }else{
             $data['title']= 'Tidak Absen Pulang';
-            $data['start']= $row['tanggal'].' 16:00:00';
+            $data['start']= $row['tanggal'].' '.$jpulang;
         }
         
         array_push($eventArray, $data);

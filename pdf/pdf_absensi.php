@@ -12,7 +12,15 @@
     $tgl2 = $years.'-'.$month.'-25';
     $pdf->SetFont('Helvetica', '', 14);
     $pdf->Cell(0, 7, "DATA ABSENSI ".date("d F Y", strtotime($tgl1))." s/d ".date("d F Y", strtotime($tgl2)), 0, 1, 'C');
-    $qabsen = "SELECT nik,DAYNAME(tanggal) dayname,day(tanggal) as day,month(tanggal) as month,year(tanggal) as year,(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (1) END) AS masuk FROM `aki_absensi` where tanggal BETWEEN '".$tgl1."' and '".$tgl2."' order by nik,month,day";
+    
+    $qjamkerja = "SELECT * FROM `aki_jamkerja` WHERE aktif='1'";
+    $rjamkerja=mysqli_query($dbLink,$qjamkerja);
+    $jmasuk='';$jistirahat1='';$jistirahat2='';$jpulang='';$jsabtu='';
+    while ($labjamkerja = mysqli_fetch_array($rjamkerja)) {
+        $jmasuk=$labjamkerja['masuk'];$jistirahat1=$labjamkerja['istirahat1'];$jistirahat2=$labjamkerja['istirahat2'];$jpulang=$labjamkerja['pulang'];$jsabtu=$labjamkerja['sabtu'];
+    }
+
+    $qabsen = "SELECT nik,DAYNAME(tanggal) dayname,day(tanggal) as day,month(tanggal) as month,year(tanggal) as year,(CASE WHEN (scan1)<time( '".$jmasuk."' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','".$jsabtu."','".$jpulang."') THEN (1) END) AS masuk FROM `aki_absensi` where tanggal BETWEEN '".$tgl1."' and '".$tgl2."' order by nik,month,day";
     $result=mysqli_query($dbLink,$qabsen);
     $absen=array();
     while ($labsen = mysqli_fetch_array($result)) {
@@ -105,7 +113,7 @@
     $pdf->SetFont('helvetica', 'B', 6.5); 
     $pdf->SetFillColor(230, 172, 48);
     $pdf->Cell(15,5,'No',1,0,'C',1);
-    $pdf->Cell(35,5,'Nama',1,0,'C',1);
+    $pdf->Cell(39,5,'Nama',1,0,'C',1);
     $cday = cal_days_in_month(CAL_GREGORIAN,6,2021);
     for ($i=26; $i <= $cday; $i++) { 
         $pdf->Cell(5,5,$i,1,0,'C',1);
@@ -160,7 +168,7 @@
     $pdf->SetFont('helvetica', '', 6.5);
     while ($lap = mysqli_fetch_array($result)) {
         $pdf->Cell(15,4,$lap["nik"],1,0,'C',0);
-        $pdf->Cell(35,4,$lap["kname"],1,0,'L',0);
+        $pdf->Cell(39,4,substr($lap["kname"],0,28),1,0,'L',0);
         $cday = cal_days_in_month(CAL_GREGORIAN,6,2021);
         $totalImp=0;
         $totalTl=0;

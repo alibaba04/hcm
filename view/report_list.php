@@ -218,7 +218,14 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
                                     $filter = $filter . " AND g.gol_kerja='" . $gol . "'";
                                 if ($status)
                                     $filter = $filter . " AND m.status='" . $status . "'";
-                                $q = "SELECT nik,Year(tanggal) as years,month(tanggal) as month,COUNT(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6)>if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (scan1) END) AS masuk FROM `aki_absensi` where 1=1 ". $filter1." GROUP by nik,month(tanggal)";
+                                $qjamkerja = "SELECT * FROM `aki_jamkerja` WHERE aktif='1'";
+                                $rjamkerja=mysqli_query($dbLink,$qjamkerja);
+                                $jmasuk='';$jistirahat1='';$jistirahat2='';$jpulang='';$jsabtu='';
+                                while ($labjamkerja = mysqli_fetch_array($rjamkerja)) {
+                                    $jmasuk=$labjamkerja['masuk'];$jistirahat1=$labjamkerja['istirahat1'];$jistirahat2=$labjamkerja['istirahat2'];$jpulang=$labjamkerja['pulang'];$jsabtu=$labjamkerja['sabtu'];
+                                }
+
+                                $q = "SELECT nik,Year(tanggal) as years,month(tanggal) as month,COUNT(CASE WHEN (scan1)<time( '".$jmasuk."' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6)>if(DAYNAME(tanggal)='Saturday','".$jsabtu."','".$jpulang."') THEN (scan1) END) AS masuk FROM `aki_absensi` where 1=1 ". $filter1." GROUP by nik,month(tanggal)";
                                 $rs1 = new MySQLPagedResultSet($q, 500, $dbLink);
                                 $sumhadir=1;
 

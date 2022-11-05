@@ -85,7 +85,7 @@
             $pdf->SetFillColor(255, 255, 255);
         }
         $pdf->Cell(6,5,$no,1,0,'C',1);
-        $pdf->Cell(50,5,$lap["kname"],1,0,'L',1);
+        $pdf->Cell(50,5,substr($lap["kname"],0,31),1,0,'L',1);
         for ($i = 1; $i <= 12; ) {
             if ($lap["nik"]) {
                 $CT = (int)$absen[$lap["nik"]][$i]['Cuti Tahunan'];

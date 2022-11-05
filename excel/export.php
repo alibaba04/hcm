@@ -71,8 +71,15 @@
 		<?php 
 		// koneksi database
 		$dbLink = mysqli_connect("localhost","u8364183_marketing","PVMMA0Akp4;(","u8364183_hcm");
+
+		$qjamkerja = "SELECT * FROM `aki_jamkerja` WHERE aktif='1'";
+		$rjamkerja=mysqli_query($dbLink,$qjamkerja);
+		$jmasuk='';$jistirahat1='';$jistirahat2='';$jpulang='';$jsabtu='';
+		while ($labjamkerja = mysqli_fetch_array($rjamkerja)) {
+			$jmasuk=$labjamkerja['masuk'];$jistirahat1=$labjamkerja['istirahat1'];$jistirahat2=$labjamkerja['istirahat2'];$jpulang=$labjamkerja['pulang'];$jsabtu=$labjamkerja['sabtu'];
+		}
  		
-		$qabsen = "SELECT nik,DAYNAME(tanggal) dayname,day(tanggal) as day,month(tanggal) as month,year(tanggal) as year,(CASE WHEN (scan1)<time( '07:36:00' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','12:00:00','16:00:00') THEN (1) END) AS masuk FROM `aki_absensi` where tanggal BETWEEN '".$tgl1."' and '".$tgl2."' order by nik,month,day";
+ 		$qabsen = "SELECT nik,DAYNAME(tanggal) dayname,day(tanggal) as day,month(tanggal) as month,year(tanggal) as year,(CASE WHEN (scan1)<time( '".$jmasuk."' ) and if(scan6='00:00:00',if(scan5='00:00:00',if(scan4='00:00:00',if(scan3='00:00:00',scan2,scan3),scan4),scan5),scan6) > if(DAYNAME(tanggal)='Saturday','".$jsabtu."','".$jpulang."') THEN (1) END) AS masuk FROM `aki_absensi` where tanggal BETWEEN '".$tgl1."' and '".$tgl2."' order by nik,month,day";
 		$result=mysqli_query($dbLink,$qabsen);
 		$absen=array();
 		while ($labsen = mysqli_fetch_array($result)) {

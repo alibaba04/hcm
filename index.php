@@ -60,6 +60,7 @@ require_once('./function/fungsi_formatdate.php');
         <link rel="stylesheet" href="css/searchInput1.css">
         <link rel="icon" href="dist/img/logo-qoobah.png" type="image/png"/>
         <link rel="stylesheet" href="plugins/timepicker/bootstrap-timepicker.min.css">
+        <link rel="stylesheet" href="plugins/toastr/toastr.min.css">
         <script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
         <style type="text/css">
             .preloader {
@@ -249,6 +250,7 @@ require_once('./function/fungsi_formatdate.php');
         <script src="plugins/timepicker/bootstrap-timepicker.min.js"></script>
         <script src="plugins/datatables/jquery.dataTables.min.js"></script>
         <script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+        <script src="plugins/toastr/toastr.min.js"></script>
     </body>
     
     
