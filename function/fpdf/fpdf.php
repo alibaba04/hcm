@@ -357,22 +357,58 @@ function AddPage($orientation='', $size='', $rotation=0)
 	$this->ColorFlag = $cf;
 }
 
-// function Header()
-// {
-// 	if ( $this->PageNo() !== 1 ) {
-// 		$this->SetFont('helvetica', 'B', 8.5); 
-// 		$this->SetFillColor(230, 172, 48);
-// 		$this->Cell(6,6,'No',1,0,'C',1);
-// 		$this->Cell(50,6,'Name',1,0,'C',1);
-// 		for ($i = 1; $i <= 12; ) {
-// 			$dateObj   = DateTime::createFromFormat('!m', $i);
-// 			$monthName = $dateObj->format('F'); 
-// 			$this->Cell(18,6,$monthName,1,0,'C',1);
-// 			$i++;
-// 		} 
-// 		$this->Cell(1,6,'',0,1,'C',0);
-//     }
-// }
+function kopsdm($nomor)
+{
+    $q= "SELECT * FROM `aki_dinas` Where md5(nodinas)='".$nomor."'";
+    $rs = mysql_query($q, $dbLink);
+    $hasil = mysql_fetch_array($rs);
+    $this->Cell(32,24,'','RB',0,'C',0);
+    $this->SetFillColor(173,216,230);
+    $this->Cell(116,6,'FORM LAPORAN',1,0,'C',1);
+    $this->SetFont('Calibri', '', 10);
+    $this->Cell(15,6,'No','RB',0,'R',0);
+    $this->SetFillColor(0,0,0);
+    $this->SetTextColor(255);
+    $this->Cell(37,6,'  013/F-SDM','B',1,'L',1);
+    $this->SetTextColor(0);
+    $this->SetFont('Calibri', 'B', 20);
+    $this->Cell(32,6,'',0,0,'C',0);
+    $this->Cell(116,12,'PERJALANAN DINAS (PERJADIN)',1,0,'C',0);
+    $this->SetFont('Calibri', '', 10);
+    $this->Cell(15,6,'Rev','RB',0,'R',0);
+    $this->Cell(21,6,'  02','B',0,'L',0);
+    $this->SetFont('Calibri', 'B', 10);
+    $this->Cell(16,6,'Publish','LB',1,'C',0);
+    $this->Cell(146,6,'',0,0,'L',0);
+    $this->SetFont('Calibri', '', 10);
+    $this->Cell(17,6,'Tanggal','RB',0,'R',0);
+    $this->Cell(37,6,'  09/11/2021','LB',1,'L',0);
+    $this->Cell(32,6,'',0,0,'L',0);
+    $this->SetFont('Calibri', 'i', 10);
+    $this->SetTextColor(180);
+    date_default_timezone_set("Asia/Jakarta");
+    $tgl = date("d/m/Y H:i:s a");
+    $this->Cell(116,6,'Printed by SDM Dept. '.$tgl,'RB',0,'R',0);
+    $this->SetFont('Calibri', '', 10.5);
+    $this->SetTextColor(0);
+    $this->Cell(15,6,'Halaman','RB',0,'R',0);
+    $this->Cell(37,6,"  ".$this->PageNo()."/4",'LB',1,'L',0);
+    $this->Cell(148,5,'  PT Anugerah Kubah Indonesia',0,0,'L',0);
+    $this->Cell(15,9,'Dept',"LRB",0,'R',0);
+    $this->SetTextColor(255);
+    $this->Cell(37,9,'  Semua',"RB",1,'L',1);
+    $this->SetTextColor(0);
+    $this->Ln(-5);
+    $this->SetFont('Calibri', '', 9);
+    $this->Cell(148,5,'  Jln Pramuka 157 Purwokerto, Ngadiluwih Kediri (0354)-7474144. www.qoobah.co.id','B',1,'L',0);
+}
+
+function Header()
+{
+	//if ($this->PageNo() == '1') {
+    	//$this->image('../dist/img/kop.jpg',0,0,215,330);
+    //}
+}
 
 function Footer()
 {

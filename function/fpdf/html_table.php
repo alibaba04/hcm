@@ -278,6 +278,7 @@ function PutLink($URL, $txt)
     $this->SetTextColor(0);
 }
 
+
 }//end of class
 
 ?>
