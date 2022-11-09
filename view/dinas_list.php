@@ -90,6 +90,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     <div class="row">
         <div class="col-md-3">
             <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/dinas_detail&mode=add'; ?>" class="btn btn-primary btn-block margin-bottom">Add</a>
+            <a href="<?php echo 'excel/exportdinas.php'; ?>" class="btn btn-primary btn-block margin-bottom">Export Excel</a>
           <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
             <input type="hidden" name="page" value="<?php echo $curPage; ?>">
             <div class="input-group input-group">
@@ -103,8 +104,8 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
             <div class="form-group input-group">
                 <input type="text" class="form-control" name="stanggal" id="stanggal" 
                 <?php
-                if (isset($_GET["tanggal"])) {
-                    echo("value='" . $_GET["tgl"] . "'");
+                if (isset($_GET["stanggal"])) {
+                    echo("value='" . $_GET["stanggal"] . "'");
                 }
                 ?>
                 onKeyPress="return handleEnter(this, event)" placeholder="Range Date">
