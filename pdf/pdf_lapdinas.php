@@ -11,7 +11,7 @@
     $pdf->SetAutoPageBreak(false);
     $pdf->SetLineWidth(0.6);
     $pdf->SetMargins(8,6,0,0);
-    $pdf->image('../dist/img/kop.jpg',0,0,210,330);
+    $pdf->image('../dist/img/kop.jpg',0,0,210,327);
     $pdf->AddFont('Calibri','','Calibri_Regular.php');
     $pdf->AddFont('Calibri','B','Calibri_Bold.php');
     $pdf->AddFont('Calibri','I','Calibri_Italic.php');
