@@ -139,7 +139,7 @@
     $pdf->Cell(125,6,'',0,0,'C',0);
     $pdf->Cell(50,5,'Direktur Utama',0,1,'L',0);
     $pdf->SetTextColor(180);
-    $pdf->SetY(310);
+    $pdf->SetY(308);
     $pdf->SetFont('Calibri', '', 9);
     date_default_timezone_set("Asia/Jakarta");
     $tgl = date("d/m/Y H:i:s a");
