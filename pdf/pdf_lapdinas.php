@@ -122,7 +122,7 @@
     $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
     $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
 
-    $pdf->Cell(150,6,": ".$days." Hari",0,1,'L',0);
+    $pdf->Cell(150,6,": ".(floor($days)+1)." Hari",0,1,'L',0);
     $pdf->Ln(5);
     $pdf->MultiCell(180,6,'Demikian surat tugas dinas luar ini dibuat untuk dipergunakan sebagaimana mestinya dan dilaksanakan dengan penuh tanggung jawab.',0,'J',0);
     $pdf->Ln(5);
