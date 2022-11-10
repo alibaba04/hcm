@@ -581,5 +581,5 @@
     $pdf->Cell(48,5,'','LBR',1,'L',0);
     
 
-    $pdf->Output('TransaksiKas.pdf', 'I'); //download file pdf
+    $pdf->Output('lapdinas.pdf', 'I'); //download file pdf
 ?>
