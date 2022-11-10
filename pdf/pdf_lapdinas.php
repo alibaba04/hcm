@@ -4,7 +4,7 @@
     require_once ("../function/fungsi_convertNumberToWord.php");
     error_reporting(0);
 
-    $pdf=new FPDF('P','mm',array(215,330));
+    $pdf=new FPDF('P','mm','F4');
 
     // SURAT DINAS //
     $pdf->AddPage();
@@ -16,7 +16,7 @@
     $pdf->AddFont('Calibri','B','Calibri_Bold.php');
     $pdf->AddFont('Calibri','I','Calibri_Italic.php');
     $pdf->SetFont('Calibri', 'B', 20);
-    $pdf->Ln(35);
+    $pdf->Ln(30);
 
     $q= "SELECT * FROM `aki_dinas` Where md5(nodinas)='".$_GET["nodinas"]."'";
     $rs = mysql_query($q, $dbLink);
@@ -25,7 +25,7 @@
     $pdf->SetFont('Calibri', '', 11);
     $pdf->Cell(199,6,'Nomor : '.$hasil['nodinas'],0,1,'C',0);
     $pdf->SetMargins(13,6,0,0);
-    $pdf->Ln(12);
+    $pdf->Ln(10);
     $pdf->Cell(199,6,'Yang bertanda tangan di bawah ini : ',0,1,'L',0);
     $pdf->Ln(2);
     $pdf->Cell(25,6,'Nama ',0,0,'L',0);
@@ -125,7 +125,7 @@
     $pdf->Cell(150,6,": ".(floor($days)+1)." Hari",0,1,'L',0);
     $pdf->Ln(5);
     $pdf->MultiCell(180,6,'Demikian surat tugas dinas luar ini dibuat untuk dipergunakan sebagaimana mestinya dan dilaksanakan dengan penuh tanggung jawab.',0,'J',0);
-    $pdf->Ln(5);
+    $pdf->Ln(10);
 
     $pdf->Cell(125,6,'',0,0,'C',0);
     $pdf->Cell(50,6,'Kediri, '.date('d F Y', strtotime($hasil['tgl_pengajuan'])),0,1,'L',0);
@@ -148,11 +148,11 @@
     // LAPORAN //
     $pdf->AddPage();
     $pdf->SetLineWidth(0.6);
-    $pdf->Rect(8, 8, 200, 314, 'D');
+    $pdf->Rect(5, 8, 200, 314, 'D');
     $pdf->SetLineWidth(0);
-    $pdf->SetMargins(8,0,0,0);
+    $pdf->SetMargins(5,0,0,0);
     $pdf->Ln(2);
-    $pdf->image('../dist/img/qoobah2.png',6,7,30,30);
+    $pdf->image('../dist/img/qoobah2.png',6,6,30,30);
     $pdf->AddFont('Calibri','','Calibri_Regular.php');
     $pdf->AddFont('Calibri','B','Calibri_Bold.php');
     $pdf->AddFont('Calibri','I','Calibri_Italic.php');
@@ -161,7 +161,7 @@
     // KOP SURAT //
     $pdf->kopsdm($_GET["nodinas"]);
 
-    $pdf->SetMargins(10,0,0,0);
+    $pdf->SetMargins(9,0,0,0);
     $pdf->Ln(0);
     $pdf->SetFont('Calibri', 'B', 12);
     $pdf->Cell(36,9,'LAPORAN PERJALANAN DINAS',0,1,'L',0);
@@ -265,7 +265,7 @@
             $pdf->Cell(30,5,$arrddinas[$i]['jobs'],0,1,'L',0);
         }
     }
-    $pdf->SetMargins(11,6,0,0);
+    $pdf->SetMargins(8,6,0,0);
     $pdf->Ln(5);
     $pdf->SetFont('Calibri', 'B', 11);
     $pdf->Cell(34,5,'LAPORAN PERJALANAN    (Untuk SDM)',0,0,'L',0);
@@ -303,13 +303,13 @@
 
     // page 2 //
     $pdf->AddPage();
-    $pdf->SetMargins(8,0,0,0);
+    $pdf->SetMargins(5,0,0,0);
     $pdf->Ln(2);
     $pdf->SetLineWidth(0.6);
     $pdf->SetAutoPageBreak(false);
-    $pdf->Rect(8, 8, 200, 314, 'D');
+    $pdf->Rect(5, 8, 200, 314, 'D');
     $pdf->SetLineWidth(0);
-    $pdf->image('../dist/img/qoobah2.png',6,7,30,30);
+    $pdf->image('../dist/img/qoobah2.png',6,6,30,30);
     $pdf->AddFont('Calibri','','Calibri_Regular.php');
     $pdf->AddFont('Calibri','B','Calibri_Bold.php');
     $pdf->AddFont('Calibri','I','Calibri_Italic.php');
@@ -318,7 +318,7 @@
     // KOP SURAT //
     $pdf->kopsdm($_GET["nodinas"]);
 
-    $pdf->SetMargins(11,6,0,0);
+    $pdf->SetMargins(9,6,0,0);
     $pdf->Ln(7);
     $pdf->SetFont('Calibri', 'B', 12);
     $pdf->Cell(34,5,'LAPORAN PERJALANAN    (Untuk SDM)',0,0,'L',0);
@@ -358,13 +358,13 @@
 
     // page 3 //
     $pdf->AddPage();
-    $pdf->SetMargins(8,0,0,0);
+    $pdf->SetMargins(5,0,0,0);
     $pdf->Ln(2);
     $pdf->SetLineWidth(0.6);
     $pdf->SetAutoPageBreak(false);
-    $pdf->Rect(8, 8, 200, 314, 'D');
+    $pdf->Rect(5, 8, 200, 314, 'D');
     $pdf->SetLineWidth(0);
-    $pdf->image('../dist/img/qoobah2.png',6,7,30,30);
+    $pdf->image('../dist/img/qoobah2.png',6,6,30,30);
     $pdf->AddFont('Calibri','','Calibri_Regular.php');
     $pdf->AddFont('Calibri','B','Calibri_Bold.php');
     $pdf->AddFont('Calibri','I','Calibri_Italic.php');
@@ -373,7 +373,7 @@
     // KOP SURAT //
     $pdf->kopsdm($_GET["nodinas"]);
 
-    $pdf->SetMargins(10,0,0,0);
+    $pdf->SetMargins(9,0,0,0);
     $pdf->Ln(5);
     $pdf->SetFont('Calibri', 'B', 12);
     $pdf->Cell(36,6,'LAPORAN KEUANGAN PERJADIN',0,0,'L',0);
@@ -519,13 +519,13 @@
 
     // page 4 //
     $pdf->AddPage();
-    $pdf->SetMargins(8,0,0,0);
-    $pdf->Ln(5);
+    $pdf->SetMargins(5,0,0,0);
+    $pdf->Ln(2);
     $pdf->SetLineWidth(0.6);
     $pdf->SetAutoPageBreak(false);
-    $pdf->Rect(8, 8, 200, 314, 'D');
+    $pdf->Rect(5, 8, 200, 314, 'D');
     $pdf->SetLineWidth(0);
-    $pdf->image('../dist/img/qoobah2.png',6,7,30,30);
+    $pdf->image('../dist/img/qoobah2.png',6,6,30,30);
     $pdf->AddFont('Calibri','','Calibri_Regular.php');
     $pdf->AddFont('Calibri','B','Calibri_Bold.php');
     $pdf->AddFont('Calibri','I','Calibri_Italic.php');
@@ -534,7 +534,7 @@
     // KOP SURAT //
     $pdf->kopsdm($_GET["nodinas"]);
 
-    $pdf->SetMargins(11,6,0,0);
+    $pdf->SetMargins(9,6,0,0);
     $pdf->Ln(7);
     $pdf->SetFont('Calibri', 'b', 11);
     $pdf->SetFillColor(214, 210, 176);

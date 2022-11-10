@@ -71,7 +71,7 @@ protected $PDFVersion;         // PDF version number
 *                               Public methods                                 *
 *******************************************************************************/
 
-function __construct($orientation='P', $unit='mm', $size='A4')
+function __construct($orientation='P', $unit='mm', $size='F4')
 {
 	// Some checks
 	$this->_dochecks();
@@ -126,7 +126,7 @@ function __construct($orientation='P', $unit='mm', $size='A4')
 	else
 		$this->Error('Incorrect unit: '.$unit);
 	// Page sizes
-	$this->StdPageSizes = array('a3'=>array(841.89,1190.55), 'a4'=>array(595.28,841.89), 'a5'=>array(420.94,595.28),
+	$this->StdPageSizes = array('a3'=>array(841.89,1190.55), 'a4'=>array(595.28,841.89), 'a5'=>array(420.94,595.28),'f4'=>array(595.4,935.5),
 		'letter'=>array(612,792), 'legal'=>array(612,1008));
 	$size = $this->_getpagesize($size);
 	$this->DefPageSize = $size;
