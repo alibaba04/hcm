@@ -221,7 +221,7 @@
     $years = floor($diff / (365*60*60*24));
     $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
     $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-    $pdf->Cell(100,5,$days." Hari",0,1,'L',0);
+    $pdf->Cell(100,5,(floor($days)+1)." Hari",0,1,'L',0);
     $pdf->Cell(34,5,'Transportasi',0,0,'L',0);
     $pdf->Cell(4,5,':',0,0,'R',0);
     $pdf->Cell(100,5,$hasil['transport'],0,1,'L',0);
@@ -423,7 +423,7 @@
     $years = floor($diff / (365*60*60*24));
     $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
     $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-    $pdf->Cell(100,5,$days." Hari",0,1,'L',0);
+    $pdf->Cell(100,5,(floor($days)+1)." Hari",0,1,'L',0);
     $pdf->Cell(34,5,'Transportasi',0,0,'L',0);
     $pdf->Cell(4,5,':',0,0,'R',0);
     $pdf->Cell(100,5,$hasil['transport'],0,1,'L',0);
