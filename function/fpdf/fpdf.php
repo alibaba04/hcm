@@ -357,15 +357,70 @@ function AddPage($orientation='', $size='', $rotation=0)
 	$this->ColorFlag = $cf;
 }
 
-function kopsdm($nomor)
+function kopsdm2($nospk)
 {
-    $q= "SELECT * FROM `aki_dinas` Where md5(nodinas)='".$nomor."'";
-    $rs = mysql_query($q, $dbLink);
-    $hasil = mysql_fetch_array($rs);
+	$this->SetFont('Calibri', 'B', 11);
+    $this->Cell(32,30,'','RB',0,'C',0);
+    $this->SetFillColor(6,156,7,255);
+    $this->SetTextColor(255);
+    $this->Cell(115,6,'FORM LAPORAN',1,0,'C',1);
+    $this->SetFont('Calibri', '', 10);
+    $this->SetTextColor(0);
+    $this->Cell(15,6,'No','RB',0,'R',0);
+    $this->SetFillColor(0,0,0);
+    $this->SetTextColor(255);
+    $this->Cell(38,6,'  003/F-SDM','B',1,'L',1);
+    $this->SetFont('Calibri', 'B', 16);
+    $this->SetTextColor(0);
+    $this->Cell(32,6,'',0,0,'C',0);
+    $this->Cell(115,12,'PERINTAH TUGAS PEMASANGAN','LTR',0,'C',0);
+    $this->SetFont('Calibri', '', 10);
+    $this->Cell(15,6,'Rev','RB',0,'R',0);
+    $this->Cell(21,6,'  04','B',0,'L',0);
+    $this->SetFont('Calibri', 'B', 10);
+    $this->Cell(16,6,'Publish','LB',1,'C',0);
+    $this->Cell(147,6,'',0,0,'L',0);
+    $this->SetFont('Calibri', '', 10);
+    $this->Cell(15,6,'Tanggal','RB',0,'R',0);
+    $this->Cell(38,6,'  10/05/2022','LB',1,'L',0);
+    $this->Cell(32,6,'',0,0,'L',0);
+    $this->SetFont('Calibri', 'i', 10);
+    
+    date_default_timezone_set("Asia/Jakarta");
+    $tgl = date("d/m/Y H:i:s a");
+    $this->Cell(115,6,'','R',0,'R',0);
+    $this->SetFont('Calibri', '', 10);
+    $this->SetTextColor(0);
+    $this->Cell(15,6,'Halaman',1,0,'R',0);
+    $pagess = $this->PageNo()-1;
+    $this->Cell(38,6,"  ".$pagess."/8",'LB',1,'L',0);
+    $this->SetTextColor(180);
+    $this->Cell(32,6,'',0,0,'L',0);
+    $this->Cell(115,6,'Printed by SDM Dept. '.$tgl,1,0,'R',0);
+    $this->SetTextColor(0);
+    $this->Cell(15,6,'Dept','RB',0,'R',0);
+    $this->SetTextColor(255);
+    $this->Cell(38,6,"Operasional",'LB',1,'L',1);
+    $this->SetTextColor(0);
+    $this->Cell(147,5,'  PT Anugerah Kubah Indonesia',0,0,'L',0);
+    $this->SetTextColor(255);
+    $this->Cell(15,9,'No. SPK',"LRB",0,'R',1);
+    $this->SetTextColor(0);
+    $this->SetFont('Calibri', '', 9);
+    $this->Cell(38,9,$nospk,"RB",1,'L',0);
+    $this->SetTextColor(0);
+    $this->Ln(-5);
+    $this->SetFont('Calibri', '', 9);
+    $this->Cell(147,5,'  Jln Pramuka 157 Purwokerto, Ngadiluwih Kediri (0354)-7474144. www.qoobah.co.id','B',1,'L',0);
+}
+function kopsdm()
+{
     $this->Cell(32,24,'','RB',0,'C',0);
-    $this->SetFillColor(173,216,230);
+    $this->SetTextColor(255);
+    $this->SetFillColor(156,194,229);
     $this->Cell(116,6,'FORM LAPORAN',1,0,'C',1);
     $this->SetFont('Calibri', '', 10);
+    $this->SetTextColor(0);
     $this->Cell(15,6,'No','RB',0,'R',0);
     $this->SetFillColor(0,0,0);
     $this->SetTextColor(255);
@@ -392,7 +447,8 @@ function kopsdm($nomor)
     $this->SetFont('Calibri', '', 10.5);
     $this->SetTextColor(0);
     $this->Cell(15,6,'Halaman','RB',0,'R',0);
-    $this->Cell(37,6,"  ".$this->PageNo()."/4",'LB',1,'L',0);
+    $pagess = $this->PageNo()-1;
+    $this->Cell(37,6,"  ".$pagess."/5",'LB',1,'L',0);
     $this->Cell(148,5,'  PT Anugerah Kubah Indonesia',0,0,'L',0);
     $this->Cell(15,9,'Dept',"LRB",0,'R',0);
     $this->SetTextColor(255);

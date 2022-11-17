@@ -96,16 +96,6 @@
     $pdf->Cell(38,6,'Tanggal Berangkat',0,0,'L',0);
     $pdf->SetFont('Calibri', '', 11);
 
-    $dayList = array(
-    'Sun' => 'Minggu',
-    'Mon' => 'Senin',
-    'Tue' => 'Selasa',
-    'Wed' => 'Rabu',
-    'Thu' => 'Kamis',
-    'Fri' => 'Jumat',
-    'Sat' => 'Sabtu'
-    );
-
     $pdf->Cell(150,6,": ".$dayList[date('D', strtotime($hasil['tgl_berangkat']))].", ".date('d F Y', strtotime($hasil['tgl_berangkat'])),0,1,'L',0);
     $pdf->SetFont('Calibri', 'B', 11);
     $pdf->Cell(7,6,'',0,0,'L',0);
@@ -159,7 +149,7 @@
     $pdf->SetFont('Calibri', 'B', 11);
 
     // KOP SURAT //
-    $pdf->kopsdm($_GET["nodinas"]);
+    $pdf->kopsdm();
 
     $pdf->SetMargins(9,0,0,0);
     $pdf->Ln(0);
@@ -177,7 +167,6 @@
     'Fri' => 'Jumat',
     'Sat' => 'Sabtu'
     );
-    $pdf->Ln(5);
     $pdf->SetFont('Calibri', '', 11);
     $pdf->Cell(34,5,'Departemen',0,0,'L',0);
     $pdf->Cell(4,5,':',0,0,'R',0);
@@ -207,7 +196,6 @@
     if (strlen($hasil['ket'])<79) {
         $pdf->Cell(4,5,'',0,1,'R',0);
     }
-    $pdf->Ln(5);
     $pdf->SetFont('Calibri', '', 11);
     $pdf->Cell(34,5,'Tanggal Selesai',0,0,'L',0);
     $pdf->Cell(4,5,':',0,0,'R',0);
@@ -271,14 +259,15 @@
     $pdf->Cell(34,5,'LAPORAN PERJALANAN    (Untuk SDM)',0,0,'L',0);
     $pdf->SetFont('Calibri', 'i', 9);
     $pdf->Cell(158,5,'**Kosongi jika menggunakan Kendaraan Umum',0,1,'R',0);
-    $pdf->SetFont('Calibri', '', 10);
-    $pdf->SetFillColor(173,216,230);
+    $pdf->SetFont('Calibri', 'B', 10);
+    $pdf->SetFillColor(247,202,172);
     $pdf->Cell(6,6,'No',1,0,'C',1);
     $pdf->Cell(30,6,'Hari, Tgl',1,0,'L',1);
     $pdf->Cell(28,6,'Waktu',1,0,'L',1);
     $pdf->Cell(68,6,'Rincian Kegiatan',1,0,'L',1);
     $pdf->Cell(30,6,'Driver**',1,0,'L',1);
     $pdf->Cell(30,6,'Keterangan',1,1,'L',1);
+    $pdf->SetFont('Calibri', '', 10);
     for ($i=0; $i < 16; $i++) { 
         $pdf->Cell(6,6,'',1,0,'C',0);
         $pdf->Cell(30,6,'',1,0,'L',0);
@@ -316,7 +305,7 @@
     $pdf->SetFont('Calibri', 'B', 11);
 
     // KOP SURAT //
-    $pdf->kopsdm($_GET["nodinas"]);
+    $pdf->kopsdm();
 
     $pdf->SetMargins(9,6,0,0);
     $pdf->Ln(7);
@@ -324,16 +313,17 @@
     $pdf->Cell(34,5,'LAPORAN PERJALANAN    (Untuk SDM)',0,0,'L',0);
     $pdf->SetFont('Calibri', 'i', 9);
     $pdf->Cell(158,5,'**Kosongi jika menggunakan Kendaraan Umum',0,1,'R',0);
-    $pdf->SetFont('Calibri', '', 10);
-    $pdf->Ln(5);
-    $pdf->SetFillColor(173,216,230);
+    $pdf->SetFont('Calibri', 'B', 10);
+    $pdf->Ln(1);
+    $pdf->SetFillColor(156,194,229);
     $pdf->Cell(8,6,'No',1,0,'C',1);
     $pdf->Cell(30,6,'Hari, Tgl',1,0,'L',1);
     $pdf->Cell(28,6,'Waktu',1,0,'L',1);
     $pdf->Cell(68,6,'Rincian Kegiatan',1,0,'L',1);
     $pdf->Cell(30,6,'Driver**',1,0,'L',1);
     $pdf->Cell(30,6,'Keterangan',1,1,'L',1);
-    for ($i=0; $i < 33; $i++) { 
+    $pdf->SetFont('Calibri', '', 10);
+    for ($i=0; $i < 35; $i++) { 
         $pdf->Cell(8,6,'',1,0,'C',0);
         $pdf->Cell(30,6,'',1,0,'L',0);
         $pdf->Cell(28,6,'',1,0,'L',0);
@@ -342,6 +332,7 @@
         $pdf->Cell(30,6,'',1,1,'L',0);
     }
     $pdf->Ln(5);
+
     $pdf->SetFont('Calibri', '', 11);
     $pdf->Cell(34,5,'Laporan diserahkan tanggal : ___________________________________',0,1,'L',0);
     $pdf->Cell(34,5,'Yang Bertugas',0,1,'L',0);
@@ -371,7 +362,7 @@
     $pdf->SetFont('Calibri', 'B', 11);
 
     // KOP SURAT //
-    $pdf->kopsdm($_GET["nodinas"]);
+    $pdf->kopsdm();
 
     $pdf->SetMargins(9,0,0,0);
     $pdf->Ln(5);
@@ -410,7 +401,6 @@
     if (strlen($hasil['ket'])<79) {
         $pdf->Cell(4,5,'',0,1,'R',0);
     }
-    $pdf->Ln(5);
     $pdf->SetFont('Calibri', '', 11);
     $pdf->Cell(34,5,'Tanggal Selesai',0,0,'L',0);
     $pdf->Cell(4,5,':',0,0,'R',0);
@@ -473,7 +463,7 @@
     $pdf->SetMargins(11,6,0,0);
     $pdf->Ln(5);
     $pdf->SetFont('Calibri', 'b', 11);
-    $pdf->SetFillColor(214, 210, 176);
+    $pdf->SetFillColor(247,202,172);
     $pdf->Cell(8,6,'No',1,0,'C',1);
     $pdf->Cell(35,6,'Hari, Tgl',1,0,'C',1);
     $pdf->Cell(68,6,'Rincian Pengeluaran',1,0,'C',1);
@@ -489,12 +479,12 @@
     $pdf->Ln(5);
     $pdf->Cell(6,6,'',0,0,'C',0);
     $pdf->Cell(35,6,'',0,0,'C',0);
-    $pdf->SetFillColor(242, 247, 146);
+    $pdf->SetFillColor(255,217,102);
     $pdf->Cell(70,6,'UANG SAKU',1,0,'L',1);
     $pdf->Cell(30,6,'',1,1,'C',1);
     $pdf->Cell(6,6,'',0,0,'C',0);
     $pdf->Cell(35,6,'',0,0,'C',0);
-    $pdf->SetFillColor(199, 207, 56);
+    $pdf->SetFillColor(146,208,80);
     $pdf->Cell(70,6,'SISA UANG SAKU',1,0,'L',1);
     $pdf->Cell(30,6,'',1,1,'C',1);
 
@@ -532,7 +522,7 @@
     $pdf->SetFont('Calibri', 'B', 11);
 
     // KOP SURAT //
-    $pdf->kopsdm($_GET["nodinas"]);
+    $pdf->kopsdm();
 
     $pdf->SetMargins(9,6,0,0);
     $pdf->Ln(7);
@@ -553,12 +543,12 @@
     $pdf->Ln(5);
     $pdf->Cell(6,6,'',0,0,'C',0);
     $pdf->Cell(35,6,'',0,0,'C',0);
-    $pdf->SetFillColor(242, 247, 146);
+    $pdf->SetFillColor(255,217,102);
     $pdf->Cell(70,6,'UANG SAKU',1,0,'L',1);
     $pdf->Cell(30,6,'',1,1,'C',1);
     $pdf->Cell(6,6,'',0,0,'C',0);
     $pdf->Cell(35,6,'',0,0,'C',0);
-    $pdf->SetFillColor(199, 207, 56);
+    $pdf->SetFillColor(146,208,80);
     $pdf->Cell(70,6,'SISA UANG SAKU',1,0,'L',1);
     $pdf->Cell(30,6,'',1,1,'C',1);
 
@@ -579,6 +569,23 @@
     $pdf->Cell(48,18,'','LR',1,'L',0);
     $pdf->Cell(48,5,'  ______________________','LR',1,'L',0);
     $pdf->Cell(48,5,'','LBR',1,'L',0);
+
+    // page 5 //
+    $pdf->AddPage();
+    $pdf->SetMargins(5,0,0,0);
+    $pdf->Ln(2);
+    $pdf->SetLineWidth(0.6);
+    $pdf->SetAutoPageBreak(false);
+    $pdf->Rect(5, 8, 200, 314, 'D');
+    $pdf->SetLineWidth(0);
+    $pdf->image('../dist/img/qoobah2.png',6,6,30,30);
+    $pdf->AddFont('Calibri','','Calibri_Regular.php');
+    $pdf->AddFont('Calibri','B','Calibri_Bold.php');
+    $pdf->AddFont('Calibri','I','Calibri_Italic.php');
+    $pdf->SetFont('Calibri', 'B', 11);
+
+    // KOP SURAT //
+    $pdf->kopsdm();
     
 
     $pdf->Output('lapdinas.pdf', 'I'); //download file pdf

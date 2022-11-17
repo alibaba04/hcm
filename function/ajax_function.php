@@ -62,7 +62,12 @@ switch ($_POST['fungsi']) {
         $result = mysql_query("SELECT m.nik,kname,g.* FROM `aki_tabel_master` m left join aki_golongan_kerja g on m.nik=g.nik where m.nik ='" . secureParamAjax($_POST['nik'], $dbLink) . "'", $dbLink);
         if (mysql_num_rows($result)>0) {
             while ( $data = mysql_fetch_assoc($result)) {
-                echo json_encode(array("nik"=>$data['nik'], "jobs"=>$data['jabatan']));
+                if ($data['gol_kerja']=='Manajemen') {
+                    echo json_encode(array("nik"=>$data['nik'], "jobs"=>$data['jabatan']));
+                }else{
+                    echo json_encode(array("nik"=>$data['nik'], "jobs"=>$data['unit']));
+                }
+                
             } 
             break;
         }

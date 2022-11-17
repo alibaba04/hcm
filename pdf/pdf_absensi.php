@@ -34,6 +34,11 @@
     while ($lizin = mysqli_fetch_array($result1)) {
         $absen2[$lizin['nik']][$lizin['day']]=$lizin['jenis'];
     }
+    $qdinas="SELECT dd.nik,Year(tgl_berangkat) as years,month(tgl_berangkat) as month ,day(tgl_berangkat) as day ,'Dinas' as jenis,COUNT(dd.nik) as jml FROM `aki_dinas` d left join aki_ddinas dd on d.nodinas=dd.nodinas WHERE aktif=1 and (tgl_berangkat) BETWEEN '".$tgl1."' and '".$tgl2."' GROUP by nik,tgl_berangkat";
+    $resultDinas=mysqli_query($dbLink,$qdinas);
+    while ($ldinas = mysqli_fetch_array($resultDinas)) {
+        $absen2[$ldinas['nik']][$ldinas['day']]=$ldinas['jenis'];
+    }
     $absen3=array();
     $qlibur="SELECT *,day(tanggal) as day FROM `aki_libur` WHERE tanggal BETWEEN '".$tgl1."' and '".$tgl2."'";
     $result2=mysqli_query($dbLink,$qlibur);
@@ -238,7 +243,7 @@
                             if ($lap['nik']) {
                                 $totalA++;
                             }
-                        } if($absen2[$lap['nik']][$i] == 'Dinas'){
+                        }if($absen2[$lap['nik']][$i] == 'Dinas'){
                             $pdf->SetFillColor(37, 250, 0);
                             $pdf->Cell(5,4,"D",1,0,'C',1);
                             if ($lap['nik']) {
@@ -428,7 +433,6 @@
         }else{
             $pdf->Cell(6,4,'0',1,0,'C',0);
         }
-        
         
         $pdf->Cell(5,4,'',0,1,'C',0);
         $no++;
