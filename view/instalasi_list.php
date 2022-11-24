@@ -88,7 +88,7 @@ if (substr($_SERVER['PHP_SELF'], -10, 10) == "index2.php" && $hakUser == 90) {
     <div class="row">
         <div class="col-md-2">
             <a href="<?php echo $_SERVER["PHP_SELF"].'?page=view/instalasi_detail&mode=add'; ?>" class="btn btn-primary btn-block margin-bottom">Add</a>
-            <a href="<?php echo 'excel/exportdinas.php'; ?>" class="btn btn-primary btn-block margin-bottom">Export Excel</a>
+            <a href="<?php echo 'excel/exportinstalasi.php'; ?>" class="btn btn-primary btn-block margin-bottom">Export Excel</a>
           <form name="frmCariPerkiraan" method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>"autocomplete="off">
             <input type="hidden" name="page" value="<?php echo $curPage; ?>">
             <div class="input-group input-group">

@@ -43,17 +43,18 @@
 			<tr>
 				<th style='background: #b3defc;'>No</th>
 				<th style='background: #b3defc;'>Tgl. Pengajuan</th>
-				<th style='background: #b3defc;'>Tanggal Pengajuan</th>
-				<th style='background: #b3defc;'>Departemen</th>
-				<th style='background: #40E0D0;'>Tanggal Berangkat</th>
-				<th style='background: #40E0D0;'>Alamat Tujuan</th>
-				<th style='background: #40E0D0;'>Keperluan</th>
-				<th style='background: #b3defc;'>Lama Hari</th>
-				<th style='background: #b3defc;'>Tanggal Selesai</th>
-				<th style='background: #9FE2BF;'>Aktual Pulang</th>
-				<th style='background: #9FE2BF;'>Laporan</th>
-				<th style='background: #b3defc;'>Jenis Kendaraan</th>
-				<th style='background: #b3defc;'>Kendaraan</th>
+				<th style='background: #b3defc;'>No Surat</th>
+				<th style='background: #b3defc;'>Nama Proyek</th>
+				<th style='background: #40E0D0;'>Nomor SPK</th>
+				<th style='background: #40E0D0;'>Alamat Proyek</th>
+				<th style='background: #40E0D0;'>No HP PJ</th>
+				<th style='background: #b3defc;'>Ukuran</th>
+				<th style='background: #b3defc;'>Ukuran (Opsional)</th>
+				<th style='background: #9FE2BF;'>Tgl. Berangkat</th>
+				<th style='background: #9FE2BF;'>Tgl. Selesai</th>
+				<th style='background: #b3defc;'>Pulang Pemasangan Aktual</th>
+				<th style='background: #b3defc;'>Laporan</th>
+				<th style='background: #b3defc;'>Jenis Pemasangan</th>
 				<?php
 					for ($i=1; $i <=20; $i++) { 
 						echo "<th style='background: #dbfffb;'>Nama ".$i."</th>";
